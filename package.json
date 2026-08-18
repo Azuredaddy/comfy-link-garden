@@ -4,9 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
-    "build:dev": "node build.mjs",
-    "dev": "npx --yes serve -l 8080 .",
-    "preview": "npx --yes serve -l 8080 dist"
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "glob": "^11.0.0"
   }
 }
