@@ -1,5 +1,17 @@
 /* Lanky Services — shared interactions */
 (function () {
+  // Skip-to-content link (accessibility)
+  var main = document.querySelector('main');
+  if (main) {
+    if (!main.id) main.id = 'main';
+    if (!document.querySelector('.skip-link')) {
+      var skip = document.createElement('a');
+      skip.className = 'skip-link';
+      skip.href = '#' + main.id;
+      skip.textContent = 'Skip to content';
+      document.body.insertBefore(skip, document.body.firstChild);
+    }
+  }
   // Mobile nav toggle
   var toggle = document.querySelector('.nav-toggle');
   if (toggle) {
@@ -48,13 +60,12 @@
     document.body.appendChild(bar);
   }
 
-  // Quote form (front-end only demo handler)
-  var form = document.querySelector('form.quote');
-  if (form) {
+  // Quote forms (front-end only demo handler)
+  document.querySelectorAll('form.quote, form.qcard').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var btn = form.querySelector('button[type="submit"]');
       if (btn) { btn.textContent = 'Thanks — we\'ll be in touch!'; btn.disabled = true; }
     });
-  }
+  });
 })();

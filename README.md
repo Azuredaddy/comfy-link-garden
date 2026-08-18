@@ -7,9 +7,9 @@ landing page for local Google search.
 ## Pages
 - `index.html` — Home (hero, Pickup & Delivery highlight, services, before/after gallery, reviews)
 - `services.html` — Services (incl. Pickup & Delivery)
-- `locations.html` — Locations hub (links to all suburbs)
+- `service-areas.html` — Service Areas hub (links to all suburbs)
 - `contact.html` — Contact + quote form
-- `locations/*.html` — 19 Central Coast suburb landing pages
+- `service-areas/*.html` — 19 Central Coast suburb landing pages (with local FAQs)
 - `sitemap.xml`, `robots.txt` — for Google indexing
 
 ## Your details (already wired in)

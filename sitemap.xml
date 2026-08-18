@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.lankyservices.com.au/</loc><lastmod>2026-08-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.lankyservices.com.au/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.lankyservices.com.au/services.html</loc><lastmod>2026-08-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations.html</loc><lastmod>2026-08-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas.html</loc><lastmod>2026-08-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.lankyservices.com.au/contact.html</loc><lastmod>2026-08-18</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/bateau-bay.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/berkeley-vale.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/charmhaven.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/erina.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/gorokan.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/gosford.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/kanwal.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/killarney-vale.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/lake-haven.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/lisarow.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/long-jetty.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/san-remo.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/terrigal.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/the-entrance.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/toukley.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/tuggerah.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/umina-beach.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/woy-woy.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.lankyservices.com.au/locations/wyong.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/bateau-bay.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/berkeley-vale.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/charmhaven.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/erina.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/gorokan.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/gosford.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/kanwal.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/killarney-vale.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/lake-haven.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/lisarow.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/long-jetty.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/san-remo.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/terrigal.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/the-entrance.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/toukley.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/tuggerah.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/umina-beach.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/woy-woy.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.lankyservices.com.au/service-areas/wyong.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
