@@ -34,6 +34,20 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
+  // Sticky mobile call/quote bar (mobile only, styled in CSS)
+  if (!document.querySelector('.mobile-cta')) {
+    var bar = document.createElement('div');
+    bar.className = 'mobile-cta';
+    var quoteHref = document.querySelector('a[href$="contact.html"], a[href="#quote"]') ? 'contact.html' : 'contact.html';
+    // use relative path that works from /locations/ too
+    var inLoc = /\/locations\//.test(location.pathname);
+    var contactHref = inLoc ? '../contact.html' : 'contact.html';
+    bar.innerHTML =
+      '<a class="call" href="tel:0439973051">Call now</a>' +
+      '<a class="quote" href="' + contactHref + '">Free quote</a>';
+    document.body.appendChild(bar);
+  }
+
   // Quote form (front-end only demo handler)
   var form = document.querySelector('form.quote');
   if (form) {
