@@ -1,0 +1,45 @@
+<svg viewBox="0 0 520 560" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Lanky Services van illustration">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16351b"/>
+      <stop offset="0.5" stop-color="#0d1f10"/>
+      <stop offset="1" stop-color="#060b07"/>
+    </linearGradient>
+    <linearGradient id="van" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d7ded8"/>
+    </linearGradient>
+  </defs>
+  <rect width="520" height="560" fill="url(#sky)"/>
+  <!-- neon glow ring -->
+  <circle cx="360" cy="150" r="120" fill="none" stroke="#8ed029" stroke-width="6" opacity="0.55"/>
+  <circle cx="360" cy="150" r="120" fill="#8ed029" opacity="0.08"/>
+  <circle cx="120" cy="90" r="80" fill="#27c1e0" opacity="0.12"/>
+  <!-- ground -->
+  <path d="M0 430 H520 V560 H0 Z" fill="#04120a" opacity="0.7"/>
+  <g stroke="#8ed029" stroke-width="4" stroke-dasharray="22 20" opacity="0.5">
+    <line x1="0" y1="502" x2="520" y2="502"/>
+  </g>
+  <!-- van -->
+  <g transform="translate(60 250)">
+    <path d="M20 40 H300 a14 14 0 0 1 14 14 V150 a10 10 0 0 1-10 10 H20 a10 10 0 0 1-10-10 V54 a14 14 0 0 1 14-14 Z" fill="url(#van)"/>
+    <!-- cab window -->
+    <path d="M300 54 h20 l34 40 v20 h-54 Z" fill="url(#van)"/>
+    <path d="M306 66 h14 l24 28 h-38 Z" fill="#0d211a"/>
+    <!-- side window -->
+    <rect x="40" y="58" width="60" height="34" rx="6" fill="#0d211a" opacity="0.85"/>
+    <!-- green branding stripe -->
+    <rect x="120" y="96" width="180" height="34" rx="6" fill="#8ed029"/>
+    <text x="134" y="120" font-family="'Space Grotesk',sans-serif" font-size="22" font-weight="700" fill="#08160a">LANKY</text>
+    <!-- chassis + wheels -->
+    <rect x="10" y="158" width="360" height="12" rx="4" fill="#0a0f0b"/>
+    <circle cx="90" cy="176" r="26" fill="#0a0f0b" stroke="#8ed029" stroke-width="3"/><circle cx="90" cy="176" r="9" fill="#d7ded8"/>
+    <circle cx="300" cy="176" r="26" fill="#0a0f0b" stroke="#8ed029" stroke-width="3"/><circle cx="300" cy="176" r="9" fill="#d7ded8"/>
+  </g>
+  <!-- recycle badge -->
+  <g transform="translate(372 372)" opacity="0.95">
+    <circle cx="0" cy="0" r="40" fill="#8ed029"/>
+    <path d="M-14 -4 L-4 -18 L6 -4 L0 -4 L0 6 L-8 6 Z" fill="#08160a"/>
+    <path d="M16 -2 L20 14 L4 12 L8 6 L-1 1 L3 -6 Z" fill="#08160a" opacity="0.85"/>
+  </g>
+</svg>
