@@ -341,3 +341,19 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
   body { padding-bottom:74px; }
 }
 @media (prefers-reduced-motion: reduce) { *{scroll-behavior:auto !important; animation:none !important;} .reveal{opacity:1; transform:none; transition:none;} }
+
+/* ---------- Dark header to suit the Lanky logo (black bg) ---------- */
+.site-header { background: rgba(11,14,11,.92); border-bottom-color: rgba(255,255,255,.08); }
+.brand .brand-logo { height:46px; }
+.nav-links a { color: rgba(244,241,231,.82); }
+.nav-links a:hover, .nav-links a.active { color:#fff; }
+.nav-phone { color:#fff; }
+.nav-phone svg { color: var(--green); }
+.nav-social { border-color: rgba(255,255,255,.28); color:#fff; }
+.nav-social:hover { border-color: var(--green); color: var(--green); }
+.nav-toggle { border-color: rgba(255,255,255,.32); }
+.nav-toggle span, .nav-toggle span::before, .nav-toggle span::after { background:#fff; }
+body.nav-open .nav-links { background: rgba(11,14,11,.98); }
+body.nav-open .nav-links a { color: rgba(244,241,231,.9); }
+/* footer logo: show real colours (no white-out) on the dark footer */
+.site-footer .brand .brand-logo { filter:none; height:46px; }
