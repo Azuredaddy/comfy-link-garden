@@ -42,7 +42,7 @@
   --glow: 0 10px 30px rgba(142,208,41,.35);
 
   --maxw: 1200px;
-  --gap: clamp(16px, 3vw, 30px);
+  --gap: clamp(14px, 2.4vw, 24px);
 
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Manrope", system-ui, -apple-system, sans-serif;
@@ -62,11 +62,11 @@ h3 { font-size: clamp(1.15rem,2vw,1.45rem); }
 p { margin:0 0 1rem; color: var(--ink-soft); }
 
 .container { width:100%; max-width: var(--maxw); margin-inline:auto; padding-inline: clamp(18px,4vw,40px); }
-section { padding: clamp(56px,8vw,110px) 0; }
+section { padding: clamp(40px,5.5vw,78px) 0; }
 
 .eyebrow { display:inline-flex; align-items:center; gap:8px; font-family: var(--font-display); font-size:.78rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color: var(--green-dk); margin-bottom:18px; }
 .eyebrow::before { content:""; width:22px; height:2px; background: var(--green); display:inline-block; border-radius:2px; }
-.section-head { max-width:680px; margin-bottom: clamp(32px,5vw,56px); }
+.section-head { max-width:680px; margin-bottom: clamp(22px,3.5vw,40px); }
 .section-head.center { margin-inline:auto; text-align:center; }
 .section-head.center .eyebrow::before { display:none; }
 .lead { font-size: clamp(1.05rem,1.5vw,1.2rem); color: var(--stone); }
@@ -119,7 +119,7 @@ body.nav-open .nav-toggle span::after { top:0; transform: rotate(-45deg); }
 .hero-badge { display:inline-flex; align-items:center; gap:10px; background: var(--surface); border:1px solid var(--line); padding:8px 16px; border-radius: var(--radius-pill); box-shadow: var(--shadow-sm); font-size:.85rem; font-weight:600; color: var(--ink-soft); margin-bottom:24px; }
 .hero-badge .stars { color: var(--green-dk); letter-spacing:2px; }
 .hero-badge .pill { background: var(--olive); color:#fff; border-radius: var(--radius-pill); padding:4px 12px; font-size:.75rem; font-weight:700; }
-.hero h1 span { color: var(--green-dk); }
+.hero h1 span { background: linear-gradient(100deg, var(--cyan), var(--green-dk)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .hero p.lead { max-width: 520px; color: var(--ink-soft); }
 .hero .slogan { font-family: var(--font-display); font-weight:600; color: var(--green-dk); font-style:italic; margin:2px 0 14px; font-size:1.05rem; }
 .hero-actions { display:flex; flex-wrap:wrap; gap:14px; margin-top:30px; }
