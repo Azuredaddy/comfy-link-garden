@@ -60,12 +60,81 @@
     document.body.appendChild(bar);
   }
 
-  // Quote forms (front-end only demo handler)
+  // Quote forms — deliver the enquiry by email to the business.
+  var BUSINESS_EMAIL = 'matt@lankyservices.com.au';
+
+  function val(form, name) {
+    var el = form.querySelector('[name="' + name + '"]');
+    if (!el) return '';
+    var v = String(el.value || '').trim().slice(0, 1000);
+    if (/^select a service$/i.test(v)) return '';
+    return v;
+  }
+
   document.querySelectorAll('form.quote, form.qcard').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var btn = form.querySelector('button[type="submit"]');
-      if (btn) { btn.textContent = 'Thanks — we\'ll be in touch!'; btn.disabled = true; }
+
+      var name = val(form, 'name');
+      var phone = val(form, 'phone');
+      var email = val(form, 'email');
+      var suburb = val(form, 'suburb');
+      var service = val(form, 'service');
+      var message = val(form, 'message');
+
+      // Basic validation — we need a way to reply.
+      if (!name || (!phone && !email)) {
+        alert('Please add your name and a phone number or email so we can get back to you.');
+        return;
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('That email address doesn\u2019t look right. Please check it and try again.');
+        return;
+      }
+
+      var lines = [
+        'Name: ' + name,
+        'Phone: ' + (phone || '—'),
+        'Email: ' + (email || '—'),
+        'Suburb: ' + (suburb || '—'),
+        'Service: ' + (service || '—'),
+        '',
+        'Details:',
+        message || '—',
+        '',
+        'Sent from ' + location.href
+      ];
+
+      var subject = 'Quote request' + (suburb ? ' — ' + suburb : '') + ' — ' + name;
+      var href = 'mailto:' + BUSINESS_EMAIL +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(lines.join('\n'));
+
+      // Only confirm once the email hand-off has actually been triggered.
+      window.location.href = href;
+
+      if (btn) {
+        btn.textContent = 'Opening your email app…';
+        btn.disabled = true;
+        setTimeout(function () {
+          btn.disabled = false;
+          btn.textContent = 'Send again';
+        }, 6000);
+      }
+
+      var note = form.querySelector('.send-status');
+      if (!note) {
+        note = document.createElement('p');
+        note.className = 'form-note send-status';
+        note.style.textAlign = 'center';
+        note.style.marginTop = '12px';
+        form.appendChild(note);
+      }
+      note.innerHTML = 'We\u2019ve opened your email app with the details ready to send \u2014 press send and we\u2019ll reply shortly. ' +
+        'If nothing opened, email <a href="mailto:' + BUSINESS_EMAIL + '">' + BUSINESS_EMAIL + '</a> or call ' +
+        '<a href="tel:0439973051">0439 973 051</a>.';
     });
   });
+
 })();
