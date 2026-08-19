@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rubbish Removal Service Areas | Central Coast NSW | Lanky Services</title>
+  <title>Rubbish Removal Locations | Central Coast NSW | Lanky Services</title>
   <meta name="description" content="Lanky Services covers 151+ Central Coast suburbs for rubbish removal, junk removal, hard rubbish and green waste. Find your suburb for local same-day service and a free quote." />
-  <meta name="keywords" content="rubbish removal central coast, service areas, junk removal central coast, hard rubbish central coast, green waste removal central coast" />
+  <meta name="keywords" content="rubbish removal central coast, locations, junk removal central coast, hard rubbish central coast, green waste removal central coast" />
   <link rel="canonical" href="https://www.lankyservices.com.au/service-areas.html" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0a0c0a" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Rubbish Removal Service Areas | Central Coast NSW | Lanky Services" />
+  <meta property="og:title" content="Rubbish Removal Locations | Central Coast NSW | Lanky Services" />
   <meta property="og:description" content="We cover 151+ Central Coast suburbs. Find yours for local same-day rubbish removal and a free quote." />
   <meta property="og:url" content="https://www.lankyservices.com.au/service-areas.html" />
   <meta property="og:image" content="https://www.lankyservices.com.au/images/og-image.jpg" />
@@ -27,7 +27,7 @@
   { "@context":"https://schema.org","@type":"LocalBusiness","name":"Lanky Services","url":"https://www.lankyservices.com.au/service-areas.html","telephone":"+61439973051","areaServed":"Central Coast, NSW","address":{"@type":"PostalAddress","addressRegion":"NSW","addressLocality":"Central Coast","addressCountry":"AU"} }
   </script>
   <script type="application/ld+json">
-  { "@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lankyservices.com.au/"},{"@type":"ListItem","position":2,"name":"Service Areas","item":"https://www.lankyservices.com.au/service-areas.html"}] }
+  { "@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.lankyservices.com.au/"},{"@type":"ListItem","position":2,"name":"Locations","item":"https://www.lankyservices.com.au/service-areas.html"}] }
   </script>
 </head>
 <body>
@@ -38,7 +38,7 @@
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="services.html">Services</a>
-        <a href="service-areas.html" class="active">Service Areas</a>
+        <a href="service-areas.html" class="active">Locations</a>
         <a href="contact.html">Contact</a>
       </nav>
       <div class="nav-cta">
@@ -52,8 +52,8 @@
   <main>
     <section class="loc-hero">
       <div class="container">
-        <nav class="breadcrumb"><a href="index.html">Home</a> / Service Areas</nav>
-        <span class="eyebrow">Service areas</span>
+        <nav class="breadcrumb"><a href="index.html">Home</a> / Locations</nav>
+        <span class="eyebrow">Locations</span>
         <h1>Rubbish &amp; junk removal across the <span>Central Coast</span></h1>
         <p>We cover 151+ suburbs right across the Central Coast, NSW. Find yours below for local same-day rubbish removal, or call us on <a href="tel:0439973051" style="color:var(--green);font-weight:700;">0439 973 051</a> for a free quote.</p>
       </div>
@@ -73,8 +73,10 @@
 
     <section style="padding-top:0;">
       <div class="container">
-        <div class="section-head reveal"><span class="eyebrow">Suburbs we service</span><h2>Find your suburb</h2><p class="lead">Each area has its own page with local rubbish removal info. Don't see yours? We probably still cover it, just ask.</p></div>
-        <div class="loc-grid">
+        <div class="section-head center reveal"><span class="eyebrow">Find your suburb</span><h2>Search your area</h2><p class="lead">We cover 151+ Central Coast suburbs. Start typing to jump straight to your local rubbish removal page.</p>
+          <input id="areaSearch" class="area-search" type="search" autocomplete="off" placeholder="Search your suburb, e.g. Gosford, Toukley, Woy Woy" aria-label="Search your suburb" />
+        </div>
+        <div id="areaGrid" class="loc-grid">
 <a class="loc-chip reveal" href="service-areas/avoca-beach.html"><span><strong>Avoca Beach</strong><span>Central Coast NSW</span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 <a class="loc-chip reveal" href="service-areas/bar-point.html"><span><strong>Bar Point</strong><span>Central Coast NSW</span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 <a class="loc-chip reveal" href="service-areas/bateau-bay.html"><span><strong>Bateau Bay</strong><span>Central Coast NSW</span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -227,8 +229,22 @@
 <a class="loc-chip reveal" href="service-areas/wyong.html"><span><strong>Wyong</strong><span>Central Coast NSW</span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 <a class="loc-chip reveal" href="service-areas/wyongah.html"><span><strong>Wyongah</strong><span>Central Coast NSW</span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
+        <p id="areaNone" class="area-none">No match, but we probably still cover it. Give us a call on <a href="tel:0439973051" style="color:var(--green);font-weight:700;">0439 973 051</a>.</p>
       </div>
     </section>
+    <script>
+    (function(){
+      var input=document.getElementById('areaSearch'); if(!input) return;
+      var grid=document.getElementById('areaGrid');
+      var chips=[].slice.call(grid.querySelectorAll('.loc-chip'));
+      var none=document.getElementById('areaNone');
+      input.addEventListener('input',function(){
+        var q=this.value.trim().toLowerCase(), shown=0;
+        chips.forEach(function(c){ var m=q===''||c.textContent.toLowerCase().indexOf(q)>-1; c.style.display=m?'':'none'; if(m)shown++; });
+        none.style.display=shown?'none':'block';
+      });
+    })();
+    </script>
 
     <section style="padding-top:0;">
       <div class="container">
@@ -262,7 +278,7 @@
         <div>
           <h4>Explore</h4>
           <a href="services.html">Services</a>
-          <a href="service-areas.html">Service Areas</a>
+          <a href="service-areas.html">Locations</a>
           <a href="about.html">About</a>
           <a href="contact.html">Contact</a>
         </div>
@@ -270,7 +286,7 @@
           <h4>Get in touch</h4>
           <a href="tel:0439973051">📞 0439 973 051</a>
           <a href="mailto:matt@lankyservices.com.au">✉️ matt@lankyservices.com.au</a>
-          <a href="https://share.google/afnjZMAXEWwP5mnyd" target="_blank" rel="noopener">★ Google Reviews</a>
+          <a href="https://www.google.com.au/search?q=Lanky+Services" target="_blank" rel="noopener">★ Google Reviews</a>
           <a href="https://www.facebook.com/lankyservices/" target="_blank" rel="noopener">📘 Facebook</a>
           <p style="margin-top:14px;font-size:.85rem;">Mon–Sat, 7am–6pm<br/>Servicing Newcastle &amp; the Central Coast, NSW</p>
         </div>
