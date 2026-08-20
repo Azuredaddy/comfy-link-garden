@@ -84,6 +84,7 @@ export const Route = createFileRoute("/api/public/notify-quote")({
               html,
               text,
               reply_to: quote.email ?? undefined,
+              purpose: "transactional",
               idempotency_key: `quote-${quote.id}`,
             },
             { apiKey: process.env["LOVABLE_API_KEY"]! },
