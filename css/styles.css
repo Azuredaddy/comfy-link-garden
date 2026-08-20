@@ -347,3 +347,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 
 /* footer headings (h3.foot-h) — keep the small uppercase label look + correct heading order */
 .site-footer h3.foot-h { color:#fff; font-family: var(--font-display); font-size:.95rem; letter-spacing:.05em; text-transform:uppercase; margin-bottom:18px; }
+
+/* Dropdown readability — force dark list with light text */
+.qgrid select, .field select { color-scheme: dark; }
+.qgrid select option, .field select option { background:#12170f; color:#f3f6ef; }
