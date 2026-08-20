@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
 
 Sitemap: https://lankyservices.com.au/sitemap.xml
-
-User-agent: *
-Disallow: /admin.html

@@ -149,7 +149,7 @@ function card(q) {
     </div>
     <dl class="grid">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     <label for="n-${q.id}">Internal notes</label>
-    <textarea id="n-${q.id}" rows="2">${esc(q.admin_notes)}</textarea>
+    <textarea id="n-${q.id}" rows="2">${esc(q.admin_notes || "")}</textarea>
     <div class="row" style="margin-top:10px">
       <button data-save="${q.id}" class="ghost">Save notes</button>
       <button data-toggle="${q.id}" data-handled="${q.handled}">${q.handled ? 'Mark as new' : 'Mark handled'}</button>
