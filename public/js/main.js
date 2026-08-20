@@ -60,8 +60,10 @@
     document.body.appendChild(bar);
   }
 
-  // Quote forms — deliver the enquiry by email to the business.
+  // Quote forms — submit the enquiry straight to the business (no email app).
   var BUSINESS_EMAIL = 'matt@lankyservices.com.au';
+  var API_URL = 'https://rstabgnhargvqwasplst.supabase.co/rest/v1/quote_requests';
+  var API_KEY = 'sb_publishable_SsCPt15jfIBlV75qC3Wt7A_4mhanmSk';
 
   function val(form, name) {
     var el = form.querySelector('[name="' + name + '"]');
@@ -71,70 +73,71 @@
     return v;
   }
 
+  function statusNote(form) {
+    var note = form.querySelector('.send-status');
+    if (!note) {
+      note = document.createElement('p');
+      note.className = 'form-note send-status';
+      note.style.textAlign = 'center';
+      note.style.marginTop = '12px';
+      form.appendChild(note);
+    }
+    return note;
+  }
+
   document.querySelectorAll('form.quote, form.qcard').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var btn = form.querySelector('button[type="submit"]');
+      var note = statusNote(form);
 
-      var name = val(form, 'name');
-      var phone = val(form, 'phone');
-      var email = val(form, 'email');
-      var suburb = val(form, 'suburb');
-      var service = val(form, 'service');
-      var message = val(form, 'message');
+      var payload = {
+        name: val(form, 'name'),
+        phone: val(form, 'phone') || null,
+        email: val(form, 'email') || null,
+        suburb: val(form, 'suburb') || null,
+        service: val(form, 'service') || null,
+        message: val(form, 'message') || null,
+        source_url: location.href.slice(0, 500)
+      };
 
-      // Basic validation — we need a way to reply.
-      if (!name || (!phone && !email)) {
-        alert('Please add your name and a phone number or email so we can get back to you.');
+      if (!payload.name || (!payload.phone && !payload.email)) {
+        note.textContent = 'Please add your name and a phone number or email so we can get back to you.';
         return;
       }
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        alert('That email address doesn\u2019t look right. Please check it and try again.');
+      if (payload.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+        note.textContent = 'That email address doesn\u2019t look right. Please check it and try again.';
         return;
       }
 
-      var lines = [
-        'Name: ' + name,
-        'Phone: ' + (phone || '—'),
-        'Email: ' + (email || '—'),
-        'Suburb: ' + (suburb || '—'),
-        'Service: ' + (service || '—'),
-        '',
-        'Details:',
-        message || '—',
-        '',
-        'Sent from ' + location.href
-      ];
+      var label = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+      note.textContent = '';
 
-      var subject = 'Quote request' + (suburb ? ' — ' + suburb : '') + ' — ' + name;
-      var href = 'mailto:' + BUSINESS_EMAIL +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(lines.join('\n'));
-
-      // Only confirm once the email hand-off has actually been triggered.
-      window.location.href = href;
-
-      if (btn) {
-        btn.textContent = 'Opening your email app…';
-        btn.disabled = true;
-        setTimeout(function () {
-          btn.disabled = false;
-          btn.textContent = 'Send again';
-        }, 6000);
-      }
-
-      var note = form.querySelector('.send-status');
-      if (!note) {
-        note = document.createElement('p');
-        note.className = 'form-note send-status';
-        note.style.textAlign = 'center';
-        note.style.marginTop = '12px';
-        form.appendChild(note);
-      }
-      note.innerHTML = 'We\u2019ve opened your email app with the details ready to send \u2014 press send and we\u2019ll reply shortly. ' +
-        'If nothing opened, email <a href="mailto:' + BUSINESS_EMAIL + '">' + BUSINESS_EMAIL + '</a> or call ' +
-        '<a href="tel:0439973051">0439 973 051</a>.';
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': API_KEY,
+          'Authorization': 'Bearer ' + API_KEY,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        form.reset();
+        if (btn) { btn.disabled = false; btn.textContent = 'Request sent'; }
+        note.innerHTML = 'Thanks ' + payload.name.replace(/[<>]/g, '') +
+          ' \u2014 your request has been sent. We\u2019ll be in touch shortly.';
+        setTimeout(function () { if (btn) btn.textContent = label; }, 6000);
+      }).catch(function () {
+        if (btn) { btn.disabled = false; btn.textContent = label; }
+        note.innerHTML = 'Sorry, that didn\u2019t send. Please call ' +
+          '<a href="tel:0439973051">0439 973 051</a> or email ' +
+          '<a href="mailto:' + BUSINESS_EMAIL + '">' + BUSINESS_EMAIL + '</a>.';
+      });
     });
   });
+
 
 })();
