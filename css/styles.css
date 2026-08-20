@@ -126,7 +126,7 @@ body.nav-open .nav-toggle span::after { top:0; transform: rotate(-45deg); }
 .hero-visual .float-tag { position:absolute; z-index:3; top:20px; right:20px; background: var(--green); color:#0a1a06; padding:10px 16px; border-radius: var(--radius-pill); font-family: var(--font-display); font-weight:700; font-size:.85rem; box-shadow: var(--glow); display:flex; align-items:center; gap:8px; }
 .float-tag .dot { width:8px; height:8px; border-radius:50%; background:#0a1a06; }
 .hero-visual .glass-card { position:absolute; z-index:2; left:20px; right:20px; bottom:20px; background: rgba(8,12,9,.6); border:1px solid rgba(142,208,41,.35); backdrop-filter: blur(10px); border-radius: var(--radius); padding:18px 20px; box-shadow: var(--shadow); }
-.hero-visual .glass-card h3 { color:#fff; margin-bottom:2px; }
+.hero-visual .glass-card .glass-title, .hero-visual .glass-card h3 { color:#fff; margin-bottom:2px; font-size:1.05rem; font-weight:700; }
 .hero-visual .glass-card p { color: rgba(255,255,255,.82); margin:0; font-size:.9rem; }
 
 /* Quote form card */
@@ -263,7 +263,7 @@ body.nav-open .nav-toggle span::after { top:0; transform: rotate(-45deg); }
 .info-row:hover { transform: translateY(-4px); border-color: rgba(142,208,41,.4); }
 .info-row .icon { width:48px; height:48px; border-radius:14px; background: linear-gradient(135deg, rgba(142,208,41,.2), rgba(36,181,214,.16)); color: var(--green); display:flex; align-items:center; justify-content:center; flex:0 0 auto; border:1px solid rgba(142,208,41,.3); }
 .info-row .icon svg { width:24px; height:24px; }
-.info-row h3 { font-size:1.05rem; margin-bottom:2px; }
+.info-row .info-label, .info-row h3 { font-size:1.05rem; margin-bottom:2px; font-weight:700; }
 .info-row p { margin:0; color: var(--stone); }
 .info-row a { color: var(--cyan); font-weight:700; }
 
