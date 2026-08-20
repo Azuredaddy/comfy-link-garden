@@ -14,35 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
-      quote_requests: {
+      admin_emails: {
         Row: {
           created_at: string
+          email: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+        }
+        Relationships: []
+      }
+      quote_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
           email: string | null
+          handled: boolean
           id: string
           message: string | null
           name: string
+          notified_at: string | null
           phone: string | null
           service: string | null
           source_url: string | null
           suburb: string | null
         }
         Insert: {
+          admin_notes?: string | null
           created_at?: string
           email?: string | null
+          handled?: boolean
           id?: string
           message?: string | null
           name: string
+          notified_at?: string | null
           phone?: string | null
           service?: string | null
           source_url?: string | null
           suburb?: string | null
         }
         Update: {
+          admin_notes?: string | null
           created_at?: string
           email?: string | null
+          handled?: boolean
           id?: string
           message?: string | null
           name?: string
+          notified_at?: string | null
           phone?: string | null
           service?: string | null
           source_url?: string | null
@@ -55,7 +79,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
