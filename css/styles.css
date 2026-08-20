@@ -344,3 +344,6 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
   body { padding-bottom:74px; }
 }
 @media (prefers-reduced-motion: reduce) { *{scroll-behavior:auto !important; animation:none !important;} .reveal{opacity:1; transform:none; transition:none;} }
+
+/* footer headings (h3.foot-h) — keep the small uppercase label look + correct heading order */
+.site-footer h3.foot-h { color:#fff; font-family: var(--font-display); font-size:.95rem; letter-spacing:.05em; text-transform:uppercase; margin-bottom:18px; }

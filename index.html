@@ -25,7 +25,7 @@
  <meta name="twitter:image" content="https://www.lankyservices.com.au/images/og-image.jpg" />
  <link rel="preconnect" href="https://fonts.googleapis.com" />
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
- <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+ <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" /><noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
  <link rel="stylesheet" href="css/styles.css" />
 
  <!-- Local Business structured data (SEO) -->
@@ -81,6 +81,7 @@
  ]
  }
  </script>
+  <link rel="preload" as="image" href="images/hero.jpg" fetchpriority="high" />
 </head>
 <body>
 
@@ -133,7 +134,7 @@
  </div>
  </div>
  <div class="hero-visual reveal">
- <img src="images/hero.jpg" alt="Lanky Services rubbish removal truck on the Central Coast" onerror="this.onerror=null;this.src='images/hero-truck.svg'" />
+ <img src="images/hero.jpg" width="1600" height="740" fetchpriority="high" decoding="async" alt="Lanky Services rubbish removal truck on the Central Coast" onerror="this.onerror=null;this.src='images/hero-truck.svg'" />
  <div class="glass-card">
  <h3>Free, no-obligation quotes</h3>
  <p>Send a photo of your pile and we’ll price it on the spot.</p>
@@ -406,7 +407,7 @@
  <p>Fast, friendly and fully insured rubbish removal across the Central Coast, NSW. We load it, haul it and dispose of it the right way.</p>
  </div>
  <div>
- <h4>Services</h4>
+ <h3 class="foot-h">Services</h3>
  <a href="services.html">Household Rubbish</a>
  <a href="services.html">Commercial &amp; Office</a>
  <a href="services.html">Green &amp; Garden Waste</a>
@@ -414,7 +415,7 @@
  <a href="services.html">Deceased Estate Clean-outs</a>
  </div>
  <div>
- <h4>Popular Areas</h4>
+ <h3 class="foot-h">Popular Areas</h3>
  <div class="footer-cols-links">
  <a href="service-areas/gosford.html">Gosford</a>
  <a href="service-areas/erina.html">Erina</a>
@@ -426,7 +427,7 @@
  <a href="service-areas.html" style="margin-top:8px;font-weight:600;color:var(--sand);">All locations →</a>
  </div>
  <div>
- <h4>Get in touch</h4>
+ <h3 class="foot-h">Get in touch</h3>
  <a href="tel:0439973051">0439 973 051</a>
  <a href="mailto:matt@lankyservices.com.au">matt@lankyservices.com.au</a>
  <a href="https://share.google/afnjZMAXEWwP5mnyd" target="_blank" rel="noopener">Google Reviews</a>
