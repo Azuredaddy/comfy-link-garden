@@ -1,31 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+// The marketing homepage stays as hand-authored static HTML (SEO critical),
+// served verbatim at "/" so nothing about the page or its markup changes.
+import homeHtml from "../../public/index.html?raw";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Rubbish Removal Central Coast NSW | Lanky Services" },
-      {
-        name: "description",
-        content:
-          "Fast, friendly and fully insured rubbish removal across the Central Coast, NSW. Free upfront quotes and same-day pickups.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:title", content: "Rubbish Removal Central Coast NSW | Lanky Services" },
-      {
-        property: "og:description",
-        content: "Free upfront quotes and same-day rubbish removal across the Central Coast, NSW.",
-      },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: HomeRedirect,
+  server: {
+    handlers: {
+      GET: async () =>
+        new Response(homeHtml, {
+          headers: { "content-type": "text/html; charset=utf-8" },
+        }),
+    },
+  },
 });
-
-// The marketing site is served as static HTML from /index.html.
-function HomeRedirect() {
-  useEffect(() => {
-    window.location.replace("/index.html");
-  }, []);
-  return null;
-}
