@@ -1,0 +1,1 @@
+DELETE FROM public.quote_requests WHERE source_url = 'local-test';
