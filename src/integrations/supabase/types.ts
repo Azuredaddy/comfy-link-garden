@@ -38,6 +38,7 @@ export type Database = {
           id: string
           message: string | null
           name: string
+          notified_at: string | null
           phone: string | null
           service: string | null
           source_url: string | null
@@ -51,6 +52,7 @@ export type Database = {
           id?: string
           message?: string | null
           name: string
+          notified_at?: string | null
           phone?: string | null
           service?: string | null
           source_url?: string | null
@@ -64,6 +66,7 @@ export type Database = {
           id?: string
           message?: string | null
           name?: string
+          notified_at?: string | null
           phone?: string | null
           service?: string | null
           source_url?: string | null
