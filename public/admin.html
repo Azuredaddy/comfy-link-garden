@@ -30,6 +30,7 @@
   .pill{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
   .pill.new{border-color:var(--accent);color:var(--accent)}
   .pill.done{border-color:#3c4a33;color:#7f8f73}
+  .pill.email-failed{border-color:var(--warn);color:var(--warn)}
   .quote h2{font-size:17px;margin:0 0 2px}
   .quote a{color:var(--accent)}
   .grid{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin:12px 0;font-size:14px}
@@ -98,7 +99,8 @@ const esc = (s) => String(s ?? '').replace(/[<>&"]/g, (c) => ({'<':'&lt;','>':'&
 const fmt = (iso) => new Date(iso).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' });
 
 async function render() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user } } = await supabase.auth.getUser();
+  const session = user ? { user } : null;
   if (!session) {
     authCard.classList.remove('hidden');
     app.classList.add('hidden');
@@ -110,7 +112,7 @@ async function render() {
   app.classList.remove('hidden');
   $('signout').classList.remove('hidden');
   $('who').textContent = session.user.email;
-  load();
+  await load();
 }
 
 async function load() {
@@ -127,7 +129,10 @@ async function load() {
     $('list').innerHTML = '';
     return;
   }
-  $('listMsg').textContent = data.length ? data.length + ' quote' + (data.length === 1 ? '' : 's') : 'No quotes here yet.';
+  const failedEmails = data.filter((quote) => quote.notification_error && !quote.notified_at).length;
+  $('listMsg').textContent = data.length
+    ? data.length + ' quote' + (data.length === 1 ? '' : 's') + (failedEmails ? ' · ' + failedEmails + ' email alert' + (failedEmails === 1 ? '' : 's') + ' need attention' : '')
+    : 'No quotes here yet.';
   $('list').innerHTML = data.map(card).join('');
 }
 
@@ -149,6 +154,7 @@ function card(q) {
       </div>
       <span class="pill ${q.handled ? 'done' : 'new'}">${q.handled ? 'Handled' : 'New'}</span>
     </div>
+    ${q.notification_error && !q.notified_at ? '<p class="pill email-failed">Saved in admin · email alert failed</p>' : ''}
     <dl class="grid">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     <label for="n-${q.id}">Internal notes</label>
     <textarea id="n-${q.id}" rows="2">${esc(q.admin_notes || "")}</textarea>
@@ -174,14 +180,19 @@ $('list').addEventListener('click', async (e) => {
     }
     if (btn.dataset.toggle) {
       const next = btn.dataset.handled !== 'true';
-      await supabase.from('quote_requests').update({ handled: next }).eq('id', btn.dataset.toggle);
-      load();
+      const { error } = await supabase.from('quote_requests').update({ handled: next }).eq('id', btn.dataset.toggle);
+      if (error) { btn.textContent = 'Update failed'; btn.disabled = false; return; }
+      await load();
     }
   } catch (_) { btn.disabled = false; }
 });
 
 $('filter').addEventListener('change', load);
-$('refresh').addEventListener('click', load);
+$('refresh').addEventListener('click', async () => {
+  $('refresh').disabled = true;
+  await load();
+  $('refresh').disabled = false;
+});
 
 $('signin').addEventListener('click', async () => {
   authMsg.textContent = '';

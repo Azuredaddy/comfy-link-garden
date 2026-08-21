@@ -62,8 +62,7 @@
 
   // Quote forms — submit the enquiry straight to the business (no email app).
   var BUSINESS_EMAIL = 'matt@lankyservices.com.au';
-  var API_URL = 'https://rstabgnhargvqwasplst.supabase.co/rest/v1/quote_requests';
-  var API_KEY = 'sb_publishable_SsCPt15jfIBlV75qC3Wt7A_4mhanmSk';
+  var API_URL = '/api/public/quote';
 
   function val(form, name) {
     var el = form.querySelector('[name="' + name + '"]');
@@ -92,14 +91,17 @@
       var note = statusNote(form);
 
       var payload = {
+        submission_key: form.dataset.submissionKey || crypto.randomUUID(),
         name: val(form, 'name'),
         phone: val(form, 'phone') || null,
         email: val(form, 'email') || null,
         suburb: val(form, 'suburb') || null,
         service: val(form, 'service') || null,
         message: val(form, 'message') || null,
-        source_url: location.href.slice(0, 500)
+        source_url: location.href.slice(0, 500),
+        website: ''
       };
+      form.dataset.submissionKey = payload.submission_key;
 
       if (!payload.name || (!payload.phone && !payload.email)) {
         note.textContent = 'Please add your name and a phone number or email so we can get back to you.';
@@ -114,23 +116,31 @@
       if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
       note.textContent = '';
 
+      var controller = new AbortController();
+      var timeout = setTimeout(function () { controller.abort(); }, 15000);
       fetch(API_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'apikey': API_KEY,
-          'Authorization': 'Bearer ' + API_KEY,
-          'Prefer': 'return=minimal'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+        credentials: 'same-origin'
       }).then(function (res) {
-        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        return res.json().catch(function () { return {}; }).then(function (body) {
+          if (!res.ok || !body.saved) throw new Error(body.message || 'Request failed: ' + res.status);
+          return body;
+        });
+      }).then(function () {
+        clearTimeout(timeout);
         form.reset();
+        delete form.dataset.submissionKey;
         if (btn) { btn.disabled = false; btn.textContent = 'Request sent'; }
         note.innerHTML = 'Thanks ' + payload.name.replace(/[<>]/g, '') +
           ' \u2014 your request has been sent. We\u2019ll be in touch shortly.';
         setTimeout(function () { if (btn) btn.textContent = label; }, 6000);
       }).catch(function () {
+        clearTimeout(timeout);
         if (btn) { btn.disabled = false; btn.textContent = label; }
         note.innerHTML = 'Sorry, that didn\u2019t send. Please call ' +
           '<a href="tel:0439973051">0439 973 051</a> or email ' +
