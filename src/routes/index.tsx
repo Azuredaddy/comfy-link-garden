@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 // The marketing homepage stays as hand-authored static HTML (SEO critical),
 // served verbatim at "/" so nothing about the page or its markup changes.
-import homeHtml from "../../public/index.html?raw";
+import homeHtml from "../home.html?raw";
 
 export const Route = createFileRoute("/")({
   server: {
