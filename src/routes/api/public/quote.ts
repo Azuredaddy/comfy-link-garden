@@ -73,7 +73,7 @@ export const Route = createFileRoute("/api/public/quote")({
         const input = parsed.data;
         if (input.website) return Response.json({ ok: true, saved: true, notified: true });
 
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { supabaseAdmin } = await import("../../../integrations/supabase/client.server");
         const payload = {
           submission_key: input.submission_key,
           name: input.name,
