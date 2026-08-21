@@ -72,6 +72,16 @@
     return v;
   }
 
+  function makeSubmissionKey() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return window.crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+
   function statusNote(form) {
     var note = form.querySelector('.send-status');
     if (!note) {
@@ -91,13 +101,13 @@
       var note = statusNote(form);
 
       var payload = {
-        submission_key: form.dataset.submissionKey || crypto.randomUUID(),
-        name: val(form, 'name'),
-        phone: val(form, 'phone') || null,
-        email: val(form, 'email') || null,
-        suburb: val(form, 'suburb') || null,
-        service: val(form, 'service') || null,
-        message: val(form, 'message') || null,
+        submission_key: form.dataset.submissionKey || makeSubmissionKey(),
+        name: val(form, 'name').slice(0, 100),
+        phone: val(form, 'phone').slice(0, 40) || null,
+        email: val(form, 'email').slice(0, 255) || null,
+        suburb: val(form, 'suburb').slice(0, 100) || null,
+        service: val(form, 'service').slice(0, 100) || null,
+        message: val(form, 'message').slice(0, 2000) || null,
         source_url: location.href.slice(0, 500),
         website: ''
       };

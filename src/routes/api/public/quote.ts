@@ -156,10 +156,14 @@ export const Route = createFileRoute("/api/public/quote")({
             },
             { apiKey },
           );
-          await supabaseAdmin
+          const { error: notifiedUpdateError } = await supabaseAdmin
             .from("quote_requests")
             .update({ notified_at: new Date().toISOString(), notification_error: null })
             .eq("id", quote.id);
+          if (notifiedUpdateError) {
+            console.error("quote notification status update failed", notifiedUpdateError);
+            return Response.json({ ok: true, saved: true, notified: true }, { status: 202 });
+          }
           return Response.json({ ok: true, saved: true, notified: true });
         } catch (error) {
           const detail = error instanceof Error ? error.message.slice(0, 500) : "Unknown email error";
