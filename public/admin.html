@@ -203,6 +203,22 @@ $('signup').addEventListener('click', async () => {
   if (signInError) authMsg.textContent = signInError.message; else render();
 });
 
+$('forgot').addEventListener('click', async () => {
+  authMsg.style.color = '';
+  authMsg.textContent = '';
+  const email = $('email').value.trim();
+  if (!email) { authMsg.textContent = 'Enter your email address first.'; return; }
+  $('forgot').disabled = true;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/reset-password.html',
+  });
+  $('forgot').disabled = false;
+  if (error) { authMsg.textContent = error.message; return; }
+  authMsg.style.color = '#a3e635';
+  authMsg.textContent = 'Reset link sent — check your inbox (and spam folder).';
+});
+
+
 $('signout').addEventListener('click', async () => {
   await supabase.auth.signOut();
   render();
