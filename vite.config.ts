@@ -2,7 +2,10 @@ import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 // Inline the hand-authored static homepage so it is bundled into the server
 // build (Vite does not copy public/index.html, and ?raw of an .html file is
@@ -14,7 +17,7 @@ const homeHtmlPlugin = () => ({
   },
   load(id: string) {
     if (id !== "\0virtual:home-html") return null;
-    const html = readFileSync(resolve(process.cwd(), "public/index.html"), "utf8");
+    const html = readFileSync(resolve(projectRoot, "public/index.html"), "utf8");
     return `export default ${JSON.stringify(html)};`;
   },
 });
