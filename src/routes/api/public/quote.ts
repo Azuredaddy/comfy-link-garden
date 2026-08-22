@@ -58,6 +58,8 @@ export const Route = createFileRoute("/api/public/quote")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const { logServerError, requestMeta } = await import("../../../lib/error-log.server");
+        const meta = requestMeta(request);
         if (!allowedBrowserRequest(request)) {
           return Response.json({ ok: false, message: "Request not allowed" }, { status: 403 });
         }
@@ -91,7 +93,7 @@ export const Route = createFileRoute("/api/public/quote")({
           .eq("submission_key", input.submission_key)
           .maybeSingle();
         if (existingError) {
-          console.error("quote lookup failed", existingError);
+          await logServerError({ source: "api:quote:lookup", error: existingError, status: 503, ...meta });
           return Response.json({ ok: false, message: "We couldn't save your request. Please try again." }, { status: 503 });
         }
 
@@ -103,7 +105,7 @@ export const Route = createFileRoute("/api/public/quote")({
             .select("*")
             .single();
           if (error || !data) {
-            console.error("quote insert failed", error);
+            await logServerError({ source: "api:quote:insert", error, status: 503, ...meta });
             return Response.json({ ok: false, message: "We couldn't save your request. Please try again." }, { status: 503 });
           }
           quote = data;
@@ -161,13 +163,13 @@ export const Route = createFileRoute("/api/public/quote")({
             .update({ notified_at: new Date().toISOString(), notification_error: null })
             .eq("id", quote.id);
           if (notifiedUpdateError) {
-            console.error("quote notification status update failed", notifiedUpdateError);
+            await logServerError({ source: "api:quote:notified-update", error: notifiedUpdateError, status: 202, context: { quote_id: quote.id }, ...meta });
             return Response.json({ ok: true, saved: true, notified: true }, { status: 202 });
           }
           return Response.json({ ok: true, saved: true, notified: true });
         } catch (error) {
           const detail = error instanceof Error ? error.message.slice(0, 500) : "Unknown email error";
-          console.error("quote email failed", error);
+          await logServerError({ source: "api:quote:email", error, status: 202, context: { quote_id: quote.id }, ...meta });
           await supabaseAdmin
             .from("quote_requests")
             .update({ notification_error: detail })
