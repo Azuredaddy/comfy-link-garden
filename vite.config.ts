@@ -22,6 +22,8 @@ const homeHtmlPlugin = () => ({
 
 export default defineConfig({
   plugins: [homeHtmlPlugin()],
+  // Wrap the server entry so SSR/API failures are logged with stack traces.
+  tanstackStart: { server: { entry: "server" } },
   vite: {
     server: { host: "::", port: 8080 },
   },

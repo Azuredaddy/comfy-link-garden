@@ -3,15 +3,13 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Quote Admin | Lanky Services</title>
+ <title>Server Errors | Lanky Services</title>
  <meta name="robots" content="noindex, nofollow" />
  <meta name="theme-color" content="#0a0d0b" />
  <link rel="icon" type="image/png" href="/favicon.png" />
  <style>
-  :root{
-    --bg:#0a0d0b; --panel:#12170f; --line:#26301f; --ink:#f3f6ef;
-    --muted:#9aa793; --accent:#a3e635; --warn:#f4b942;
-  }
+  :root{ --bg:#0a0d0b; --panel:#12170f; --line:#26301f; --ink:#f3f6ef;
+    --muted:#9aa793; --accent:#a3e635; --warn:#f4b942; --bad:#ff9a8a; }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
   header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
@@ -19,33 +17,34 @@
   .wrap{max-width:1000px;margin:0 auto;padding:20px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
   label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
-  input,textarea,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+  input,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
     background:#0d120b;color:var(--ink);font:inherit;color-scheme:dark}
   button{cursor:pointer;border:0;border-radius:10px;padding:11px 16px;font:600 15px/1 inherit;
     background:var(--accent);color:#10160c}
   button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
   button:disabled{opacity:.6;cursor:default}
+  a{color:var(--accent)}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .muted{color:var(--muted);font-size:14px}
+  .err{color:var(--bad);font-size:14px}
   .pill{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-  .pill.new{border-color:var(--accent);color:var(--accent)}
+  .pill.open{border-color:var(--warn);color:var(--warn)}
   .pill.done{border-color:#3c4a33;color:#7f8f73}
-  .pill.email-failed{border-color:var(--warn);color:var(--warn)}
-  .quote h2{font-size:17px;margin:0 0 2px}
-  .quote a{color:var(--accent)}
+  .err-title{font-size:16px;margin:0 0 2px;word-break:break-word}
   .grid{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin:12px 0;font-size:14px}
   .grid dt{color:var(--muted)}
   .grid dd{margin:0;word-break:break-word}
-  .err{color:#ff9a8a;font-size:14px}
+  pre{background:#0d120b;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;
+    font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:320px;white-space:pre-wrap;word-break:break-word}
   .hidden{display:none}
   @media(max-width:520px){.grid{grid-template-columns:1fr}.grid dt{margin-top:6px}}
  </style>
 </head>
 <body>
 <header>
-  <h1>Lanky Services — Quote admin</h1>
+  <h1>Lanky Services — Server errors</h1>
   <div class="row">
-    <a class="muted" href="/admin-errors.html">Server errors</a>
+    <a class="muted" href="/admin.html">Quotes</a>
     <span id="who" class="muted"></span>
     <button id="signout" class="ghost hidden">Sign out</button>
   </div>
@@ -61,22 +60,18 @@
     <input id="password" type="password" autocomplete="current-password" />
     <div class="row" style="margin-top:14px">
       <button id="signin">Sign in</button>
-      <button id="signup" class="ghost">Create account</button>
-      <button id="forgot" class="ghost">Forgot password?</button>
     </div>
     <p id="authMsg" class="err" style="min-height:20px"></p>
-    <p class="muted">First time? Enter your email and a password, then tap “Create account”. Forgot yours? Enter your email and tap “Forgot password?” — we’ll email you a reset link.</p>
   </section>
-
 
   <section id="app" class="hidden">
     <div class="card row" style="justify-content:space-between">
       <div class="row">
         <label for="filter" style="margin:0">Show</label>
         <select id="filter" style="width:auto">
-          <option value="open">New / unhandled</option>
-          <option value="all">All quotes</option>
-          <option value="handled">Handled</option>
+          <option value="open">Unresolved</option>
+          <option value="all">All errors</option>
+          <option value="resolved">Resolved</option>
         </select>
       </div>
       <button id="refresh" class="ghost">Refresh</button>
@@ -95,14 +90,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = (id) => document.getElementById(id);
 const authCard = $('authCard'), app = $('app'), authMsg = $('authMsg');
-
 const esc = (s) => String(s ?? '').replace(/[<>&"]/g, (c) => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
 const fmt = (iso) => new Date(iso).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' });
 
 async function render() {
   const { data: { user } } = await supabase.auth.getUser();
-  const session = user ? { user } : null;
-  if (!session) {
+  if (!user) {
     authCard.classList.remove('hidden');
     app.classList.add('hidden');
     $('signout').classList.add('hidden');
@@ -112,16 +105,16 @@ async function render() {
   authCard.classList.add('hidden');
   app.classList.remove('hidden');
   $('signout').classList.remove('hidden');
-  $('who').textContent = session.user.email;
+  $('who').textContent = user.email;
   await load();
 }
 
 async function load() {
   const mode = $('filter').value;
   $('listMsg').textContent = 'Loading…';
-  let q = supabase.from('quote_requests').select('*').order('created_at', { ascending: false }).limit(200);
-  if (mode === 'open') q = q.eq('handled', false);
-  if (mode === 'handled') q = q.eq('handled', true);
+  let q = supabase.from('server_errors').select('*').order('created_at', { ascending: false }).limit(200);
+  if (mode === 'open') q = q.eq('resolved', false);
+  if (mode === 'resolved') q = q.eq('resolved', true);
   const { data, error } = await q;
 
   if (error) {
@@ -130,59 +123,51 @@ async function load() {
     $('list').innerHTML = '';
     return;
   }
-  const failedEmails = data.filter((quote) => quote.notification_error && !quote.notified_at).length;
   $('listMsg').textContent = data.length
-    ? data.length + ' quote' + (data.length === 1 ? '' : 's') + (failedEmails ? ' · ' + failedEmails + ' email alert' + (failedEmails === 1 ? '' : 's') + ' need attention' : '')
-    : 'No quotes here yet.';
+    ? data.length + ' error' + (data.length === 1 ? '' : 's') + ' logged'
+    : 'No errors logged — everything is running clean.';
   $('list').innerHTML = data.map(card).join('');
 }
 
-function card(q) {
+function card(e) {
   const rows = [
-    ['Phone', q.phone ? `<a href="tel:${esc(q.phone.replace(/\s/g,''))}">${esc(q.phone)}</a>` : null],
-    ['Email', q.email ? `<a href="mailto:${esc(q.email)}">${esc(q.email)}</a>` : null],
-    ['Suburb', q.suburb ? esc(q.suburb) : null],
-    ['Service', q.service ? esc(q.service) : null],
-    ['Details', q.message ? esc(q.message) : null],
-    ['From page', q.source_url ? `<a href="${esc(q.source_url)}" target="_blank" rel="noopener">${esc(q.source_url)}</a>` : null],
+    ['When', esc(fmt(e.created_at))],
+    ['Source', esc(e.source)],
+    ['Route', e.route ? esc((e.method ? e.method + ' ' : '') + e.route) : null],
+    ['Status', e.status ? esc(e.status) : null],
+    ['Browser', e.user_agent ? esc(e.user_agent) : null],
+    ['Context', e.context ? esc(JSON.stringify(e.context)) : null],
   ].filter(([, v]) => v);
 
-  return `<article class="card quote">
+  return `<article class="card">
     <div class="row" style="justify-content:space-between;align-items:flex-start">
-      <div>
-        <h2>${esc(q.name)}</h2>
-        <div class="muted">${fmt(q.created_at)}</div>
-      </div>
-      <span class="pill ${q.handled ? 'done' : 'new'}">${q.handled ? 'Handled' : 'New'}</span>
+      <h2 class="err-title">${esc(e.message)}</h2>
+      <span class="pill ${e.resolved ? 'done' : 'open'}">${e.resolved ? 'Resolved' : 'Open'}</span>
     </div>
-    ${q.notification_error && !q.notified_at ? '<p class="pill email-failed">Saved in admin · email alert failed</p>' : ''}
     <dl class="grid">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
-    <label for="n-${q.id}">Internal notes</label>
-    <textarea id="n-${q.id}" rows="2">${esc(q.admin_notes || "")}</textarea>
+    ${e.stack ? `<details><summary class="muted">Stack trace</summary><pre>${esc(e.stack)}</pre></details>` : '<p class="muted">No stack trace captured.</p>'}
     <div class="row" style="margin-top:10px">
-      <button data-save="${q.id}" class="ghost">Save notes</button>
-      <button data-toggle="${q.id}" data-handled="${q.handled}">${q.handled ? 'Mark as new' : 'Mark handled'}</button>
+      <button data-toggle="${e.id}" data-resolved="${e.resolved}">${e.resolved ? 'Mark unresolved' : 'Mark resolved'}</button>
+      <button data-delete="${e.id}" class="ghost">Delete</button>
     </div>
   </article>`;
 }
 
-$('list').addEventListener('click', async (e) => {
-  const btn = e.target.closest('button');
+$('list').addEventListener('click', async (ev) => {
+  const btn = ev.target.closest('button');
   if (!btn) return;
   btn.disabled = true;
   try {
-    if (btn.dataset.save) {
-      const notes = document.getElementById('n-' + btn.dataset.save).value;
-      const { error } = await supabase.from('quote_requests')
-        .update({ admin_notes: notes }).eq('id', btn.dataset.save);
-      btn.textContent = error ? 'Save failed' : 'Saved';
-      setTimeout(() => { btn.textContent = 'Save notes'; btn.disabled = false; }, 2000);
+    if (btn.dataset.toggle) {
+      const next = btn.dataset.resolved !== 'true';
+      const { error } = await supabase.from('server_errors').update({ resolved: next }).eq('id', btn.dataset.toggle);
+      if (error) { btn.textContent = 'Update failed'; btn.disabled = false; return; }
+      await load();
       return;
     }
-    if (btn.dataset.toggle) {
-      const next = btn.dataset.handled !== 'true';
-      const { error } = await supabase.from('quote_requests').update({ handled: next }).eq('id', btn.dataset.toggle);
-      if (error) { btn.textContent = 'Update failed'; btn.disabled = false; return; }
+    if (btn.dataset.delete) {
+      const { error } = await supabase.from('server_errors').delete().eq('id', btn.dataset.delete);
+      if (error) { btn.textContent = 'Delete failed'; btn.disabled = false; return; }
       await load();
     }
   } catch (_) { btn.disabled = false; }
@@ -202,34 +187,6 @@ $('signin').addEventListener('click', async () => {
   });
   if (error) authMsg.textContent = error.message; else render();
 });
-
-$('signup').addEventListener('click', async () => {
-  authMsg.textContent = '';
-  const { error } = await supabase.auth.signUp({
-    email: $('email').value.trim(), password: $('password').value,
-  });
-  if (error) { authMsg.textContent = error.message; return; }
-  const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: $('email').value.trim(), password: $('password').value,
-  });
-  if (signInError) authMsg.textContent = signInError.message; else render();
-});
-
-$('forgot').addEventListener('click', async () => {
-  authMsg.style.color = '';
-  authMsg.textContent = '';
-  const email = $('email').value.trim();
-  if (!email) { authMsg.textContent = 'Enter your email address first.'; return; }
-  $('forgot').disabled = true;
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/reset-password.html',
-  });
-  $('forgot').disabled = false;
-  if (error) { authMsg.textContent = error.message; return; }
-  authMsg.style.color = '#a3e635';
-  authMsg.textContent = 'Reset link sent — check your inbox (and spam folder).';
-});
-
 
 $('signout').addEventListener('click', async () => {
   await supabase.auth.signOut();
