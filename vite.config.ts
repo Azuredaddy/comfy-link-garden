@@ -51,7 +51,7 @@ const staticPagesPlugin = () => ({
 });
 
 export default defineConfig({
-  plugins: [homeHtmlPlugin()],
+  plugins: [homeHtmlPlugin(), staticPagesPlugin()],
   // Wrap the server entry so SSR/API failures are logged with stack traces.
   tanstackStart: { server: { entry: "server" } },
   vite: {
