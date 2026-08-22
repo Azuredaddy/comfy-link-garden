@@ -86,6 +86,48 @@ export type Database = {
         }
         Relationships: []
       }
+      server_errors: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          message: string
+          method: string | null
+          resolved: boolean
+          route: string | null
+          source: string
+          stack: string | null
+          status: number | null
+          user_agent: string | null
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          message: string
+          method?: string | null
+          resolved?: boolean
+          route?: string | null
+          source: string
+          stack?: string | null
+          status?: number | null
+          user_agent?: string | null
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          message?: string
+          method?: string | null
+          resolved?: boolean
+          route?: string | null
+          source?: string
+          stack?: string | null
+          status?: number | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
