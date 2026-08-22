@@ -1,6 +1,4 @@
-import { defineConfig } from "vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteReact from "@vitejs/plugin-react";
+import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,6 +21,8 @@ const homeHtmlPlugin = () => ({
 });
 
 export default defineConfig({
-  server: { host: "::", port: 8080 },
-  plugins: [homeHtmlPlugin(), tanstackStart(), viteReact()],
+  plugins: [homeHtmlPlugin()],
+  vite: {
+    server: { host: "::", port: 8080 },
+  },
 });
