@@ -38,10 +38,14 @@ export type Database = {
           id: string
           message: string | null
           name: string
+          notification_attempted_at: string | null
+          notification_attempts: number
+          notification_error: string | null
           notified_at: string | null
           phone: string | null
           service: string | null
           source_url: string | null
+          submission_key: string | null
           suburb: string | null
         }
         Insert: {
@@ -52,10 +56,14 @@ export type Database = {
           id?: string
           message?: string | null
           name: string
+          notification_attempted_at?: string | null
+          notification_attempts?: number
+          notification_error?: string | null
           notified_at?: string | null
           phone?: string | null
           service?: string | null
           source_url?: string | null
+          submission_key?: string | null
           suburb?: string | null
         }
         Update: {
@@ -66,11 +74,57 @@ export type Database = {
           id?: string
           message?: string | null
           name?: string
+          notification_attempted_at?: string | null
+          notification_attempts?: number
+          notification_error?: string | null
           notified_at?: string | null
           phone?: string | null
           service?: string | null
           source_url?: string | null
+          submission_key?: string | null
           suburb?: string | null
+        }
+        Relationships: []
+      }
+      server_errors: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          message: string
+          method: string | null
+          resolved: boolean
+          route: string | null
+          source: string
+          stack: string | null
+          status: number | null
+          user_agent: string | null
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          message: string
+          method?: string | null
+          resolved?: boolean
+          route?: string | null
+          source: string
+          stack?: string | null
+          status?: number | null
+          user_agent?: string | null
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          message?: string
+          method?: string | null
+          resolved?: boolean
+          route?: string | null
+          source?: string
+          stack?: string | null
+          status?: number | null
+          user_agent?: string | null
         }
         Relationships: []
       }

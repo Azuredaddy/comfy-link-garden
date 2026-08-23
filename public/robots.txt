@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /admin-errors.html
+Disallow: /reset-password.html
 
 Sitemap: https://lankyservices.com.au/sitemap.xml

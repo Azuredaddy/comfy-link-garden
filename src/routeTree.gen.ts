@@ -10,43 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiPublicNotifyQuoteRouteImport } from './routes/api/public/notify-quote'
+import { Route as SplatRouteImport } from './routes/$'
+import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicNotifyQuoteRoute = ApiPublicNotifyQuoteRouteImport.update({
-  id: '/api/public/notify-quote',
-  path: '/api/public/notify-quote',
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicQuoteRoute = ApiPublicQuoteRouteImport.update({
+  id: '/api/public/quote',
+  path: '/api/public/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/public/notify-quote': typeof ApiPublicNotifyQuoteRoute
+  '/$': typeof SplatRoute
+  '/api/public/quote': typeof ApiPublicQuoteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/public/notify-quote': typeof ApiPublicNotifyQuoteRoute
+  '/$': typeof SplatRoute
+  '/api/public/quote': typeof ApiPublicQuoteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/public/notify-quote': typeof ApiPublicNotifyQuoteRoute
+  '/$': typeof SplatRoute
+  '/api/public/quote': typeof ApiPublicQuoteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/notify-quote'
+  fullPaths: '/' | '/$' | '/api/public/quote'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/notify-quote'
-  id: '__root__' | '/' | '/api/public/notify-quote'
+  to: '/' | '/$' | '/api/public/quote'
+  id: '__root__' | '/' | '/$' | '/api/public/quote'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiPublicNotifyQuoteRoute: typeof ApiPublicNotifyQuoteRoute
+  SplatRoute: typeof SplatRoute
+  ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +68,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/notify-quote': {
-      id: '/api/public/notify-quote'
-      path: '/api/public/notify-quote'
-      fullPath: '/api/public/notify-quote'
-      preLoaderRoute: typeof ApiPublicNotifyQuoteRouteImport
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/quote': {
+      id: '/api/public/quote'
+      path: '/api/public/quote'
+      fullPath: '/api/public/quote'
+      preLoaderRoute: typeof ApiPublicQuoteRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiPublicNotifyQuoteRoute: ApiPublicNotifyQuoteRoute,
+  SplatRoute: SplatRoute,
+  ApiPublicQuoteRoute: ApiPublicQuoteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
