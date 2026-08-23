@@ -159,7 +159,7 @@
         if (payload.service) rows += '<li><strong>Job:</strong> ' + esc(payload.service) + '</li>';
 
         var done = document.createElement('div');
-        done.className = 'quote-confirm reveal is-visible';
+        done.className = 'quote-confirm';
         done.setAttribute('role', 'status');
         done.setAttribute('tabindex', '-1');
         done.innerHTML =
