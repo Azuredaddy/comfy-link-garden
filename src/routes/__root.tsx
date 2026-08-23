@@ -5,7 +5,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lanky Services | Rubbish Removal Central Coast NSW" },
+      { title: "Rubbish Removal Central Coast NSW | Lanky Services" },
+      {
+        name: "description",
+        content:
+          "Fast, friendly rubbish removal across the Central Coast & Newcastle NSW. Household junk, hard rubbish, green waste & furniture removed. Free quotes, 7 days.",
+      },
+      { property: "og:title", content: "Rubbish Removal Central Coast NSW | Lanky Services" },
+      {
+        property: "og:description",
+        content:
+          "Fast, friendly rubbish removal across the Central Coast & Newcastle NSW. Household junk, hard rubbish, green waste & furniture removed. Free quotes, 7 days.",
+      },
     ],
     links: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
   }),
