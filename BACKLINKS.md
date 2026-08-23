@@ -95,3 +95,59 @@ Name: Lanky Services | Phone: 0439 973 051 | Email: matt@lankyservices.com.au | 
 - Facebook + Instagram (link in bio) — already have FB
 - Central Coast community FB groups / local business directories
 - Sponsor a local sports club / school fete → a link from their site (great local relevance)
+
+## ============================================
+## COPY-PASTE BACKLINK / CITATION KIT (Aug 2026)
+## ============================================
+## Rule #1: paste the NAP block IDENTICALLY every time. Inconsistent name/phone
+## across sites is the #1 thing that kills local citation value.
+
+### NAP (Name / Address / Phone) — paste exactly, everywhere
+Business name: Lanky Services
+Phone:         0439 973 051
+Email:         matt@lankyservices.com.au
+Website:       https://lankyservices.com.au
+ABN:           75 340 334 049
+Service area:  Central Coast & Newcastle, NSW (mobile service — no shopfront)
+Hours:         Monday–Saturday, 7:00am–6:00pm
+Facebook:      https://www.facebook.com/lankyservices/
+Google reviews:https://share.google/afnjZMAXEWwP5mnyd
+
+### Primary category
+Rubbish removal service
+### Secondary categories
+Garbage collection service · Waste management service · Courier service · Delivery service
+
+### Short description (≤160 chars — for directory tagline / meta)
+Fast, cheap, fully insured rubbish removal across the Central Coast & Newcastle. Junk, hard rubbish, green waste & Marketplace pickups. Free quotes, we do the lifting.
+
+### Medium description (~300 chars — most directories)
+Lanky Services is your local, insured-to-$20-million rubbish removal crew for the Central Coast and Newcastle. We clear household junk, hard rubbish, green waste, furniture, mattresses, whitegoods, deceased-estate and garage clean-outs — plus pickup & delivery for Marketplace and Gumtree finds. Same-day where we can. Only an arm's length away.
+
+### Long description (~600 chars — GBP "from the business", About fields)
+Lanky Services is a locally owned and operated rubbish removal and pickup/delivery business covering the Central Coast and Newcastle, NSW. We take the hassle out of getting rid of your junk — household clean-ups, hard rubbish, green and garden waste, old furniture and mattresses, fridges and whitegoods, e-waste, deceased-estate and garage/shed clean-outs, and renovation debris. We do all the lifting, loading and sweep-up, price by volume (not weight), and give upfront quotes with no surprises. We recycle and donate whatever we can. Fully insured to $20 million. Free quotes seven days — send a photo and we'll price it on the spot. Only an arm's length away.
+
+### Services to list (where the directory allows a services field)
+Household & Junk Removal · Hard Rubbish Removal · Green Waste Removal · Furniture & Mattress Removal · Whitegoods & Appliance Removal · Deceased Estate Clean-outs · Garage & Shed Clean-outs · Commercial Rubbish Removal · Renovation & Construction Waste · Pickup & Delivery (Marketplace/Gumtree)
+
+### Submit here (free), in priority order — tick as you go
+[ ] Google Business Profile  (biggest lever — add photos + weekly posts)
+[ ] Bing Places for Business — https://www.bingplaces.com/
+[ ] buy.nsw profile — CONFIRM website is set to lankyservices.com.au (already exists)
+[ ] Yellow Pages AU — https://www.yellowpages.com.au/
+[ ] True Local — https://www.truelocal.com.au/
+[ ] Hotfrog AU — https://www.hotfrog.com.au/
+[ ] StartLocal — https://www.startlocal.com.au/
+[ ] Yelp Australia — https://biz.yelp.com/
+[ ] Oneflare — https://www.oneflare.com.au/  (rubbish removal category)
+[ ] hipages — https://hipages.com.au/  (trade profile + backlink)
+[ ] Airtasker — profile with website link
+[ ] Word of Mouth — https://www.wordofmouth.com.au/
+[ ] ProductReview.com.au — https://www.productreview.com.au/
+[ ] Local Search / dLook / AussieWeb / Fyple / Cylex
+[ ] Facebook + Instagram — put lankyservices.com.au in the bio/About
+
+### Local relevance (worth more than any directory on a young domain)
+[ ] Sponsor a Central Coast sports club / school fete → link from their site
+[ ] Join Central Coast community Facebook groups (post helpful answers, not spam)
+[ ] Ask 3–5 happy customers for a Google review THIS WEEK (target 50+)
