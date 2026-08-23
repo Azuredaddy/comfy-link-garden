@@ -145,10 +145,45 @@
         clearTimeout(timeout);
         form.reset();
         delete form.dataset.submissionKey;
-        if (btn) { btn.disabled = false; btn.textContent = 'Request sent'; }
-        note.innerHTML = 'Thanks ' + payload.name.replace(/[<>]/g, '') +
-          ' \u2014 your request has been sent. We\u2019ll be in touch shortly.';
-        setTimeout(function () { if (btn) btn.textContent = label; }, 6000);
+        if (btn) { btn.disabled = false; btn.textContent = label; }
+
+        function esc(v) {
+          return String(v || '').replace(/[<>&"]/g, function (c) {
+            return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c];
+          });
+        }
+        var rows = '';
+        if (payload.phone) rows += '<li><strong>Phone:</strong> ' + esc(payload.phone) + '</li>';
+        if (payload.email) rows += '<li><strong>Email:</strong> ' + esc(payload.email) + '</li>';
+        if (payload.suburb) rows += '<li><strong>Suburb:</strong> ' + esc(payload.suburb) + '</li>';
+        if (payload.service) rows += '<li><strong>Job:</strong> ' + esc(payload.service) + '</li>';
+
+        var done = document.createElement('div');
+        done.className = 'quote-confirm reveal is-visible';
+        done.setAttribute('role', 'status');
+        done.setAttribute('tabindex', '-1');
+        done.innerHTML =
+          '<div class="qc-tick" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">' +
+            '<path d="M20 6 9 17l-5-5"/></svg>' +
+          '</div>' +
+          '<h2>Thanks ' + esc(payload.name.split(' ')[0]) + ', your request is in.</h2>' +
+          '<p>We\u2019ve received your quote request and it\u2019s already with our team.</p>' +
+          '<h3>What happens next</h3>' +
+          '<ol class="qc-steps">' +
+            '<li>We review the details you sent (usually within a couple of hours, Mon\u2013Sat 7am\u20136pm).</li>' +
+            '<li>Matt calls or texts you with an upfront, no-obligation price.</li>' +
+            '<li>Happy with it? We lock in a time \u2014 often same or next day.</li>' +
+          '</ol>' +
+          (rows ? '<h3>What you sent us</h3><ul class="qc-summary">' + rows + '</ul>' : '') +
+          '<p class="qc-contact">Need it sorted urgently? Call <a href="tel:0439973051">0439 973 051</a> ' +
+          'or email <a href="mailto:' + BUSINESS_EMAIL + '">' + BUSINESS_EMAIL + '</a>.</p>' +
+          '<p class="form-note">Tip: photos help us quote faster \u2014 text or email them through anytime.</p>';
+
+        form.parentNode.replaceChild(done, form);
+        try { done.focus(); } catch (err) {}
+        try { done.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {}
+
       }).catch(function () {
         clearTimeout(timeout);
         if (btn) { btn.disabled = false; btn.textContent = label; }
