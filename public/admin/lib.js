@@ -81,6 +81,15 @@ export async function apiOpenPdf(path, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
+// Xero connection status (cached for the session; pass true to refresh).
+let _xero = null;
+export async function xeroStatus(force = false) {
+  if (_xero && !force) return _xero;
+  try { _xero = await apiFetch('/api/admin/xero/status', { method: 'GET' }); }
+  catch { _xero = { configured: false, connected: false }; }
+  return _xero;
+}
+
 // Allocate the next FY document number via the SECURITY DEFINER RPC.
 export async function nextNumber(docType) {
   const { data, error } = await supabase.rpc('next_document_number', { p_doc_type: docType });
