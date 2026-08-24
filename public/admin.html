@@ -3,58 +3,130 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <title>Quote Admin | Lanky Services</title>
+ <title>Admin | Lanky Services</title>
  <meta name="robots" content="noindex, nofollow" />
  <meta name="theme-color" content="#0a0d0b" />
  <link rel="icon" type="image/png" href="/favicon.png" />
  <style>
   :root{
-    --bg:#0a0d0b; --panel:#12170f; --line:#26301f; --ink:#f3f6ef;
-    --muted:#9aa793; --accent:#a3e635; --warn:#f4b942;
+    --bg:#0a0d0b; --panel:#12170f; --panel2:#0d120b; --line:#26301f; --ink:#f3f6ef;
+    --muted:#9aa793; --accent:#a3e635; --accent-ink:#10160c; --warn:#f4b942;
+    --bad:#ff9a8a; --good:#a3e635; --blue:#67c1e6;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-  header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}
-  header h1{font-size:18px;margin:0;letter-spacing:.02em}
-  .wrap{max-width:1000px;margin:0 auto;padding:20px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
-  label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
-  input,textarea,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
-    background:#0d120b;color:var(--ink);font:inherit;color-scheme:dark}
-  button{cursor:pointer;border:0;border-radius:10px;padding:11px 16px;font:600 15px/1 inherit;
-    background:var(--accent);color:#10160c}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--ink);
+    font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color-scheme:dark}
+  a{color:var(--accent)}
+  button{cursor:pointer;border:0;border-radius:10px;padding:10px 15px;font:600 14px/1 inherit;
+    background:var(--accent);color:var(--accent-ink)}
   button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-  button:disabled{opacity:.6;cursor:default}
+  button.subtle{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  button.danger{background:transparent;color:var(--bad);border:1px solid #5a2a24}
+  button.sm{padding:7px 11px;font-size:13px;border-radius:8px}
+  button:disabled{opacity:.55;cursor:default}
+  input,textarea,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--ink);font:inherit;color-scheme:dark}
+  label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+  .muted{color:var(--muted)}
+  .err{color:var(--bad)}
+  .hidden{display:none!important}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .muted{color:var(--muted);font-size:14px}
-  .pill{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-  .pill.new{border-color:var(--accent);color:var(--accent)}
-  .pill.done{border-color:#3c4a33;color:#7f8f73}
-  .pill.email-failed{border-color:var(--warn);color:var(--warn)}
-  .quote h2{font-size:17px;margin:0 0 2px}
-  .quote a{color:var(--accent)}
-  .grid{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin:12px 0;font-size:14px}
-  .grid dt{color:var(--muted)}
-  .grid dd{margin:0;word-break:break-word}
-  .err{color:#ff9a8a;font-size:14px}
-  .hidden{display:none}
-  @media(max-width:520px){.grid{grid-template-columns:1fr}.grid dt{margin-top:6px}}
+  .spread{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .grow{flex:1}
+  .right{margin-left:auto}
+
+  /* shell */
+  .shell{display:flex;min-height:100vh}
+  .side{width:210px;flex:0 0 210px;background:var(--panel);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+  .brand{padding:18px 18px 8px;font-weight:800;letter-spacing:.02em}
+  .brand small{display:block;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-top:2px}
+  nav.tabs{display:flex;flex-direction:column;padding:8px;gap:2px}
+  nav.tabs a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;
+    color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+  nav.tabs a .ic{width:18px;text-align:center;opacity:.8}
+  nav.tabs a:hover{background:var(--panel2)}
+  nav.tabs a.active{background:var(--accent);color:var(--accent-ink)}
+  nav.tabs a .badge{margin-left:auto;background:var(--accent);color:var(--accent-ink);
+    font-size:11px;font-weight:800;padding:1px 7px;border-radius:999px}
+  nav.tabs a.active .badge{background:var(--accent-ink);color:var(--accent)}
+  .side-foot{margin-top:auto;padding:12px;border-top:1px solid var(--line);font-size:13px}
+  .main{flex:1;min-width:0}
+  .topbar{display:flex;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:rgba(10,13,11,.92);backdrop-filter:blur(6px);z-index:5}
+  .topbar h1{font-size:17px;margin:0}
+  .content{padding:22px;max-width:1100px}
+
+  /* cards, tables, tiles */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-bottom:16px}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .tile .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .tile .v{font-size:26px;font-weight:800;margin-top:6px;letter-spacing:-.01em}
+  .tile .s{font-size:12px;color:var(--muted);margin-top:2px}
+  .tile.accent{border-color:#3f5a1f}
+  .tile.accent .v{color:var(--accent)}
+
+  table.tbl{width:100%;border-collapse:collapse}
+  table.tbl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    padding:8px 10px;border-bottom:1px solid var(--line);font-weight:700}
+  table.tbl td{padding:11px 10px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+  table.tbl tr.clickable{cursor:pointer}
+  table.tbl tr.clickable:hover td{background:var(--panel2)}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  th.num{text-align:right}
+
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;
+    border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+  .pill.new,.pill.sent{border-color:var(--blue);color:var(--blue)}
+  .pill.draft{border-color:var(--line);color:var(--muted)}
+  .pill.accepted,.pill.paid,.pill.done,.pill.handled{border-color:var(--accent);color:var(--accent)}
+  .pill.declined,.pill.void,.pill.overdue,.pill.failed{border-color:var(--warn);color:var(--warn)}
+
+  /* drawer / modal */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;justify-content:flex-end}
+  .scrim.center{align-items:center;justify-content:center;padding:16px}
+  .drawer{width:min(560px,100%);height:100%;background:var(--bg);border-left:1px solid var(--line);
+    overflow-y:auto;padding:20px}
+  .modal{width:min(760px,100%);max-height:92vh;overflow-y:auto;background:var(--bg);
+    border:1px solid var(--line);border-radius:16px;padding:20px}
+  .drawer h2,.modal h2{margin:0 0 4px;font-size:19px}
+  dl.kv{display:grid;grid-template-columns:120px 1fr;gap:7px 12px;margin:14px 0;font-size:14px}
+  dl.kv dt{color:var(--muted)}
+  dl.kv dd{margin:0;word-break:break-word}
+
+  /* line item editor */
+  .items{width:100%;border-collapse:collapse;margin:6px 0}
+  .items th{font-size:11px;color:var(--muted);text-transform:uppercase;text-align:left;padding:4px 6px}
+  .items td{padding:3px 4px;vertical-align:top}
+  .items input{padding:8px 9px}
+  .items .num input{text-align:right}
+
+  /* toast */
+  #toasts{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;flex-direction:column;gap:8px}
+  .toast{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:12px 14px;max-width:340px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .toast.bad{border-left-color:var(--bad)}
+
+  @media(max-width:820px){
+    .shell{flex-direction:column}
+    .side{width:auto;flex:none;height:auto;position:static;flex-direction:row;flex-wrap:wrap;align-items:center}
+    .brand{padding:12px 14px}
+    nav.tabs{flex-direction:row;flex-wrap:wrap;flex:1}
+    .side-foot{margin:0;border:0;padding:8px 14px}
+    .side{border-right:0;border-bottom:1px solid var(--line)}
+    dl.kv{grid-template-columns:1fr}
+  }
  </style>
 </head>
 <body>
-<header>
-  <h1>Lanky Services — Quote admin</h1>
-  <div class="row">
-    <a class="muted" href="/admin-errors.html">Server errors</a>
-    <span id="who" class="muted"></span>
-    <button id="signout" class="ghost hidden">Sign out</button>
-  </div>
-</header>
 
-<div class="wrap">
-  <section id="authCard" class="card hidden" style="max-width:420px;margin:40px auto">
-    <h2 style="margin-top:0;font-size:18px">Sign in</h2>
-    <p class="muted">Admin access only. Use your approved business email.</p>
+<!-- Sign-in gate -->
+<div id="gate" class="scrim center hidden">
+  <div class="modal" style="max-width:420px">
+    <h2>Lanky Services — Admin</h2>
+    <p class="muted" style="margin-top:4px">Admin access only. Use your approved business email.</p>
     <label for="email">Email</label>
     <input id="email" type="email" autocomplete="username" />
     <label for="password">Password</label>
@@ -65,178 +137,48 @@
       <button id="forgot" class="ghost">Forgot password?</button>
     </div>
     <p id="authMsg" class="err" style="min-height:20px"></p>
-    <p class="muted">First time? Enter your email and a password, then tap “Create account”. Forgot yours? Enter your email and tap “Forgot password?” — we’ll email you a reset link.</p>
-  </section>
-
-
-  <section id="app" class="hidden">
-    <div class="card row" style="justify-content:space-between">
-      <div class="row">
-        <label for="filter" style="margin:0">Show</label>
-        <select id="filter" style="width:auto">
-          <option value="open">New / unhandled</option>
-          <option value="all">All quotes</option>
-          <option value="handled">Handled</option>
-        </select>
-      </div>
-      <button id="refresh" class="ghost">Refresh</button>
-    </div>
-    <p id="listMsg" class="muted"></p>
-    <div id="list"></div>
-  </section>
+    <p class="muted" style="font-size:13px">First time? Enter your email + a password, then “Create account”.</p>
+  </div>
 </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-
-const SUPABASE_URL = 'https://rstabgnhargvqwasplst.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_SsCPt15jfIBlV75qC3Wt7A_4mhanmSk';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-const $ = (id) => document.getElementById(id);
-const authCard = $('authCard'), app = $('app'), authMsg = $('authMsg');
-
-const esc = (s) => String(s ?? '').replace(/[<>&"]/g, (c) => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
-const fmt = (iso) => new Date(iso).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' });
-
-async function render() {
-  const { data: { user } } = await supabase.auth.getUser();
-  const session = user ? { user } : null;
-  if (!session) {
-    authCard.classList.remove('hidden');
-    app.classList.add('hidden');
-    $('signout').classList.add('hidden');
-    $('who').textContent = '';
-    return;
-  }
-  authCard.classList.add('hidden');
-  app.classList.remove('hidden');
-  $('signout').classList.remove('hidden');
-  $('who').textContent = session.user.email;
-  await load();
-}
-
-async function load() {
-  const mode = $('filter').value;
-  $('listMsg').textContent = 'Loading…';
-  let q = supabase.from('quote_requests').select('*').order('created_at', { ascending: false }).limit(200);
-  if (mode === 'open') q = q.eq('handled', false);
-  if (mode === 'handled') q = q.eq('handled', true);
-  const { data, error } = await q;
-
-  if (error) {
-    $('listMsg').innerHTML = '<span class="err">' + esc(error.message) +
-      ' — this account may not be on the approved admin list.</span>';
-    $('list').innerHTML = '';
-    return;
-  }
-  const failedEmails = data.filter((quote) => quote.notification_error && !quote.notified_at).length;
-  $('listMsg').textContent = data.length
-    ? data.length + ' quote' + (data.length === 1 ? '' : 's') + (failedEmails ? ' · ' + failedEmails + ' email alert' + (failedEmails === 1 ? '' : 's') + ' need attention' : '')
-    : 'No quotes here yet.';
-  $('list').innerHTML = data.map(card).join('');
-}
-
-function card(q) {
-  const rows = [
-    ['Phone', q.phone ? `<a href="tel:${esc(q.phone.replace(/\s/g,''))}">${esc(q.phone)}</a>` : null],
-    ['Email', q.email ? `<a href="mailto:${esc(q.email)}">${esc(q.email)}</a>` : null],
-    ['Suburb', q.suburb ? esc(q.suburb) : null],
-    ['Service', q.service ? esc(q.service) : null],
-    ['Details', q.message ? esc(q.message) : null],
-    ['From page', q.source_url ? `<a href="${esc(q.source_url)}" target="_blank" rel="noopener">${esc(q.source_url)}</a>` : null],
-  ].filter(([, v]) => v);
-
-  return `<article class="card quote">
-    <div class="row" style="justify-content:space-between;align-items:flex-start">
-      <div>
-        <h2>${esc(q.name)}</h2>
-        <div class="muted">${fmt(q.created_at)}</div>
-      </div>
-      <span class="pill ${q.handled ? 'done' : 'new'}">${q.handled ? 'Handled' : 'New'}</span>
+<!-- App shell -->
+<div id="app" class="shell hidden">
+  <aside class="side">
+    <div class="brand">Lanky Services<small>Admin portal</small></div>
+    <nav class="tabs" id="nav">
+      <a data-tab="dashboard" class="active"><span class="ic">▚</span>Dashboard</a>
+      <a data-tab="leads"><span class="ic">✉</span>Leads<span class="badge hidden" id="leadsBadge">0</span></a>
+      <a data-tab="quotes"><span class="ic">§</span>Quotes</a>
+      <a data-tab="invoices"><span class="ic">₳</span>Invoices</a>
+      <a data-tab="expenses"><span class="ic">⛽</span>Expenses</a>
+      <a data-tab="reports"><span class="ic">▤</span>Reports</a>
+      <a data-tab="settings"><span class="ic">⚙</span>Settings</a>
+    </nav>
+    <div class="side-foot">
+      <div class="muted" id="who" style="font-size:12px;word-break:break-all"></div>
+      <button id="signout" class="ghost sm" style="margin-top:8px">Sign out</button>
     </div>
-    ${q.notification_error && !q.notified_at ? '<p class="pill email-failed">Saved in admin · email alert failed</p>' : ''}
-    <dl class="grid">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
-    <label for="n-${q.id}">Internal notes</label>
-    <textarea id="n-${q.id}" rows="2">${esc(q.admin_notes || "")}</textarea>
-    <div class="row" style="margin-top:10px">
-      <button data-save="${q.id}" class="ghost">Save notes</button>
-      <button data-toggle="${q.id}" data-handled="${q.handled}">${q.handled ? 'Mark as new' : 'Mark handled'}</button>
+  </aside>
+
+  <main class="main">
+    <div class="topbar"><h1 id="pageTitle">Dashboard</h1>
+      <button id="refresh" class="ghost sm right">Refresh</button>
     </div>
-  </article>`;
-}
+    <div class="content">
+      <section id="tab-dashboard"></section>
+      <section id="tab-leads" class="hidden"></section>
+      <section id="tab-quotes" class="hidden"></section>
+      <section id="tab-invoices" class="hidden"></section>
+      <section id="tab-expenses" class="hidden"></section>
+      <section id="tab-reports" class="hidden"></section>
+      <section id="tab-settings" class="hidden"></section>
+    </div>
+  </main>
+</div>
 
-$('list').addEventListener('click', async (e) => {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  btn.disabled = true;
-  try {
-    if (btn.dataset.save) {
-      const notes = document.getElementById('n-' + btn.dataset.save).value;
-      const { error } = await supabase.from('quote_requests')
-        .update({ admin_notes: notes }).eq('id', btn.dataset.save);
-      btn.textContent = error ? 'Save failed' : 'Saved';
-      setTimeout(() => { btn.textContent = 'Save notes'; btn.disabled = false; }, 2000);
-      return;
-    }
-    if (btn.dataset.toggle) {
-      const next = btn.dataset.handled !== 'true';
-      const { error } = await supabase.from('quote_requests').update({ handled: next }).eq('id', btn.dataset.toggle);
-      if (error) { btn.textContent = 'Update failed'; btn.disabled = false; return; }
-      await load();
-    }
-  } catch (_) { btn.disabled = false; }
-});
+<div id="modalRoot"></div>
+<div id="toasts"></div>
 
-$('filter').addEventListener('change', load);
-$('refresh').addEventListener('click', async () => {
-  $('refresh').disabled = true;
-  await load();
-  $('refresh').disabled = false;
-});
-
-$('signin').addEventListener('click', async () => {
-  authMsg.textContent = '';
-  const { error } = await supabase.auth.signInWithPassword({
-    email: $('email').value.trim(), password: $('password').value,
-  });
-  if (error) authMsg.textContent = error.message; else render();
-});
-
-$('signup').addEventListener('click', async () => {
-  authMsg.textContent = '';
-  const { error } = await supabase.auth.signUp({
-    email: $('email').value.trim(), password: $('password').value,
-  });
-  if (error) { authMsg.textContent = error.message; return; }
-  const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: $('email').value.trim(), password: $('password').value,
-  });
-  if (signInError) authMsg.textContent = signInError.message; else render();
-});
-
-$('forgot').addEventListener('click', async () => {
-  authMsg.style.color = '';
-  authMsg.textContent = '';
-  const email = $('email').value.trim();
-  if (!email) { authMsg.textContent = 'Enter your email address first.'; return; }
-  $('forgot').disabled = true;
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/reset-password.html',
-  });
-  $('forgot').disabled = false;
-  if (error) { authMsg.textContent = error.message; return; }
-  authMsg.style.color = '#a3e635';
-  authMsg.textContent = 'Reset link sent — check your inbox (and spam folder).';
-});
-
-
-$('signout').addEventListener('click', async () => {
-  await supabase.auth.signOut();
-  render();
-});
-
-render();
-</script>
+<script type="module" src="/admin/app.js"></script>
 </body>
 </html>

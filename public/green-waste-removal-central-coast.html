@@ -26,6 +26,61 @@
   <script type="application/ld+json">
   { "@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://lankyservices.com.au/"},{"@type":"ListItem","position":2,"name":"Green Waste Removal Central Coast","item":"https://lankyservices.com.au/green-waste-removal-central-coast.html"}] }
   </script>
+  <!-- Global brand structured data (Organization + WebSite) -->
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://lankyservices.com.au/#organization",
+      "name": "Lanky Services",
+      "alternateName": "Lanky Services Rubbish Removal",
+      "url": "https://lankyservices.com.au/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://lankyservices.com.au/#logo",
+        "url": "https://lankyservices.com.au/images/logo-mark.svg",
+        "contentUrl": "https://lankyservices.com.au/images/logo-mark.svg",
+        "caption": "Lanky Services"
+      },
+      "image": "https://lankyservices.com.au/images/og-image.jpg",
+      "description": "Family-run rubbish removal and pickup & delivery service covering the Central Coast and Newcastle, NSW.",
+      "email": "matt@lankyservices.com.au",
+      "telephone": "+61439973051",
+      "identifier": { "@type": "PropertyValue", "propertyID": "ABN", "value": "75 340 334 049" },
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "NSW",
+        "addressLocality": "Central Coast",
+        "addressCountry": "AU"
+      },
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Central Coast, NSW" },
+        { "@type": "AdministrativeArea", "name": "Newcastle, NSW" }
+      ],
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "telephone": "+61439973051",
+        "email": "matt@lankyservices.com.au",
+        "areaServed": "AU",
+        "availableLanguage": "English"
+      }],
+      "sameAs": ["https://www.facebook.com/lankyservices/", "https://share.google/afnjZMAXEWwP5mnyd"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://lankyservices.com.au/#website",
+      "url": "https://lankyservices.com.au/",
+      "name": "Lanky Services",
+      "description": "Rubbish removal, junk pickup and delivery across the Central Coast and Newcastle, NSW.",
+      "inLanguage": "en-AU",
+      "publisher": { "@id": "https://lankyservices.com.au/#organization" }
+    }
+  ]
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -41,7 +96,7 @@
       </nav>
       <div class="nav-cta">
         <a class="nav-phone" href="tel:0439973051"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0439 973 051</a>
-        <a class="btn btn-accent" href="contact.html">Free Quote</a>
+        <a class="btn btn-accent" href="/quote.html">Free Quote</a>
         <a class="nav-social" href="https://www.facebook.com/lankyservices/" target="_blank" rel="noopener" aria-label="Follow Lanky Services on Facebook"><svg viewBox="0 0 24 24" fill="#1877F2"><path d="M13 22v-8h3l1-4h-4V8c0-1.1.3-2 2-2h2V2.1C18.7 2 17.5 2 16.3 2 13.5 2 11.5 3.7 11.5 6.9V10H8v4h3.5v8H13z"/></svg></a>
         <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span></button>
       </div>
@@ -55,7 +110,7 @@
         <h1>Green Waste Removal <span>Central Coast</span></h1>
         <p>Overgrown yard or a big prune left behind? We clear green and garden waste right across the Central Coast and recycle it where we can.</p>
         <div class="hero-actions" style="margin-top:26px;">
-          <a class="btn btn-accent btn-lg" href="contact.html">Get a free quote</a>
+          <a class="btn btn-accent btn-lg" href="/quote.html">Get a free quote</a>
           <a class="btn btn-ghost-light btn-lg" href="tel:0439973051">Call 0439 973 051</a>
         </div>
       </div>
@@ -71,7 +126,7 @@
 </div></section>
 <section class="dark" style="padding-top:0;"><div class="container" style="padding-top:clamp(40px,6vw,80px);">
   <div class="split">
-    <div class="reveal"><span class="eyebrow">Green waste removal near me</span><h2>Local, and we do the loading</h2><p class="lead">Searching for green waste removal near you on the Central Coast? That's us. We rake it, load it and haul it, so you keep your weekend and your back. Recycled and mulched wherever we can.</p><a class="btn btn-accent" href="contact.html" style="margin-top:10px;">Get a free green waste quote</a></div>
+    <div class="reveal"><span class="eyebrow">Green waste removal near me</span><h2>Local, and we do the loading</h2><p class="lead">Searching for green waste removal near you on the Central Coast? That's us. We rake it, load it and haul it, so you keep your weekend and your back. Recycled and mulched wherever we can.</p><a class="btn btn-accent" href="/quote.html" style="margin-top:10px;">Get a free green waste quote</a></div>
     <div class="reveal"><ul class="check-list">
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Branches, prunings, hedges &amp; clippings</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Whole-yard and storm clean-ups</li>
@@ -107,7 +162,7 @@
           <h2>Get your free quote today</h2>
           <p>Send a photo of your pile and we'll give you an upfront price. Servicing all of the Central Coast.</p>
           <div class="hero-actions">
-            <a class="btn btn-accent btn-lg" href="contact.html">Get my free quote</a>
+            <a class="btn btn-accent btn-lg" href="/quote.html">Get my free quote</a>
             <a class="btn btn-ghost-light btn-lg" href="tel:0439973051">Call 0439 973 051</a>
           </div>
         </div>
