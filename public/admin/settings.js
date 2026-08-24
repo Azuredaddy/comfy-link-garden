@@ -1,7 +1,7 @@
 // Settings — business details used on quotes/invoices, the GST toggle, bank
 // details for invoice payment, document number prefixes, and a placeholder for
 // the Xero connection (added later via Lovable).
-import { $, esc, supabase, toast } from './lib.js';
+import { $, esc, supabase, toast, apiFetch, xeroStatus } from './lib.js';
 
 export async function load() {
   const { data, error } = await supabase.from('business_settings').select('*').eq('id', 1).maybeSingle();
@@ -52,10 +52,9 @@ export async function load() {
       <p class="muted" style="font-size:12px;margin-top:6px">Numbers reset each financial year, e.g. Q-2026-001.</p>
     </div>
 
-    <div class="card">
+    <div class="card" id="xeroCard">
       <strong>Xero</strong>
-      <p class="muted" style="font-size:13px;margin-top:6px">Xero isn't connected yet. Add the Xero integration in Lovable, and quotes/invoices can then be pushed to Xero for your accounting. (The data model is already Xero-ready.)</p>
-      <span class="pill">Not connected</span>
+      <p class="muted" style="font-size:13px;margin-top:6px">Checking connection…</p>
     </div>
 
     <div class="card spread">
@@ -85,5 +84,74 @@ export async function load() {
     e.target.disabled = false;
     if (error) { toast(error.message, 'bad'); return; }
     toast('Settings saved');
+  });
+
+  handleXeroReturn();
+  await renderXero();
+}
+
+// Show a toast for the ?xero=... result after returning from Xero consent.
+function handleXeroReturn() {
+  const p = new URLSearchParams(location.search);
+  const x = p.get('xero');
+  if (!x) return;
+  const msg = {
+    connected: ['Xero connected ✓', 'ok'],
+    denied: ['Xero connection was cancelled.', 'bad'],
+    state: ['Xero connection expired — please try again.', 'bad'],
+    error: ['Xero connection failed — check your app settings.', 'bad'],
+  }[x];
+  if (msg) toast(msg[0], msg[1]);
+  history.replaceState(null, '', location.pathname);
+}
+
+async function renderXero() {
+  const card = $('xeroCard');
+  const s = await xeroStatus(true);
+
+  if (!s.configured) {
+    card.innerHTML = `<strong>Xero</strong>
+      <p class="muted" style="font-size:13px;margin-top:6px">To connect Xero, add these secrets in Lovable, then reload:</p>
+      <ul class="muted" style="font-size:13px;margin:6px 0 0 18px">
+        <li><code>XERO_CLIENT_ID</code></li><li><code>XERO_CLIENT_SECRET</code></li>
+        <li><code>XERO_REDIRECT_URI</code> — set to <code>${esc(location.origin)}/api/admin/xero/callback</code></li>
+      </ul>
+      <span class="pill" style="margin-top:10px;display:inline-block">Not configured</span>`;
+    return;
+  }
+
+  if (!s.connected) {
+    card.innerHTML = `<strong>Xero</strong>
+      <p class="muted" style="font-size:13px;margin-top:6px">Connect your Xero organisation to import your business details and push quotes &amp; invoices.</p>
+      <button id="xConnect" style="margin-top:8px">Connect Xero</button>`;
+    $('xConnect').addEventListener('click', async (e) => {
+      e.target.disabled = true; e.target.textContent = 'Redirecting…';
+      try { const { url } = await apiFetch('/api/admin/xero/authorize-url'); location.href = url; }
+      catch (err) { toast(err.message, 'bad'); e.target.disabled = false; e.target.textContent = 'Connect Xero'; }
+    });
+    return;
+  }
+
+  card.innerHTML = `<div class="spread"><strong>Xero</strong><span class="pill paid">Connected</span></div>
+    <p class="muted" style="font-size:13px;margin-top:6px">Organisation: <strong style="color:var(--ink)">${esc(s.tenant_name || '—')}</strong></p>
+    <div class="row" style="margin-top:8px">
+      <button id="xImport" class="subtle">Import business details from Xero</button>
+      <button id="xDisconnect" class="danger">Disconnect</button>
+    </div>
+    <p class="muted" style="font-size:12px;margin-top:8px">Once connected, open a quote/invoice and use “Push to Xero”.</p>`;
+
+  $('xImport').addEventListener('click', async (e) => {
+    e.target.disabled = true; e.target.textContent = 'Importing…';
+    try {
+      await apiFetch('/api/admin/xero/sync-settings');
+      toast('Imported from Xero');
+      load();
+    } catch (err) { toast(err.message, 'bad'); e.target.disabled = false; e.target.textContent = 'Import business details from Xero'; }
+  });
+  $('xDisconnect').addEventListener('click', async (e) => {
+    if (!window.confirm('Disconnect Xero?')) return;
+    e.target.disabled = true;
+    try { await apiFetch('/api/admin/xero/disconnect'); toast('Xero disconnected'); renderXero(); }
+    catch (err) { toast(err.message, 'bad'); e.target.disabled = false; }
   });
 }

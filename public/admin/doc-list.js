@@ -1,7 +1,9 @@
 // Shared list view for quotes and invoices: filter, table with clickable rows,
 // inline status control, and quick Send / PDF actions.
-import { $, el, esc, money, fmtDate, supabase, toast, apiFetch, apiOpenPdf } from './lib.js';
+import { $, el, esc, money, fmtDate, supabase, toast, apiFetch, apiOpenPdf, xeroStatus } from './lib.js';
 import { openDocEditor } from './doc-form.js';
+
+let xeroOn = false;
 
 const STATUSES = {
   quote: ['draft', 'sent', 'accepted', 'declined', 'expired', 'invoiced'],
@@ -35,6 +37,7 @@ export async function loadDocList(kind) {
   const refresh = () => renderRows(kind, table, isInvoice);
   $('dlFilter').addEventListener('change', refresh);
   $('dlNew').addEventListener('click', () => openDocEditor(kind, { onSaved: refresh }));
+  xeroOn = (await xeroStatus()).connected === true;
   await refresh();
 }
 
@@ -99,6 +102,22 @@ async function renderRows(kind, table, isInvoice) {
       } catch (err) { toast(err.message, 'bad'); sendBtn.disabled = false; sendBtn.textContent = 'Send'; }
     });
     actions.append(pdfBtn, sendBtn);
+
+    if (xeroOn) {
+      const linked = kind === 'invoice' ? d.xero_invoice_id : d.xero_quote_id;
+      const xBtn = el(`<button class="ghost sm" style="margin-left:6px">${linked ? '✓ Xero' : 'Push to Xero'}</button>`);
+      xBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (linked && !window.confirm(`Already in Xero. Push ${kind} again?`)) return;
+        xBtn.disabled = true; xBtn.textContent = '…';
+        try {
+          const res = await apiFetch(`/api/admin/xero/push-${kind}`, { body: { id: d.id } });
+          toast(`In Xero as ${res.xero_number}` + (res.emailed ? ' · emailed' : ''));
+          refresh();
+        } catch (err) { toast(err.message, 'bad'); xBtn.disabled = false; xBtn.textContent = linked ? '✓ Xero' : 'Push to Xero'; }
+      });
+      actions.append(xBtn);
+    }
 
     tr.addEventListener('click', () => openDocEditor(kind, { id: d.id, onSaved: refresh }));
     rows.appendChild(tr);

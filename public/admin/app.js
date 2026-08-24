@@ -13,7 +13,8 @@ const TITLES = {
   dashboard: 'Dashboard', leads: 'Leads', quotes: 'Quotes', invoices: 'Invoices',
   expenses: 'Expenses', reports: 'Reports & tax', settings: 'Settings',
 };
-let current = 'dashboard';
+const _tabParam = new URLSearchParams(location.search).get('tab');
+let current = (_tabParam && TABS[_tabParam]) ? _tabParam : 'dashboard';
 
 function show(tab) {
   current = tab;

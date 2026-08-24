@@ -500,6 +500,45 @@ export type Database = {
         }
         Relationships: []
       }
+      xero_connection: {
+        Row: {
+          id: number
+          access_token: string | null
+          refresh_token: string | null
+          expires_at: string | null
+          tenant_id: string | null
+          tenant_name: string | null
+          connected_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          access_token?: string | null
+          refresh_token?: string | null
+          expires_at?: string | null
+          tenant_id?: string | null
+          tenant_name?: string | null
+          connected_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          access_token?: string | null
+          refresh_token?: string | null
+          expires_at?: string | null
+          tenant_id?: string | null
+          tenant_name?: string | null
+          connected_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      xero_oauth_state: {
+        Row: { state: string; created_at: string }
+        Insert: { state: string; created_at?: string }
+        Update: { state?: string; created_at?: string }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
