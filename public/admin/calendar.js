@@ -1,6 +1,6 @@
 // Jobs tab — a month calendar of booked work (word-of-mouth, returning
 // clients, etc.) plus an upcoming list. Click a day to add, a job to edit.
-import { $, el, esc, money, fmtDate, supabase, toast, openOverlay, todayISO } from './lib.js';
+import { $, el, esc, money, fmtDate, supabase, toast, openOverlay, todayISO, apiFetch } from './lib.js';
 
 const SOURCES = ['Word of mouth', 'Returning client', 'Website lead', 'Airtasker', 'Phone', 'Other'];
 const STATUSES = ['booked', 'completed', 'cancelled'];
@@ -19,6 +19,7 @@ export async function load() {
         <button class="ghost sm" id="calNext">›</button>
         <h2 id="calLabel"></h2>
         <button class="subtle sm" id="calToday">Today</button>
+        <button id="calRemind" class="ghost sm">✉ Email tomorrow's jobs</button>
         <button id="calAdd" class="right">＋ Add job</button>
       </div>
       <div class="cal" id="calDows">${DOW.map((d) => `<div class="dow">${d}</div>`).join('')}</div>
@@ -33,6 +34,14 @@ export async function load() {
   $('calNext').addEventListener('click', () => { vm++; if (vm > 11) { vm = 0; vy++; } render(); });
   $('calToday').addEventListener('click', () => { vy = now.getFullYear(); vm = now.getMonth(); render(); });
   $('calAdd').addEventListener('click', () => openJob(null, todayISO()));
+  $('calRemind').addEventListener('click', async (e) => {
+    e.target.disabled = true;
+    try {
+      const r = await apiFetch('/api/cron/job-reminders', { method: 'GET' });
+      toast(r.jobs ? `${r.jobs} job(s) tomorrow — ${r.emailed ? 'reminder emailed' : 'email failed'}` : 'No booked jobs tomorrow.');
+    } catch (err) { toast(err.message, 'bad'); }
+    e.target.disabled = false;
+  });
   await render();
 }
 
