@@ -1,7 +1,7 @@
 // Income tab — "other" income (Airtasker, cash jobs, etc.) added manually or
 // imported from an Excel/CSV file. Feeds the Dashboard and Reports totals.
 import {
-  $, el, esc, money, fmtDate, supabase, toast, todayISO,
+  $, el, esc, money, fmtDate, supabase, toast, todayISO, openOverlay,
   currentFyStart, fyRange, monthRange,
 } from './lib.js';
 
@@ -79,6 +79,8 @@ const AMOUNT_KEYS = ['amount', 'income', 'total', 'earnings', 'earning', 'value'
   'task amount', 'task amount ex gst', 'transaction amount', 'transaction amount (task unrelated)', 'gross', 'gross amount', 'amount paid'];
 const SOURCE_KEYS = ['source', 'from', 'platform', 'client', 'type', 'category', 'account', 'statement descriptor', 'transaction type'];
 const DESC_KEYS = ['description', 'details', 'note', 'notes', 'job', 'task', 'title', 'memo', 'task name', 'invoice number'];
+const FEE_KEYS = ['service fee', 'fees', 'airtasker fee', 'commission', 'fee'];
+const FEE_GST_KEYS = ['fees gst', 'service fee gst', 'fee gst'];
 
 function pick(row, keys) {
   for (const k of Object.keys(row)) if (keys.includes(norm(k))) return row[k];
@@ -98,6 +100,7 @@ function toAmount(v) {
 }
 
 let parsedRows = [];
+let parsedFees = [];
 async function handleFile(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -118,6 +121,16 @@ async function handleFile(e) {
       amount: toAmount(pick(r, AMOUNT_KEYS)),
     })).filter((r) => r.amount > 0);
 
+    // Service/commission fees → claimable expenses (deductible).
+    parsedFees = raw.map((r) => ({
+      expense_date: toISO(pick(r, DATE_KEYS)) || todayISO(),
+      category: looksAirtasker ? 'Airtasker fees' : 'Platform fees',
+      description: (pick(r, DESC_KEYS) || 'Service fee').toString().trim() + ' — fee',
+      supplier: looksAirtasker ? 'Airtasker' : (pick(r, SOURCE_KEYS) || null),
+      amount: Math.abs(toAmount(pick(r, FEE_KEYS))),
+      gst_amount: toAmount(pick(r, FEE_GST_KEYS)) || null,
+    })).filter((r) => r.amount > 0);
+
     if (!parsedRows.length) {
       $('inFileMsg').textContent = '';
       $('inPreview').innerHTML = `<p class="err" style="font-size:13px">Couldn't find an amount column. Columns found: ${esc(Object.keys(raw[0]).join(', '))}. Rename one to “Amount” and try again.</p>`;
@@ -131,6 +144,8 @@ async function handleFile(e) {
         <thead><tr><th>Date</th><th>Source</th><th>Description</th><th class="num">Amount</th></tr></thead>
         <tbody>${parsedRows.slice(0, 5).map((r) => `<tr><td>${esc(fmtDate(r.income_date))}</td><td>${esc(r.source || '—')}</td><td>${esc(r.description || '—')}</td><td class="num">${money(r.amount)}</td></tr>`).join('')}</tbody>
       </table>
+      ${parsedFees.length ? `<label style="display:flex;align-items:center;gap:8px;margin-top:12px;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">
+        <input type="checkbox" id="inFees" checked style="width:auto"> Also record ${parsedFees.length} service fee${parsedFees.length === 1 ? '' : 's'} (${money(parsedFees.reduce((s, f) => s + f.amount, 0))}) as claimable expenses</label>` : ''}
       <button id="inImport" style="margin-top:12px">Import ${parsedRows.length} rows (${money(total)})</button>`;
     $('inImport').addEventListener('click', doImport);
   } catch (err) {
@@ -145,8 +160,15 @@ async function doImport() {
   const btn = $('inImport'); btn.disabled = true; btn.textContent = 'Importing…';
   const { error } = await supabase.from('other_income').insert(parsedRows);
   if (error) { toast(error.message, 'bad'); btn.disabled = false; btn.textContent = 'Import'; return; }
-  toast(`Imported ${parsedRows.length} income rows`);
-  parsedRows = []; $('inFile').value = ''; $('inFileMsg').textContent = ''; $('inPreview').innerHTML = '';
+
+  let feeMsg = '';
+  const feesBox = $('inFees');
+  if (feesBox && feesBox.checked && parsedFees.length) {
+    const { error: fe } = await supabase.from('expenses').insert(parsedFees);
+    feeMsg = fe ? ' (fees failed: ' + fe.message + ')' : ` + ${parsedFees.length} fees as expenses`;
+  }
+  toast(`Imported ${parsedRows.length} income rows${feeMsg}`);
+  parsedRows = []; parsedFees = []; $('inFile').value = ''; $('inFileMsg').textContent = ''; $('inPreview').innerHTML = '';
   refresh();
 }
 
@@ -171,14 +193,47 @@ async function refresh() {
       <td>${esc(r.description || '—')}</td>
       <td class="num">${money(r.amount)}</td>
       <td class="num"></td></tr>`);
-    const del = el('<button class="danger sm">Delete</button>');
+    const edit = el('<button class="ghost sm">Edit</button>');
+    edit.addEventListener('click', () => openEdit(r));
+    const del = el('<button class="danger sm" style="margin-left:6px">Delete</button>');
     del.addEventListener('click', async () => {
       if (!window.confirm('Delete this income entry?')) return;
       const { error } = await supabase.from('other_income').delete().eq('id', r.id);
       if (error) { toast(error.message, 'bad'); return; }
       toast('Deleted'); refresh();
     });
-    tr.children[4].appendChild(del);
+    tr.children[4].append(edit, del);
     rows.appendChild(tr);
   }
+}
+
+function openEdit(r) {
+  const view = el(`<div>
+    <h2>Edit income</h2>
+    <div class="row">
+      <div style="width:160px"><label>Date</label><input id="ieDate" type="date" value="${esc(r.income_date)}"></div>
+      <div class="grow"><label>Source</label><input id="ieSource" value="${esc(r.source || '')}"></div>
+      <div style="width:130px"><label>Amount $</label><input id="ieAmount" inputmode="decimal" value="${r.amount ?? ''}"></div>
+    </div>
+    <label>Description</label><input id="ieDesc" value="${esc(r.description || '')}">
+    <div class="row" style="margin-top:16px">
+      <button id="ieSave">Save changes</button>
+      <button id="ieCancel" class="ghost">Close</button>
+    </div>
+  </div>`);
+  const close = openOverlay(view, 'modal', { dismissible: false });
+  view.querySelector('#ieCancel').addEventListener('click', () => close());
+  view.querySelector('#ieSave').addEventListener('click', async (ev) => {
+    const amount = parseFloat(view.querySelector('#ieAmount').value);
+    if (!amount || amount <= 0) { toast('Enter an amount.', 'bad'); return; }
+    ev.target.disabled = true;
+    const { error } = await supabase.from('other_income').update({
+      income_date: view.querySelector('#ieDate').value || todayISO(),
+      source: view.querySelector('#ieSource').value.trim() || null,
+      description: view.querySelector('#ieDesc').value.trim() || null,
+      amount,
+    }).eq('id', r.id);
+    if (error) { toast(error.message, 'bad'); ev.target.disabled = false; return; }
+    toast('Income updated'); close(); refresh();
+  });
 }
