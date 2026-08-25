@@ -14,6 +14,7 @@ export async function unhandledCount() {
 export async function load() {
   const root = $('tab-leads');
   root.innerHTML = `
+    <div class="banner">📞 You always ring customers to book them in — tap a phone number in a lead to call straight away.</div>
     <div class="card spread">
       <div class="row">
         <label style="margin:0">Show</label>

@@ -23,6 +23,7 @@ function show(tab) {
   }
   document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.tab === tab));
   $('pageTitle').textContent = TITLES[tab];
+  const side = $('side'); if (side) side.classList.remove('open');
   try { TABS[tab].load(); } catch (e) { console.error(e); toast('Failed to load ' + tab, 'bad'); }
 }
 
@@ -37,6 +38,7 @@ async function render() {
   $('gate').classList.add('hidden');
   $('app').classList.remove('hidden');
   $('who').textContent = user.email;
+  const av = $('avatar'); if (av) av.textContent = (user.email || 'M').trim()[0].toUpperCase();
   show(current);
   // update the Leads badge in the background
   leads.unhandledCount().then((n) => {
@@ -53,6 +55,8 @@ $('nav').addEventListener('click', (e) => {
   show(a.dataset.tab);
 });
 $('refresh').addEventListener('click', () => render());
+const menuBtn = $('menuBtn');
+if (menuBtn) menuBtn.addEventListener('click', () => $('side').classList.toggle('open'));
 
 // ---- auth actions (ported from the original admin page) -------------------
 const authMsg = $('authMsg');
