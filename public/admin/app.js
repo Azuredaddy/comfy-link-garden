@@ -1,5 +1,5 @@
 // Admin portal shell: auth gate, tab navigation, and per-tab lazy loading.
-import { $, supabase, toast } from './lib.js';
+import { $, el, esc, supabase, toast, openOverlay } from './lib.js';
 import * as dashboard from './dashboard.js';
 import * as leads from './leads.js';
 import * as jobs from './calendar.js';
@@ -42,7 +42,14 @@ async function render() {
   $('gate').classList.add('hidden');
   $('app').classList.remove('hidden');
   $('who').textContent = user.email;
-  const av = $('avatar'); if (av) av.textContent = (user.email || 'M').trim()[0].toUpperCase();
+  paintAvatar(user);
+  const av = $('avatar');
+  if (av && !av.dataset.wired) {
+    av.dataset.wired = '1';
+    av.style.cursor = 'pointer';
+    av.title = 'Edit your profile';
+    av.addEventListener('click', () => openProfile());
+  }
   show(current);
   // update the Leads badge in the background
   leads.unhandledCount().then((n) => {
@@ -89,6 +96,70 @@ $('forgot').addEventListener('click', async () => {
   authMsg.textContent = 'Reset link sent — check your inbox (and spam).';
 });
 $('signout').addEventListener('click', async () => { await supabase.auth.signOut(); render(); });
+
+function paintAvatar(user) {
+  const av = $('avatar'); if (!av) return;
+  const url = user?.user_metadata?.avatar_url;
+  const name = user?.user_metadata?.display_name || user?.email || 'M';
+  if (url) av.innerHTML = `<img src="${esc(url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  else av.textContent = name.trim()[0].toUpperCase();
+}
+
+async function openProfile() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const meta = user.user_metadata || {};
+  const view = el(`<div>
+    <h2>Your profile</h2>
+    <div style="display:flex;align-items:center;gap:14px;margin:14px 0">
+      <div id="pfAv" style="width:64px;height:64px;border-radius:50%;background:var(--raised);display:grid;place-items:center;overflow:hidden;color:var(--lime);font-family:var(--f-display);font-weight:700;font-size:24px"></div>
+      <div class="grow"><label style="margin-top:0">Profile picture</label><input id="pfFile" type="file" accept="image/*"></div>
+    </div>
+    <label>Display name</label><input id="pfName" value="${esc(meta.display_name || '')}" placeholder="e.g. Matt">
+    <label>Email</label><input value="${esc(user.email || '')}" disabled>
+    <button id="pfSave" style="margin-top:14px">Save profile</button>
+    <div style="height:1px;background:var(--line);margin:22px 0 14px"></div>
+    <h3 style="font-size:15px">Change password</h3>
+    <label>New password</label><input id="pfPw" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+    <label>Confirm password</label><input id="pfPw2" type="password" autocomplete="new-password">
+    <div class="row" style="margin-top:12px"><button id="pfPwSave" class="subtle">Update password</button><button id="pfClose" class="ghost right">Close</button></div>
+  </div>`);
+  const close = openOverlay(view, 'modal', { dismissible: false });
+  const pav = view.querySelector('#pfAv');
+  const setPrev = (url, initial) => { pav.innerHTML = url ? `<img src="${url}" style="width:100%;height:100%;object-fit:cover">` : esc(initial); };
+  setPrev(meta.avatar_url, (meta.display_name || user.email || 'M').trim()[0].toUpperCase());
+  view.querySelector('#pfClose').addEventListener('click', () => close());
+  view.querySelector('#pfFile').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) setPrev(URL.createObjectURL(f)); });
+
+  view.querySelector('#pfSave').addEventListener('click', async (e) => {
+    e.target.disabled = true;
+    try {
+      let avatar_url = meta.avatar_url;
+      const f = view.querySelector('#pfFile').files[0];
+      if (f) {
+        const ext = (f.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = `${user.id}-${Date.now()}.${ext}`;
+        const up = await supabase.storage.from('avatars').upload(path, f, { upsert: true });
+        if (up.error) throw up.error;
+        avatar_url = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+      }
+      const { error } = await supabase.auth.updateUser({ data: { display_name: view.querySelector('#pfName').value.trim(), avatar_url } });
+      if (error) throw error;
+      toast('Profile saved'); close();
+      const { data: { user: u2 } } = await supabase.auth.getUser(); paintAvatar(u2);
+    } catch (err) { toast(err.message, 'bad'); e.target.disabled = false; }
+  });
+
+  view.querySelector('#pfPwSave').addEventListener('click', async (e) => {
+    const pw = view.querySelector('#pfPw').value, pw2 = view.querySelector('#pfPw2').value;
+    if (pw.length < 6) { toast('Password must be at least 6 characters.', 'bad'); return; }
+    if (pw !== pw2) { toast('Passwords do not match.', 'bad'); return; }
+    e.target.disabled = true;
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    if (error) { toast(error.message, 'bad'); e.target.disabled = false; return; }
+    toast('Password updated'); view.querySelector('#pfPw').value = ''; view.querySelector('#pfPw2').value = ''; e.target.disabled = false;
+  });
+}
 
 // expose a couple of cross-tab helpers used by dashboard shortcuts
 window.LANKY = { go: show };
