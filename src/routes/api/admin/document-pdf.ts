@@ -32,13 +32,13 @@ export const Route = createFileRoute("/api/admin/document-pdf")({
         const { data: items } = await supabaseAdmin
           .from(itemsTable)
           .select("*")
-          .eq(fk, id)
+          .eq(fk as never, id)
           .order("position", { ascending: true });
 
         const settings = await loadSettings();
         const bytes = await renderDocumentPdf(type, doc as never, (items ?? []) as never, settings);
 
-        return new Response(new Blob([bytes], { type: "application/pdf" }), {
+        return new Response(new Blob([bytes as unknown as BlobPart], { type: "application/pdf" }), {
           headers: {
             "content-type": "application/pdf",
             "content-disposition": `inline; filename="${type}-${doc.number || id}.pdf"`,

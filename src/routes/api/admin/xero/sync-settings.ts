@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/admin/xero/sync-settings")({
           // only write fields Xero actually returned
           const patch: Record<string, unknown> = {};
           for (const [k, v] of Object.entries(details)) if (v !== undefined && v !== null && v !== "") patch[k] = v;
-          if (Object.keys(patch).length) await supabaseAdmin.from("business_settings").update(patch).eq("id", 1);
+          if (Object.keys(patch).length) await supabaseAdmin.from("business_settings").update(patch as never).eq("id", 1);
           return Response.json({ ok: true, details });
         } catch (error) {
           return Response.json({ ok: false, message: error instanceof Error ? error.message : "Xero error" }, { status: 400 });

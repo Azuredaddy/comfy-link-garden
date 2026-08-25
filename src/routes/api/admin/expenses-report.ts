@@ -37,7 +37,7 @@ export const Route = createFileRoute("/api/admin/expenses-report")({
         const settings = await loadSettings();
         const bytes = await renderExpensesReportPdf(fy, (expenses ?? []) as never, settings);
 
-        return new Response(new Blob([bytes], { type: "application/pdf" }), {
+        return new Response(new Blob([bytes as unknown as BlobPart], { type: "application/pdf" }), {
           headers: {
             "content-type": "application/pdf",
             "content-disposition": `inline; filename="lanky-expenses-FY${fy}-${fy + 1}.pdf"`,

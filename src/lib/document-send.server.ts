@@ -37,7 +37,7 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
   const { data: items } = await supabaseAdmin
     .from(itemsTable)
     .select("*")
-    .eq(fk, id)
+    .eq(fk as never, id)
     .order("position", { ascending: true });
 
   // --- render + host the PDF ------------------------------------------------
@@ -47,9 +47,14 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     const key = `${kind}/${doc.number || id}-${crypto.randomUUID().slice(0, 8)}.pdf`;
     const { error: upErr } = await supabaseAdmin.storage
       .from("documents")
-      .upload(key, new Blob([bytes], { type: "application/pdf" }), { contentType: "application/pdf", upsert: true });
+      .upload(key, new Blob([bytes as unknown as BlobPart], { type: "application/pdf" }), { contentType: "application/pdf", upsert: true });
     if (upErr) throw upErr;
-    url = supabaseAdmin.storage.from("documents").getPublicUrl(key).data.publicUrl;
+    // `documents` is a private bucket — hand out a long-lived signed link.
+    const { data: signed, error: signErr } = await supabaseAdmin.storage
+      .from("documents")
+      .createSignedUrl(key, 60 * 60 * 24 * 365);
+    if (signErr || !signed?.signedUrl) throw signErr ?? new Error("Could not create a document link.");
+    url = signed.signedUrl;
   } catch (error) {
     await logServerError({ source: `api:${kind}:pdf`, error, status: 500, context: { id }, ...meta });
     return Response.json({ ok: false, message: "Could not generate the PDF. Please try again." }, { status: 500 });
@@ -69,7 +74,8 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     [kind === "quote" ? "Quote number" : "Invoice number", doc.number ?? "—"],
     ["Total", "$" + Number(doc.total || 0).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })],
   ];
-  if (kind === "invoice" && doc.due_date) rows.push(["Due date", new Date(doc.due_date + "T00:00:00").toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" })]);
+  const dueDate = (doc as { due_date?: string | null }).due_date;
+  if (kind === "invoice" && dueDate) rows.push(["Due date", new Date(dueDate + "T00:00:00").toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" })]);
 
   const { html, text } = brandedEmail({
     businessName: settings.business_name,
