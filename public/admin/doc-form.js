@@ -116,6 +116,7 @@ export async function openDocEditor(kind, opts = {}) {
       <button id="dSend" class="subtle">Save &amp; send</button>
       ${doc.id ? '<button id="dPdf" class="ghost">Preview PDF</button>' : ''}
       ${(!isInvoice && doc.id) ? '<button id="dConvert" class="ghost">Convert to invoice</button>' : ''}
+      ${(isInvoice && doc.id) ? '<button id="dPayLink" class="ghost">Copy pay link</button>' : ''}
       ${doc.id ? '<button id="dDelete" class="danger" style="margin-left:auto">Delete</button>' : ''}
     </div>
     <p class="muted" style="font-size:12px;margin-top:8px">“Save &amp; send” emails the customer a link to the ${isInvoice ? 'invoice' : 'quote'} PDF.</p>
@@ -272,6 +273,13 @@ export async function openDocEditor(kind, opts = {}) {
   if (pdfBtn) pdfBtn.addEventListener('click', async () => {
     try { await apiOpenPdf(`/api/admin/document-pdf?type=${kind}&id=${doc.id}`, `${kind}-${doc.number || doc.id}.pdf`); }
     catch (err) { toast(err.message, 'bad'); }
+  });
+
+  const payLinkBtn = view.querySelector('#dPayLink');
+  if (payLinkBtn) payLinkBtn.addEventListener('click', async () => {
+    const link = `${location.origin}/pay?invoice=${doc.id}`;
+    try { await navigator.clipboard.writeText(link); toast('Payment link copied — text or email it to the customer'); }
+    catch { window.prompt('Copy this payment link:', link); }
   });
 
   const convBtn = view.querySelector('#dConvert');

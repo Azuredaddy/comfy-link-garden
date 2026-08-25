@@ -77,12 +77,20 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
   const dueDate = (doc as { due_date?: string | null }).due_date;
   if (kind === "invoice" && dueDate) rows.push(["Due date", new Date(dueDate + "T00:00:00").toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" })]);
 
+  // Offer online card payment on invoices when Stripe is configured.
+  const { isConfigured: stripeOn, siteUrl } = await import("./stripe.server");
+  const canPay = kind === "invoice" && stripeOn();
+  const payUrl = `${siteUrl(new URL(request.url).origin)}/pay?invoice=${id}`;
+
   const { html, text } = brandedEmail({
     businessName: settings.business_name,
     heading: kind === "quote" ? "Your quote from Lanky Services" : "Your invoice from Lanky Services",
     intro: `Hi ${doc.customer_name}, ${kind === "quote" ? "thanks for the opportunity — here's your quote." : "please find your invoice below."}`,
     rows,
-    button: { label: kind === "quote" ? "View your quote (PDF)" : "View your invoice (PDF)", url },
+    button: canPay
+      ? { label: "Pay this invoice", url: payUrl }
+      : { label: kind === "quote" ? "View your quote (PDF)" : "View your invoice (PDF)", url },
+    button2: canPay ? { label: "View invoice (PDF)", url } : undefined,
     contact: { phone: settings.phone, email: settings.email },
   });
 
