@@ -160,6 +160,7 @@ export async function fetchOrgDetails() {
 type DocLike = {
   customer_name: string; customer_email?: string | null; customer_phone?: string | null;
   number?: string | null; issue_date: string; due_date?: string | null; expiry_date?: string | null;
+  discount_percent?: number | null;
 };
 type ItemLike = { description?: string | null; quantity: number; unit_price: number };
 
@@ -190,7 +191,7 @@ async function ensureContact(doc: DocLike): Promise<string> {
   return id;
 }
 
-function lineItems(items: ItemLike[], gst: boolean) {
+function lineItems(items: ItemLike[], gst: boolean, discountPercent = 0) {
   const code = process.env["XERO_SALES_ACCOUNT_CODE"] || "200";
   return items.map((it) => ({
     Description: (it.description || ".").slice(0, 3900),
@@ -198,6 +199,7 @@ function lineItems(items: ItemLike[], gst: boolean) {
     UnitAmount: Number(it.unit_price) || 0,
     AccountCode: code,
     TaxType: gst ? "OUTPUT" : "NONE",
+    ...(discountPercent > 0 ? { DiscountRate: discountPercent } : {}),
   }));
 }
 
@@ -215,7 +217,7 @@ export async function pushInvoice(doc: DocLike, items: ItemLike[], gstRegistered
         Reference: doc.number || undefined,
         Status: "AUTHORISED",
         LineAmountTypes: gstRegistered ? "Exclusive" : "NoTax",
-        LineItems: lineItems(items, gstRegistered),
+        LineItems: lineItems(items, gstRegistered, Number(doc.discount_percent) || 0),
       }],
     },
   });
@@ -242,7 +244,7 @@ export async function pushQuote(doc: DocLike, items: ItemLike[], gstRegistered: 
         Reference: doc.number || undefined,
         Status: "SENT",
         LineAmountTypes: gstRegistered ? "Exclusive" : "NoTax",
-        LineItems: lineItems(items, gstRegistered),
+        LineItems: lineItems(items, gstRegistered, Number(doc.discount_percent) || 0),
       }],
     },
   });

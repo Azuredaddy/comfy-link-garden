@@ -4,14 +4,15 @@ import * as dashboard from './dashboard.js';
 import * as leads from './leads.js';
 import * as quotes from './quotes.js';
 import * as invoices from './invoices.js';
+import * as products from './products.js';
 import * as expenses from './expenses.js';
 import * as reports from './reports.js';
 import * as settings from './settings.js';
 
-const TABS = { dashboard, leads, quotes, invoices, expenses, reports, settings };
+const TABS = { dashboard, leads, quotes, invoices, products, expenses, reports, settings };
 const TITLES = {
   dashboard: 'Dashboard', leads: 'Leads', quotes: 'Quotes', invoices: 'Invoices',
-  expenses: 'Expenses', reports: 'Reports & tax', settings: 'Settings',
+  products: 'Price list', expenses: 'Expenses', reports: 'Reports & tax', settings: 'Settings',
 };
 const _tabParam = new URLSearchParams(location.search).get('tab');
 let current = (_tabParam && TABS[_tabParam]) ? _tabParam : 'dashboard';
