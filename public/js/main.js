@@ -109,7 +109,8 @@
         service: val(form, 'service').slice(0, 100) || null,
         message: val(form, 'message').slice(0, 2000) || null,
         source_url: location.href.slice(0, 500),
-        website: ''
+        website: '',
+        marketing_opt_in: !!(form.querySelector('[name="marketing_opt_in"]') && form.querySelector('[name="marketing_opt_in"]').checked)
       };
       form.dataset.submissionKey = payload.submission_key;
 
