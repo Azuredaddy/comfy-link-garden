@@ -22,6 +22,10 @@ export async function load() {
       </div>
     </div>
     <div class="card">
+      <div class="card-head"><h2>Upcoming jobs</h2><a onclick="LANKY.go('jobs')">Calendar →</a></div>
+      <div id="dashJobs"></div>
+    </div>
+    <div class="card">
       <div class="card-head"><h2>Recent paid invoices</h2></div>
       <div id="dashRecent"></div>
     </div>
@@ -41,7 +45,7 @@ export async function load() {
   const twelveAgo = new Date(); twelveAgo.setMonth(twelveAgo.getMonth() - 11); twelveAgo.setDate(1);
   const today = todayISO();
 
-  const [paidFy, paidMonth, expFy, outstanding, leads, recent, paid12, overdue, failed, otherFy, otherMonth] = await Promise.all([
+  const [paidFy, paidMonth, expFy, outstanding, leads, recent, paid12, overdue, failed, otherFy, otherMonth, jobsUp] = await Promise.all([
     supabase.from('invoices').select('total').eq('status', 'paid').gte('paid_at', fyR.from + 'T00:00:00').lte('paid_at', fyR.to + 'T23:59:59'),
     supabase.from('invoices').select('total').eq('status', 'paid').gte('paid_at', m.from + 'T00:00:00').lte('paid_at', m.to + 'T23:59:59'),
     supabase.from('expenses').select('amount').gte('expense_date', fyR.from).lte('expense_date', fyR.to),
@@ -53,6 +57,7 @@ export async function load() {
     supabase.from('quote_requests').select('name,suburb').not('notification_error', 'is', null).is('notified_at', null).limit(5),
     supabase.from('other_income').select('amount').gte('income_date', fyR.from).lte('income_date', fyR.to),
     supabase.from('other_income').select('amount').gte('income_date', m.from).lte('income_date', m.to),
+    supabase.from('jobs').select('title,job_date,job_time,suburb,status').gte('job_date', today).neq('status', 'cancelled').order('job_date', { ascending: true }).order('job_time', { ascending: true }).limit(6),
   ]);
 
   const revFy = sum(paidFy.data, 'total');
@@ -106,4 +111,11 @@ export async function load() {
         <td><strong class="num">${esc(r.number || '—')}</strong></td><td>${esc(r.customer_name)}</td>
         <td class="muted">${esc(fmtDate(r.paid_at))}</td><td class="num">${money(r.total)}</td></tr>`).join('')}</tbody></table>`
     : '<p class="cap">No paid invoices yet.</p>';
+
+  $('dashJobs').innerHTML = (jobsUp.data && jobsUp.data.length)
+    ? `<table class="tbl"><tbody>${jobsUp.data.map((j) => `<tr>
+        <td style="width:140px" class="muted">${esc(fmtDate(j.job_date))}${j.job_time ? ' · ' + esc(j.job_time.slice(0, 5)) : ''}</td>
+        <td><strong>${esc(j.title)}</strong>${j.suburb ? ` <span class="muted">· ${esc(j.suburb)}</span>` : ''}</td>
+        <td><span class="pill ${j.status === 'completed' ? 'paid' : 'sent'}">${esc(j.status)}</span></td></tr>`).join('')}</tbody></table>`
+    : '<p class="cap">No upcoming jobs. Add them on the Jobs calendar.</p>';
 }

@@ -1,0 +1,156 @@
+// Jobs tab — a month calendar of booked work (word-of-mouth, returning
+// clients, etc.) plus an upcoming list. Click a day to add, a job to edit.
+import { $, el, esc, money, fmtDate, supabase, toast, openOverlay, todayISO } from './lib.js';
+
+const SOURCES = ['Word of mouth', 'Returning client', 'Website lead', 'Airtasker', 'Phone', 'Other'];
+const STATUSES = ['booked', 'completed', 'cancelled'];
+const DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+const now = new Date();
+let vy = now.getFullYear();
+let vm = now.getMonth();
+
+export async function load() {
+  $('tab-jobs').innerHTML = `
+    <div class="card">
+      <div class="cal-head">
+        <button class="ghost sm" id="calPrev">‹</button>
+        <button class="ghost sm" id="calNext">›</button>
+        <h2 id="calLabel"></h2>
+        <button class="subtle sm" id="calToday">Today</button>
+        <button id="calAdd" class="right">＋ Add job</button>
+      </div>
+      <div class="cal" id="calDows">${DOW.map((d) => `<div class="dow">${d}</div>`).join('')}</div>
+      <div class="cal" id="calGrid" style="margin-top:6px"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2>Upcoming jobs</h2></div>
+      <div id="calUpcoming"></div>
+    </div>`;
+
+  $('calPrev').addEventListener('click', () => { vm--; if (vm < 0) { vm = 11; vy--; } render(); });
+  $('calNext').addEventListener('click', () => { vm++; if (vm > 11) { vm = 0; vy++; } render(); });
+  $('calToday').addEventListener('click', () => { vy = now.getFullYear(); vm = now.getMonth(); render(); });
+  $('calAdd').addEventListener('click', () => openJob(null, todayISO()));
+  await render();
+}
+
+const iso = (y, m, d) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+async function render() {
+  $('calLabel').textContent = `${MON[vm]} ${vy}`;
+  const first = iso(vy, vm, 1);
+  const last = iso(vy, vm, new Date(vy, vm + 1, 0).getDate());
+
+  const [monthJobs, upcoming] = await Promise.all([
+    supabase.from('jobs').select('*').gte('job_date', first).lte('job_date', last),
+    supabase.from('jobs').select('*').gte('job_date', todayISO()).neq('status', 'cancelled').order('job_date', { ascending: true }).order('job_time', { ascending: true }).limit(12),
+  ]);
+
+  const byDay = {};
+  for (const j of (monthJobs.data || [])) (byDay[j.job_date] = byDay[j.job_date] || []).push(j);
+
+  // build grid (Mon-first)
+  const firstDow = (new Date(vy, vm, 1).getDay() + 6) % 7; // 0 = Monday
+  const daysInMonth = new Date(vy, vm + 1, 0).getDate();
+  const cells = [];
+  for (let i = 0; i < firstDow; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7) cells.push(null);
+
+  const today = todayISO();
+  const grid = $('calGrid');
+  grid.innerHTML = '';
+  for (const d of cells) {
+    if (d === null) { grid.appendChild(el('<div class="cal-day other"></div>')); continue; }
+    const ds = iso(vy, vm, d);
+    const jobs = (byDay[ds] || []).sort((a, b) => (a.job_time || '').localeCompare(b.job_time || ''));
+    const cell = el(`<div class="cal-day ${ds === today ? 'today' : ''}"><div class="dn">${d}</div></div>`);
+    for (const j of jobs.slice(0, 4)) {
+      const chip = el(`<div class="job-chip ${esc(j.status)}" title="${esc(j.title)}${j.job_time ? ' · ' + j.job_time.slice(0, 5) : ''}">${j.job_time ? esc(j.job_time.slice(0, 5)) + ' ' : ''}${esc(j.title)}</div>`);
+      chip.addEventListener('click', (e) => { e.stopPropagation(); openJob(j); });
+      cell.appendChild(chip);
+    }
+    if (jobs.length > 4) cell.appendChild(el(`<div class="dn">+${jobs.length - 4} more</div>`));
+    cell.addEventListener('click', () => openJob(null, ds));
+    grid.appendChild(cell);
+  }
+
+  // upcoming list
+  const up = $('calUpcoming');
+  up.innerHTML = (upcoming.data && upcoming.data.length)
+    ? `<table class="tbl"><tbody>${upcoming.data.map((j) => `<tr class="clickable" data-job="${j.id}">
+        <td style="width:130px" class="muted">${esc(fmtDate(j.job_date))}${j.job_time ? ' · ' + esc(j.job_time.slice(0, 5)) : ''}</td>
+        <td><strong>${esc(j.title)}</strong>${j.suburb ? ` <span class="muted">· ${esc(j.suburb)}</span>` : ''}</td>
+        <td>${j.source ? `<span class="pill">${esc(j.source)}</span>` : ''}</td>
+        <td class="num">${j.amount != null ? money(j.amount) : ''}</td>
+        <td><span class="pill ${j.status === 'completed' ? 'paid' : j.status === 'cancelled' ? 'void' : 'sent'}">${esc(j.status)}</span></td>
+      </tr>`).join('')}</tbody></table>`
+    : '<p class="cap">No upcoming jobs. Click a day on the calendar to add one.</p>';
+  up.querySelectorAll('[data-job]').forEach((tr) => {
+    const j = (upcoming.data || []).find((x) => x.id === tr.dataset.job);
+    tr.addEventListener('click', () => openJob(j));
+  });
+}
+
+function openJob(job, dateStr) {
+  const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', status: 'booked', source: 'Word of mouth', amount: '' };
+  const view = el(`<div>
+    <div class="spread"><h2>${job ? 'Edit job' : 'New job'}</h2>${job ? `<span class="pill ${j.status === 'completed' ? 'paid' : j.status === 'cancelled' ? 'void' : 'sent'}">${esc(j.status)}</span>` : ''}</div>
+    <label>Customer / job title</label><input id="jTitle" value="${esc(j.title || '')}" placeholder="e.g. Dave — garage clean-out">
+    <div class="row">
+      <div class="grow"><label>Date</label><input id="jDate" type="date" value="${esc(j.job_date)}"></div>
+      <div style="width:130px"><label>Time</label><input id="jTime" type="time" value="${esc((j.job_time || '').slice(0, 5))}"></div>
+    </div>
+    <div class="row">
+      <div class="grow"><label>Phone</label><input id="jPhone" value="${esc(j.customer_phone || '')}"></div>
+      <div style="width:150px"><label>Suburb</label><input id="jSuburb" value="${esc(j.suburb || '')}"></div>
+    </div>
+    <div class="row">
+      <div class="grow"><label>Source</label><select id="jSource">${SOURCES.map((s) => `<option ${s === j.source ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div style="width:150px"><label>Status</label><select id="jStatus">${STATUSES.map((s) => `<option ${s === j.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div style="width:130px"><label>Amount $</label><input id="jAmount" inputmode="decimal" value="${j.amount != null ? j.amount : ''}" placeholder="optional"></div>
+    </div>
+    <label>Notes</label><textarea id="jDesc" rows="3">${esc(j.description || '')}</textarea>
+    <div class="row" style="margin-top:16px">
+      <button id="jSave">${job ? 'Save changes' : 'Add job'}</button>
+      <button id="jCancel" class="ghost">Close</button>
+      ${job ? '<button id="jDelete" class="danger" style="margin-left:auto">Delete</button>' : ''}
+    </div>
+  </div>`);
+  const close = openOverlay(view, 'modal', { dismissible: false });
+  view.querySelector('#jCancel').addEventListener('click', () => close());
+
+  view.querySelector('#jSave').addEventListener('click', async (e) => {
+    const title = view.querySelector('#jTitle').value.trim();
+    if (!title) { toast('Add a customer / job title.', 'bad'); return; }
+    const amt = parseFloat(view.querySelector('#jAmount').value);
+    const payload = {
+      title,
+      customer_phone: view.querySelector('#jPhone').value.trim() || null,
+      suburb: view.querySelector('#jSuburb').value.trim() || null,
+      description: view.querySelector('#jDesc').value.trim() || null,
+      job_date: view.querySelector('#jDate').value || todayISO(),
+      job_time: view.querySelector('#jTime').value || null,
+      source: view.querySelector('#jSource').value,
+      status: view.querySelector('#jStatus').value,
+      amount: isNaN(amt) ? null : amt,
+    };
+    e.target.disabled = true;
+    const res = job
+      ? await supabase.from('jobs').update(payload).eq('id', j.id)
+      : await supabase.from('jobs').insert(payload);
+    if (res.error) { toast(res.error.message, 'bad'); e.target.disabled = false; return; }
+    toast(job ? 'Job updated' : 'Job added');
+    close(); render();
+  });
+
+  const del = view.querySelector('#jDelete');
+  if (del) del.addEventListener('click', async () => {
+    if (!window.confirm('Delete this job?')) return;
+    const { error } = await supabase.from('jobs').delete().eq('id', j.id);
+    if (error) { toast(error.message, 'bad'); return; }
+    toast('Job deleted'); close(); render();
+  });
+}

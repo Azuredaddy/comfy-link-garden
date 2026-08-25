@@ -2,6 +2,7 @@
 import { $, supabase, toast } from './lib.js';
 import * as dashboard from './dashboard.js';
 import * as leads from './leads.js';
+import * as jobs from './calendar.js';
 import * as quotes from './quotes.js';
 import * as invoices from './invoices.js';
 import * as products from './products.js';
@@ -10,9 +11,9 @@ import * as income from './income.js';
 import * as reports from './reports.js';
 import * as settings from './settings.js';
 
-const TABS = { dashboard, leads, quotes, invoices, products, expenses, income, reports, settings };
+const TABS = { dashboard, leads, jobs, quotes, invoices, products, expenses, income, reports, settings };
 const TITLES = {
-  dashboard: 'Dashboard', leads: 'Leads', quotes: 'Quotes', invoices: 'Invoices',
+  dashboard: 'Dashboard', leads: 'Leads', jobs: 'Jobs calendar', quotes: 'Quotes', invoices: 'Invoices',
   products: 'Price list', expenses: 'Expenses', income: 'Other income', reports: 'Reports & tax', settings: 'Settings',
 };
 const _tabParam = new URLSearchParams(location.search).get('tab');
