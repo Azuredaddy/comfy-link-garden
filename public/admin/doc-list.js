@@ -101,7 +101,16 @@ async function renderRows(kind, table, isInvoice) {
         refresh();
       } catch (err) { toast(err.message, 'bad'); sendBtn.disabled = false; sendBtn.textContent = 'Send'; }
     });
-    actions.append(pdfBtn, sendBtn);
+    const delBtn = el('<button class="danger sm" style="margin-left:6px">Delete</button>');
+    delBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!window.confirm(`Delete ${kind} ${d.number || ''}? This can't be undone.`)) return;
+      const { error } = await supabase.from(table).delete().eq('id', d.id);
+      if (error) { toast(error.message, 'bad'); return; }
+      toast(`${kind[0].toUpperCase() + kind.slice(1)} deleted`);
+      refresh();
+    });
+    actions.append(pdfBtn, sendBtn, delBtn);
 
     if (xeroOn) {
       const linked = kind === 'invoice' ? d.xero_invoice_id : d.xero_quote_id;

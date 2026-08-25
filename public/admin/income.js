@@ -75,9 +75,10 @@ async function addOne() {
 // ---- spreadsheet import ---------------------------------------------------
 const norm = (s) => String(s || '').trim().toLowerCase();
 const DATE_KEYS = ['date', 'income date', 'paid', 'payment date', 'when', 'day', 'transaction date'];
-const AMOUNT_KEYS = ['amount', 'income', 'total', 'earnings', 'earning', 'value', 'paid', 'net', 'payout', 'amount ($)', '$'];
-const SOURCE_KEYS = ['source', 'from', 'platform', 'client', 'type', 'category', 'account'];
-const DESC_KEYS = ['description', 'details', 'note', 'notes', 'job', 'task', 'title', 'memo'];
+const AMOUNT_KEYS = ['amount', 'income', 'total', 'earnings', 'earning', 'value', 'paid', 'net', 'payout', 'amount ($)', '$',
+  'task amount', 'task amount ex gst', 'transaction amount', 'transaction amount (task unrelated)', 'gross', 'gross amount', 'amount paid'];
+const SOURCE_KEYS = ['source', 'from', 'platform', 'client', 'type', 'category', 'account', 'statement descriptor', 'transaction type'];
+const DESC_KEYS = ['description', 'details', 'note', 'notes', 'job', 'task', 'title', 'memo', 'task name', 'invoice number'];
 
 function pick(row, keys) {
   for (const k of Object.keys(row)) if (keys.includes(norm(k))) return row[k];
@@ -109,9 +110,10 @@ async function handleFile(e) {
     const raw = XLSX.utils.sheet_to_json(ws, { defval: '' });
     if (!raw.length) { $('inFileMsg').textContent = 'That sheet looks empty.'; return; }
 
+    const looksAirtasker = Object.keys(raw[0] || {}).some((k) => norm(k).startsWith('task'));
     parsedRows = raw.map((r) => ({
       income_date: toISO(pick(r, DATE_KEYS)) || todayISO(),
-      source: (pick(r, SOURCE_KEYS) || '').toString().trim() || null,
+      source: (pick(r, SOURCE_KEYS) || '').toString().trim() || (looksAirtasker ? 'Airtasker' : null),
       description: (pick(r, DESC_KEYS) || '').toString().trim() || null,
       amount: toAmount(pick(r, AMOUNT_KEYS)),
     })).filter((r) => r.amount > 0);

@@ -71,6 +71,7 @@ export async function openDocEditor(kind, opts = {}) {
       <h2>${doc.id ? esc(doc.number || (isInvoice ? 'Invoice' : 'Quote')) : (isInvoice ? 'New invoice' : 'New quote')}</h2>
       ${doc.id ? `<span class="pill ${esc(doc.status)}">${esc(doc.status)}</span>` : ''}
     </div>
+    ${doc.id ? `<div class="muted" style="font-size:12px;margin-top:2px">${doc.sent_at ? 'Sent ' + new Date(doc.sent_at).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not sent yet'}${doc.created_at ? ' · created ' + new Date(doc.created_at).toLocaleDateString('en-AU') : ''}</div>` : ''}
 
     <div class="row"><div class="grow"><label>Customer name</label><input id="dName" value="${esc(doc.customer_name)}"></div></div>
     <div class="row">
@@ -112,6 +113,7 @@ export async function openDocEditor(kind, opts = {}) {
     <textarea id="dInternal" rows="2">${esc(doc.internal_notes || '')}</textarea>
 
     <div class="row" style="margin-top:18px">
+      <button id="dCancel" class="ghost">Close</button>
       <button id="dSave">${doc.id ? 'Save changes' : 'Save draft'}</button>
       <button id="dSend" class="subtle">Save &amp; send</button>
       ${doc.id ? '<button id="dPdf" class="ghost">Preview PDF</button>' : ''}
@@ -122,7 +124,10 @@ export async function openDocEditor(kind, opts = {}) {
     <p class="muted" style="font-size:12px;margin-top:8px">“Save &amp; send” emails the customer a link to the ${isInvoice ? 'invoice' : 'quote'} PDF.</p>
   </div>`);
 
-  const close = openOverlay(view, 'modal');
+  const close = openOverlay(view, 'modal', { dismissible: false });
+  view.querySelector('#dCancel').addEventListener('click', () => {
+    if (window.confirm('Close this without saving? Any unsaved changes will be lost.')) close();
+  });
   const tbody = view.querySelector('#dItems');
   items.forEach((it) => tbody.appendChild(itemRow(it)));
 
