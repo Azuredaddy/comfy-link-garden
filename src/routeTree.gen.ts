@@ -11,7 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
+import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/expenses-report'
+import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
+import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
+import { Route as ApiAdminQuoteSendRouteImport } from './routes/api/admin/quote/send'
+import { Route as ApiAdminXeroAuthorizeUrlRouteImport } from './routes/api/admin/xero/authorize-url'
+import { Route as ApiAdminXeroCallbackRouteImport } from './routes/api/admin/xero/callback'
+import { Route as ApiAdminXeroDisconnectRouteImport } from './routes/api/admin/xero/disconnect'
+import { Route as ApiAdminXeroPushInvoiceRouteImport } from './routes/api/admin/xero/push-invoice'
+import { Route as ApiAdminXeroPushQuoteRouteImport } from './routes/api/admin/xero/push-quote'
+import { Route as ApiAdminXeroStatusRouteImport } from './routes/api/admin/xero/status'
+import { Route as ApiAdminXeroSyncSettingsRouteImport } from './routes/api/admin/xero/sync-settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +35,196 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminDocumentPdfRoute = ApiAdminDocumentPdfRouteImport.update({
+  id: '/api/admin/document-pdf',
+  path: '/api/admin/document-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminExpensesReportRoute = ApiAdminExpensesReportRouteImport.update({
+  id: '/api/admin/expenses-report',
+  path: '/api/admin/expenses-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
+  id: '/api/admin/reply',
+  path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicQuoteRoute = ApiPublicQuoteRouteImport.update({
   id: '/api/public/quote',
   path: '/api/public/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminInvoiceSendRoute = ApiAdminInvoiceSendRouteImport.update({
+  id: '/api/admin/invoice/send',
+  path: '/api/admin/invoice/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminQuoteSendRoute = ApiAdminQuoteSendRouteImport.update({
+  id: '/api/admin/quote/send',
+  path: '/api/admin/quote/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroAuthorizeUrlRoute =
+  ApiAdminXeroAuthorizeUrlRouteImport.update({
+    id: '/api/admin/xero/authorize-url',
+    path: '/api/admin/xero/authorize-url',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminXeroCallbackRoute = ApiAdminXeroCallbackRouteImport.update({
+  id: '/api/admin/xero/callback',
+  path: '/api/admin/xero/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroDisconnectRoute = ApiAdminXeroDisconnectRouteImport.update({
+  id: '/api/admin/xero/disconnect',
+  path: '/api/admin/xero/disconnect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroPushInvoiceRoute = ApiAdminXeroPushInvoiceRouteImport.update({
+  id: '/api/admin/xero/push-invoice',
+  path: '/api/admin/xero/push-invoice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroPushQuoteRoute = ApiAdminXeroPushQuoteRouteImport.update({
+  id: '/api/admin/xero/push-quote',
+  path: '/api/admin/xero/push-quote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroStatusRoute = ApiAdminXeroStatusRouteImport.update({
+  id: '/api/admin/xero/status',
+  path: '/api/admin/xero/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroSyncSettingsRoute =
+  ApiAdminXeroSyncSettingsRouteImport.update({
+    id: '/api/admin/xero/sync-settings',
+    path: '/api/admin/xero/sync-settings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
+  '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/reply': typeof ApiAdminReplyRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
+  '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
+  '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
+  '/api/admin/xero/disconnect': typeof ApiAdminXeroDisconnectRoute
+  '/api/admin/xero/push-invoice': typeof ApiAdminXeroPushInvoiceRoute
+  '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
+  '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
+  '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
+  '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/reply': typeof ApiAdminReplyRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
+  '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
+  '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
+  '/api/admin/xero/disconnect': typeof ApiAdminXeroDisconnectRoute
+  '/api/admin/xero/push-invoice': typeof ApiAdminXeroPushInvoiceRoute
+  '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
+  '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
+  '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
+  '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/reply': typeof ApiAdminReplyRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
+  '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
+  '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
+  '/api/admin/xero/disconnect': typeof ApiAdminXeroDisconnectRoute
+  '/api/admin/xero/push-invoice': typeof ApiAdminXeroPushInvoiceRoute
+  '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
+  '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
+  '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/api/public/quote'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/api/admin/document-pdf'
+    | '/api/admin/expenses-report'
+    | '/api/admin/reply'
+    | '/api/public/quote'
+    | '/api/admin/invoice/send'
+    | '/api/admin/quote/send'
+    | '/api/admin/xero/authorize-url'
+    | '/api/admin/xero/callback'
+    | '/api/admin/xero/disconnect'
+    | '/api/admin/xero/push-invoice'
+    | '/api/admin/xero/push-quote'
+    | '/api/admin/xero/status'
+    | '/api/admin/xero/sync-settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/api/public/quote'
-  id: '__root__' | '/' | '/$' | '/api/public/quote'
+  to:
+    | '/'
+    | '/$'
+    | '/api/admin/document-pdf'
+    | '/api/admin/expenses-report'
+    | '/api/admin/reply'
+    | '/api/public/quote'
+    | '/api/admin/invoice/send'
+    | '/api/admin/quote/send'
+    | '/api/admin/xero/authorize-url'
+    | '/api/admin/xero/callback'
+    | '/api/admin/xero/disconnect'
+    | '/api/admin/xero/push-invoice'
+    | '/api/admin/xero/push-quote'
+    | '/api/admin/xero/status'
+    | '/api/admin/xero/sync-settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/api/admin/document-pdf'
+    | '/api/admin/expenses-report'
+    | '/api/admin/reply'
+    | '/api/public/quote'
+    | '/api/admin/invoice/send'
+    | '/api/admin/quote/send'
+    | '/api/admin/xero/authorize-url'
+    | '/api/admin/xero/callback'
+    | '/api/admin/xero/disconnect'
+    | '/api/admin/xero/push-invoice'
+    | '/api/admin/xero/push-quote'
+    | '/api/admin/xero/status'
+    | '/api/admin/xero/sync-settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
+  ApiAdminExpensesReportRoute: typeof ApiAdminExpensesReportRoute
+  ApiAdminReplyRoute: typeof ApiAdminReplyRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
+  ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
+  ApiAdminQuoteSendRoute: typeof ApiAdminQuoteSendRoute
+  ApiAdminXeroAuthorizeUrlRoute: typeof ApiAdminXeroAuthorizeUrlRoute
+  ApiAdminXeroCallbackRoute: typeof ApiAdminXeroCallbackRoute
+  ApiAdminXeroDisconnectRoute: typeof ApiAdminXeroDisconnectRoute
+  ApiAdminXeroPushInvoiceRoute: typeof ApiAdminXeroPushInvoiceRoute
+  ApiAdminXeroPushQuoteRoute: typeof ApiAdminXeroPushQuoteRoute
+  ApiAdminXeroStatusRoute: typeof ApiAdminXeroStatusRoute
+  ApiAdminXeroSyncSettingsRoute: typeof ApiAdminXeroSyncSettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +243,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/document-pdf': {
+      id: '/api/admin/document-pdf'
+      path: '/api/admin/document-pdf'
+      fullPath: '/api/admin/document-pdf'
+      preLoaderRoute: typeof ApiAdminDocumentPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/expenses-report': {
+      id: '/api/admin/expenses-report'
+      path: '/api/admin/expenses-report'
+      fullPath: '/api/admin/expenses-report'
+      preLoaderRoute: typeof ApiAdminExpensesReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/reply': {
+      id: '/api/admin/reply'
+      path: '/api/admin/reply'
+      fullPath: '/api/admin/reply'
+      preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/quote': {
       id: '/api/public/quote'
       path: '/api/public/quote'
       fullPath: '/api/public/quote'
       preLoaderRoute: typeof ApiPublicQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/invoice/send': {
+      id: '/api/admin/invoice/send'
+      path: '/api/admin/invoice/send'
+      fullPath: '/api/admin/invoice/send'
+      preLoaderRoute: typeof ApiAdminInvoiceSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/quote/send': {
+      id: '/api/admin/quote/send'
+      path: '/api/admin/quote/send'
+      fullPath: '/api/admin/quote/send'
+      preLoaderRoute: typeof ApiAdminQuoteSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/authorize-url': {
+      id: '/api/admin/xero/authorize-url'
+      path: '/api/admin/xero/authorize-url'
+      fullPath: '/api/admin/xero/authorize-url'
+      preLoaderRoute: typeof ApiAdminXeroAuthorizeUrlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/callback': {
+      id: '/api/admin/xero/callback'
+      path: '/api/admin/xero/callback'
+      fullPath: '/api/admin/xero/callback'
+      preLoaderRoute: typeof ApiAdminXeroCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/disconnect': {
+      id: '/api/admin/xero/disconnect'
+      path: '/api/admin/xero/disconnect'
+      fullPath: '/api/admin/xero/disconnect'
+      preLoaderRoute: typeof ApiAdminXeroDisconnectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/push-invoice': {
+      id: '/api/admin/xero/push-invoice'
+      path: '/api/admin/xero/push-invoice'
+      fullPath: '/api/admin/xero/push-invoice'
+      preLoaderRoute: typeof ApiAdminXeroPushInvoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/push-quote': {
+      id: '/api/admin/xero/push-quote'
+      path: '/api/admin/xero/push-quote'
+      fullPath: '/api/admin/xero/push-quote'
+      preLoaderRoute: typeof ApiAdminXeroPushQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/status': {
+      id: '/api/admin/xero/status'
+      path: '/api/admin/xero/status'
+      fullPath: '/api/admin/xero/status'
+      preLoaderRoute: typeof ApiAdminXeroStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/sync-settings': {
+      id: '/api/admin/xero/sync-settings'
+      path: '/api/admin/xero/sync-settings'
+      fullPath: '/api/admin/xero/sync-settings'
+      preLoaderRoute: typeof ApiAdminXeroSyncSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +340,19 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
+  ApiAdminExpensesReportRoute: ApiAdminExpensesReportRoute,
+  ApiAdminReplyRoute: ApiAdminReplyRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
+  ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
+  ApiAdminQuoteSendRoute: ApiAdminQuoteSendRoute,
+  ApiAdminXeroAuthorizeUrlRoute: ApiAdminXeroAuthorizeUrlRoute,
+  ApiAdminXeroCallbackRoute: ApiAdminXeroCallbackRoute,
+  ApiAdminXeroDisconnectRoute: ApiAdminXeroDisconnectRoute,
+  ApiAdminXeroPushInvoiceRoute: ApiAdminXeroPushInvoiceRoute,
+  ApiAdminXeroPushQuoteRoute: ApiAdminXeroPushQuoteRoute,
+  ApiAdminXeroStatusRoute: ApiAdminXeroStatusRoute,
+  ApiAdminXeroSyncSettingsRoute: ApiAdminXeroSyncSettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
