@@ -109,6 +109,7 @@ export async function openDocEditor(kind, opts = {}) {
       <button id="dSend" class="subtle">Save &amp; send</button>
       ${doc.id ? '<button id="dPdf" class="ghost">Preview PDF</button>' : ''}
       ${(!isInvoice && doc.id) ? '<button id="dConvert" class="ghost">Convert to invoice</button>' : ''}
+      ${doc.id ? '<button id="dDelete" class="danger" style="margin-left:auto">Delete</button>' : ''}
     </div>
     <p class="muted" style="font-size:12px;margin-top:8px">“Save &amp; send” emails the customer a link to the ${isInvoice ? 'invoice' : 'quote'} PDF.</p>
   </div>`);
@@ -233,5 +234,20 @@ export async function openDocEditor(kind, opts = {}) {
     const { rows } = collect();
     close();
     openDocEditor('invoice', { fromQuote: { ...doc, _items: rows }, onSaved: opts.onSaved });
+  });
+
+  const delBtn = view.querySelector('#dDelete');
+  if (delBtn) delBtn.addEventListener('click', async (e) => {
+    const label = doc.number || (isInvoice ? 'this invoice' : 'this quote');
+    const warn = isInvoice && doc.status === 'paid'
+      ? `${label} is marked PAID and counts toward your revenue. Delete it anyway? This can't be undone.`
+      : `Delete ${label}? This can't be undone.`;
+    if (!window.confirm(warn)) return;
+    e.target.disabled = true;
+    // line items are removed automatically (ON DELETE CASCADE)
+    const { error } = await supabase.from(table).delete().eq('id', doc.id);
+    if (error) { toast(error.message, 'bad'); e.target.disabled = false; return; }
+    toast((isInvoice ? 'Invoice' : 'Quote') + ' deleted');
+    close(); opts.onSaved && opts.onSaved();
   });
 }
