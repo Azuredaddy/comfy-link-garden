@@ -5,7 +5,7 @@
 // public.is_admin() RLS helper.
 import { supabaseAdmin } from "../integrations/supabase/client.server";
 
-export type AdminUser = { id: string; email: string };
+export type AdminUser = { id: string; email: string; role: string };
 
 type AdminResult =
   | { ok: true; user: AdminUser }
@@ -26,11 +26,14 @@ export async function requireAdmin(request: Request): Promise<AdminResult> {
 
   const { data: admins, error: adminError } = await supabaseAdmin
     .from("admin_emails")
-    .select("email");
+    .select("email, role");
   if (adminError) return deny(503, "Could not verify admin access. Please try again.");
 
-  const isAdmin = (admins ?? []).some((row) => row.email.toLowerCase() === email);
-  if (!isAdmin) return deny(403, "This account is not on the approved admin list.");
+  const row = (admins ?? []).find((r) => r.email.toLowerCase() === email);
+  if (!row) return deny(403, "This account is not on the approved admin list.");
+  const role = (row as { role?: string }).role ?? "admin";
+  // Every /api/admin/* route performs an action; view-only users are blocked.
+  if (role === "viewer") return deny(403, "Your account is view-only.");
 
-  return { ok: true, user: { id: data.user!.id, email } };
+  return { ok: true, user: { id: data.user!.id, email, role } };
 }

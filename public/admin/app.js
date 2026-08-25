@@ -1,5 +1,5 @@
 // Admin portal shell: auth gate, tab navigation, and per-tab lazy loading.
-import { $, el, esc, supabase, toast, openOverlay } from './lib.js';
+import { $, el, esc, supabase, toast, openOverlay, myRole } from './lib.js';
 import * as dashboard from './dashboard.js';
 import * as leads from './leads.js';
 import * as jobs from './calendar.js';
@@ -43,6 +43,9 @@ async function render() {
   $('app').classList.remove('hidden');
   $('who').textContent = user.email;
   paintAvatar(user);
+  const role = await myRole(true);
+  document.body.classList.toggle('role-viewer', role === 'viewer');
+  const rl = $('roleLabel'); if (rl) rl.textContent = role === 'admin' ? 'Admin' : role === 'editor' ? 'Editor' : 'View only';
   const av = $('avatar');
   if (av && !av.dataset.wired) {
     av.dataset.wired = '1';

@@ -81,6 +81,16 @@ export async function apiOpenPdf(path, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
+// Current user's portal role: 'admin' | 'editor' | 'viewer' (cached).
+let _role = null;
+export async function myRole(force = false) {
+  if (_role && !force) return _role;
+  try { const { data } = await supabase.rpc('my_role'); _role = data || 'admin'; }
+  catch { _role = 'admin'; }
+  return _role;
+}
+export const canEdit = async () => (await myRole()) !== 'viewer';
+
 // Xero connection status (cached for the session; pass true to refresh).
 let _xero = null;
 export async function xeroStatus(force = false) {
