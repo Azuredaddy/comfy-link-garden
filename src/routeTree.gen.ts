@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as PayRouteImport } from './routes/pay'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
 import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/expenses-report'
 import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
+import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
 import { Route as ApiAdminQuoteSendRouteImport } from './routes/api/admin/quote/send'
 import { Route as ApiAdminXeroAuthorizeUrlRouteImport } from './routes/api/admin/xero/authorize-url'
@@ -35,6 +37,11 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayRoute = PayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminDocumentPdfRoute = ApiAdminDocumentPdfRouteImport.update({
   id: '/api/admin/document-pdf',
   path: '/api/admin/document-pdf',
@@ -53,6 +60,11 @@ const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
 const ApiPublicQuoteRoute = ApiPublicQuoteRouteImport.update({
   id: '/api/public/quote',
   path: '/api/public/quote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
+  id: '/api/stripe/webhook',
+  path: '/api/stripe/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminInvoiceSendRoute = ApiAdminInvoiceSendRouteImport.update({
@@ -106,10 +118,12 @@ const ApiAdminXeroSyncSettingsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/pay': typeof PayRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
@@ -123,10 +137,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/pay': typeof PayRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
@@ -141,10 +157,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/pay': typeof PayRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
@@ -160,10 +178,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/pay'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
     | '/api/admin/reply'
     | '/api/public/quote'
+    | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
@@ -177,10 +197,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/pay'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
     | '/api/admin/reply'
     | '/api/public/quote'
+    | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
@@ -194,10 +216,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/pay'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
     | '/api/admin/reply'
     | '/api/public/quote'
+    | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
@@ -212,10 +236,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  PayRoute: typeof PayRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
   ApiAdminExpensesReportRoute: typeof ApiAdminExpensesReportRoute
   ApiAdminReplyRoute: typeof ApiAdminReplyRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
+  ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
   ApiAdminQuoteSendRoute: typeof ApiAdminQuoteSendRoute
   ApiAdminXeroAuthorizeUrlRoute: typeof ApiAdminXeroAuthorizeUrlRoute
@@ -241,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/$'
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pay': {
+      id: '/pay'
+      path: '/pay'
+      fullPath: '/pay'
+      preLoaderRoute: typeof PayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/document-pdf': {
@@ -269,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/quote'
       fullPath: '/api/public/quote'
       preLoaderRoute: typeof ApiPublicQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/stripe/webhook': {
+      id: '/api/stripe/webhook'
+      path: '/api/stripe/webhook'
+      fullPath: '/api/stripe/webhook'
+      preLoaderRoute: typeof ApiStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/invoice/send': {
@@ -340,10 +380,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  PayRoute: PayRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
   ApiAdminExpensesReportRoute: ApiAdminExpensesReportRoute,
   ApiAdminReplyRoute: ApiAdminReplyRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
+  ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
   ApiAdminQuoteSendRoute: ApiAdminQuoteSendRoute,
   ApiAdminXeroAuthorizeUrlRoute: ApiAdminXeroAuthorizeUrlRoute,

@@ -356,6 +356,33 @@ export type Database = {
           },
         ]
       }
+      other_income: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          income_date: string
+          source: string | null
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          income_date?: string
+          source?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          income_date?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           active: boolean
