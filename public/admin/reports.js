@@ -38,29 +38,46 @@ export async function load() {
 
 async function render() {
   const { from, to } = fyRange(fy);
-  const [paid, exp] = await Promise.all([
+  const [paid, exp, other] = await Promise.all([
     supabase.from('invoices').select('total,gst_amount').eq('status', 'paid').gte('paid_at', from + 'T00:00:00').lte('paid_at', to + 'T23:59:59'),
     supabase.from('expenses').select('amount,gst_amount,category').gte('expense_date', from).lte('expense_date', to),
+    supabase.from('other_income').select('amount,source').gte('income_date', from).lte('income_date', to),
   ]);
 
   const gross = sum(paid.data, 'total');
+  const otherTotal = sum(other.data, 'amount');
+  const totalIncome = gross + otherTotal;
   const expTotal = sum(exp.data, 'amount');
-  const net = gross - expTotal;
+  const net = totalIncome - expTotal;
 
   // expenses by category
   const byCat = {};
   for (const e of (exp.data || [])) byCat[e.category] = (byCat[e.category] || 0) + Number(e.amount || 0);
   const catRows = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
 
+  // other income by source
+  const bySource = {};
+  for (const r of (other.data || [])) { const k = r.source || 'Other'; bySource[k] = (bySource[k] || 0) + Number(r.amount || 0); }
+  const srcRows = Object.entries(bySource).sort((a, b) => b[1] - a[1]);
+
   const gstOut = sum(paid.data, 'gst_amount');
   const gstIn = sum(exp.data, 'gst_amount');
 
   $('rpBody').innerHTML = `
     <div class="tiles">
-      <div class="tile accent"><div class="k">Gross sales</div><div class="v">${money(gross)}</div><div class="s">Paid invoices</div></div>
+      <div class="tile"><div class="k">Invoice sales</div><div class="v">${money(gross)}</div><div class="s">Paid invoices</div></div>
+      <div class="tile"><div class="k">Other income</div><div class="v">${money(otherTotal)}</div><div class="s">Airtasker, cash, imported</div></div>
+      <div class="tile accent"><div class="k">Total income</div><div class="v">${money(totalIncome)}</div><div class="s">Invoices + other</div></div>
       <div class="tile"><div class="k">Expenses</div><div class="v">${money(expTotal)}</div><div class="s">Deductible</div></div>
       <div class="tile accent"><div class="k">Net profit</div><div class="v">${money(net)}</div><div class="s">Before tax</div></div>
     </div>
+
+    ${srcRows.length ? `<div class="card">
+      <strong>Other income by source</strong>
+      <table class="tbl" style="margin-top:8px"><tbody>${
+        srcRows.map(([s, v]) => `<tr><td>${esc(s)}</td><td class="num">${money(v)}</td></tr>`).join('')
+      }<tr><td><strong>Total</strong></td><td class="num"><strong>${money(otherTotal)}</strong></td></tr></tbody></table>
+    </div>` : ''}
 
     <div class="card">
       <strong>Expenses by category</strong>

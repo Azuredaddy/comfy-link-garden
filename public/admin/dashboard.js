@@ -41,7 +41,7 @@ export async function load() {
   const twelveAgo = new Date(); twelveAgo.setMonth(twelveAgo.getMonth() - 11); twelveAgo.setDate(1);
   const today = todayISO();
 
-  const [paidFy, paidMonth, expFy, outstanding, leads, recent, paid12, overdue, failed] = await Promise.all([
+  const [paidFy, paidMonth, expFy, outstanding, leads, recent, paid12, overdue, failed, otherFy, otherMonth] = await Promise.all([
     supabase.from('invoices').select('total').eq('status', 'paid').gte('paid_at', fyR.from + 'T00:00:00').lte('paid_at', fyR.to + 'T23:59:59'),
     supabase.from('invoices').select('total').eq('status', 'paid').gte('paid_at', m.from + 'T00:00:00').lte('paid_at', m.to + 'T23:59:59'),
     supabase.from('expenses').select('amount').gte('expense_date', fyR.from).lte('expense_date', fyR.to),
@@ -51,21 +51,27 @@ export async function load() {
     supabase.from('invoices').select('total,paid_at').eq('status', 'paid').gte('paid_at', twelveAgo.toISOString()),
     supabase.from('invoices').select('number,customer_name,total,due_date,status').in('status', ['sent', 'overdue']).order('due_date', { ascending: true }).limit(20),
     supabase.from('quote_requests').select('name,suburb').not('notification_error', 'is', null).is('notified_at', null).limit(5),
+    supabase.from('other_income').select('amount').gte('income_date', fyR.from).lte('income_date', fyR.to),
+    supabase.from('other_income').select('amount').gte('income_date', m.from).lte('income_date', m.to),
   ]);
 
   const revFy = sum(paidFy.data, 'total');
   const revMonth = sum(paidMonth.data, 'total');
+  const otherFyTotal = sum(otherFy.data, 'amount');
+  const otherMonthTotal = sum(otherMonth.data, 'amount');
+  const totalIncomeFy = revFy + otherFyTotal;
   const expenses = sum(expFy.data, 'amount');
   const owed = sum(outstanding.data, 'total');
   const newLeads = leads.count ?? 0;
+  const fyLbl = fy + '–' + String(fy + 1).slice(2);
 
   const tile = (k, v, s, accent) => `<div class="tile ${accent ? 'accent' : ''}">
     <div class="k">${esc(k)}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`;
   $('dashTiles').innerHTML =
-    tile('Made this month', money0(revMonth), new Date().toLocaleDateString('en-AU', { month: 'long' }) + ' · paid', true) +
-    tile('Revenue FY ' + fy + '–' + String(fy + 1).slice(2), money0(revFy), 'Paid invoices') +
-    tile('Expenses FY ' + fy + '–' + String(fy + 1).slice(2), money0(expenses), 'Deductible spend') +
-    tile('Net for tax', money0(revFy - expenses), 'Revenue − expenses', true) +
+    tile('Income this month', money0(revMonth + otherMonthTotal), new Date().toLocaleDateString('en-AU', { month: 'long' }) + ' · invoices + other', true) +
+    tile('Total income FY ' + fyLbl, money0(totalIncomeFy), `Invoices ${money0(revFy)} · Other ${money0(otherFyTotal)}`, true) +
+    tile('Expenses FY ' + fyLbl, money0(expenses), 'Deductible spend') +
+    tile('Net for tax', money0(totalIncomeFy - expenses), 'Income − expenses', true) +
     tile('Outstanding', money0(owed), (outstanding.data?.length || 0) + ' unpaid invoice(s)') +
     tile('New leads', String(newLeads), 'Waiting to be called');
 
