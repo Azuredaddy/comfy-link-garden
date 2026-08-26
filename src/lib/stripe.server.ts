@@ -1,67 +1,106 @@
-// Stripe helper for online invoice payments (no SDK — REST + HMAC).
-// Config comes from environment secrets (set in Lovable):
-//   STRIPE_SECRET_KEY       — sk_live_… / sk_test_…
-//   STRIPE_WEBHOOK_SECRET   — whsec_…  (from the webhook endpoint you create)
-//   PUBLIC_SITE_URL         — optional, e.g. https://lankyservices.com.au
-import crypto from "node:crypto";
+// Stripe access for Lanky Services — all calls are proxied through Lovable's
+// connector gateway, which holds the real Stripe secret key. The *_API_KEY
+// values below are gateway connection identifiers, NOT Stripe secret keys.
+import Stripe from "stripe";
 
+const getEnv = (key: string): string => {
+  const value = process.env[key];
+  if (!value) throw new Error(`${key} is not configured`);
+  return value;
+};
+
+export type StripeEnv = "sandbox" | "live";
+
+const GATEWAY_STRIPE_BASE = "https://connector-gateway.lovable.dev/stripe";
+
+/** True once payments have been provisioned for at least one environment. */
 export function isConfigured(): boolean {
-  return !!process.env["STRIPE_SECRET_KEY"];
+  return !!(process.env["STRIPE_SANDBOX_API_KEY"] || process.env["STRIPE_LIVE_API_KEY"]);
 }
 
 export function siteUrl(fallbackOrigin: string): string {
   return (process.env["PUBLIC_SITE_URL"] || fallbackOrigin || "https://lankyservices.com.au").replace(/\/+$/, "");
 }
 
-/** Create a hosted Stripe Checkout session for an invoice. Returns the payment URL. */
-export async function createCheckoutSession(opts: {
-  invoiceId: string;
-  number: string;
-  amountCents: number;
-  customerEmail?: string | null;
-  successUrl: string;
-  cancelUrl: string;
-}): Promise<string> {
-  const key = process.env["STRIPE_SECRET_KEY"];
-  if (!key) throw new Error("Stripe isn't set up yet.");
-
-  const body = new URLSearchParams();
-  body.set("mode", "payment");
-  body.set("success_url", opts.successUrl);
-  body.set("cancel_url", opts.cancelUrl);
-  body.set("client_reference_id", opts.invoiceId);
-  body.set("metadata[invoice_id]", opts.invoiceId);
-  if (opts.customerEmail) body.set("customer_email", opts.customerEmail);
-  body.set("line_items[0][quantity]", "1");
-  body.set("line_items[0][price_data][currency]", "aud");
-  body.set("line_items[0][price_data][unit_amount]", String(opts.amountCents));
-  body.set("line_items[0][price_data][product_data][name]", `Invoice ${opts.number || ""}`.trim());
-
-  const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: { authorization: `Bearer ${key}`, "content-type": "application/x-www-form-urlencoded" },
-    body,
-  });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json?.error?.message || "Could not start the payment.");
-  return json.url as string;
+export function getConnectionApiKey(env: StripeEnv): string {
+  return env === "sandbox" ? getEnv("STRIPE_SANDBOX_API_KEY") : getEnv("STRIPE_LIVE_API_KEY");
 }
 
-/** Verify a Stripe webhook signature (v1 scheme) against the raw body. */
-export function verifySignature(payload: string, sigHeader: string | null, secret: string): boolean {
-  if (!sigHeader) return false;
-  const parts: Record<string, string> = {};
-  for (const kv of sigHeader.split(",")) {
-    const i = kv.indexOf("=");
-    if (i > 0) parts[kv.slice(0, i).trim()] = kv.slice(i + 1).trim();
+export function createStripeClient(env: StripeEnv): Stripe {
+  const connectionApiKey = getConnectionApiKey(env);
+  const lovableApiKey = getEnv("LOVABLE_API_KEY");
+
+  return new Stripe(connectionApiKey, {
+    apiVersion: "2026-03-25.dahlia",
+    httpClient: Stripe.createFetchHttpClient((input, init) => {
+      const stripeUrl = input instanceof Request ? input.url : input.toString();
+      const gatewayUrl = stripeUrl.replace("https://api.stripe.com", GATEWAY_STRIPE_BASE);
+      return fetch(gatewayUrl, {
+        ...init,
+        headers: {
+          ...Object.fromEntries(
+            new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).entries(),
+          ),
+          "X-Connection-Api-Key": connectionApiKey,
+          "Lovable-API-Key": lovableApiKey,
+        },
+      });
+    }),
+  });
+}
+
+export function getStripeErrorMessage(error: unknown): string {
+  if (error && typeof error === "object") {
+    const e = error as {
+      message?: string; type?: string; code?: string; param?: string; requestId?: string;
+      raw?: { message?: string; type?: string; code?: string; param?: string; requestId?: string };
+    };
+    const message = e.raw?.message ?? e.message;
+    if (message) {
+      const details = [
+        e.raw?.type ?? e.type,
+        e.raw?.code ?? e.code,
+        e.raw?.param ?? e.param,
+        e.raw?.requestId ?? e.requestId,
+      ].filter(Boolean);
+      return details.length ? `${message} (${details.join(", ")})` : message;
+    }
   }
-  const t = parts["t"];
-  const v1 = parts["v1"];
-  if (!t || !v1) return false;
-  const expected = crypto.createHmac("sha256", secret).update(`${t}.${payload}`).digest("hex");
-  try {
-    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
-  } catch {
-    return false;
+  return "Stripe request failed";
+}
+
+/** Verify a Stripe webhook signature (HMAC-SHA256, no SDK needed). */
+export async function verifyWebhook(req: Request, env: StripeEnv): Promise<{ type: string; data: { object: any } }> {
+  const signature = req.headers.get("stripe-signature");
+  const body = await req.text();
+  const secret = env === "sandbox"
+    ? getEnv("PAYMENTS_SANDBOX_WEBHOOK_SECRET")
+    : getEnv("PAYMENTS_LIVE_WEBHOOK_SECRET");
+
+  if (!signature || !body) throw new Error("Missing signature or body");
+
+  let timestamp: string | undefined;
+  const v1Signatures: string[] = [];
+  for (const part of signature.split(",")) {
+    const [key, value] = part.split("=", 2);
+    if (key === "t") timestamp = value;
+    if (key === "v1" && value) v1Signatures.push(value);
   }
+  if (!timestamp || v1Signatures.length === 0) throw new Error("Invalid signature format");
+
+  const age = Math.abs(Date.now() / 1000 - Number(timestamp));
+  if (age > 300) throw new Error("Webhook timestamp too old");
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signed = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${timestamp}.${body}`));
+  const expected = Buffer.from(new Uint8Array(signed)).toString("hex");
+  if (!v1Signatures.includes(expected)) throw new Error("Invalid webhook signature");
+
+  return JSON.parse(body);
 }
