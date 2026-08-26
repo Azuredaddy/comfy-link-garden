@@ -406,6 +406,7 @@ export type Database = {
       messages: {
         Row: {
           body: string | null
+          channel: string
           created_at: string
           direction: string
           email_status: string
@@ -416,9 +417,11 @@ export type Database = {
           quote_request_id: string | null
           subject: string | null
           to_email: string | null
+          to_phone: string | null
         }
         Insert: {
           body?: string | null
+          channel?: string
           created_at?: string
           direction?: string
           email_status?: string
@@ -429,9 +432,11 @@ export type Database = {
           quote_request_id?: string | null
           subject?: string | null
           to_email?: string | null
+          to_phone?: string | null
         }
         Update: {
           body?: string | null
+          channel?: string
           created_at?: string
           direction?: string
           email_status?: string
@@ -442,6 +447,7 @@ export type Database = {
           quote_request_id?: string | null
           subject?: string | null
           to_email?: string | null
+          to_phone?: string | null
         }
         Relationships: [
           {
