@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/admin/broadcast")({
             .select("email,name,unsubscribe_token")
             .is("unsubscribed_at", null)
             .limit(2000);
-          recipients = (data ?? []) as never;
+          recipients = data ?? [];
         }
         if (!recipients.length) return Response.json({ ok: true, sent: 0, failed: 0, message: "No subscribers to send to yet." });
 

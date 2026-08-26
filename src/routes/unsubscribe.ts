@@ -21,7 +21,7 @@ export const Route = createFileRoute("/unsubscribe")({
         const { supabaseAdmin } = await import("../integrations/supabase/client.server");
         const { data } = await supabaseAdmin
           .from("marketing_subscribers")
-          .update({ unsubscribed_at: new Date().toISOString() } as never)
+          .update({ unsubscribed_at: new Date().toISOString() })
           .eq("unsubscribe_token", token)
           .is("unsubscribed_at", null)
           .select("email")
