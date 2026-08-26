@@ -298,7 +298,9 @@ export type Database = {
       jobs: {
         Row: {
           amount: number | null
+          confirmation_sent_at: string | null
           created_at: string
+          customer_email: string | null
           customer_phone: string | null
           description: string | null
           id: string
@@ -314,7 +316,9 @@ export type Database = {
         }
         Insert: {
           amount?: number | null
+          confirmation_sent_at?: string | null
           created_at?: string
+          customer_email?: string | null
           customer_phone?: string | null
           description?: string | null
           id?: string
@@ -330,7 +334,9 @@ export type Database = {
         }
         Update: {
           amount?: number | null
+          confirmation_sent_at?: string | null
           created_at?: string
+          customer_email?: string | null
           customer_phone?: string | null
           description?: string | null
           id?: string
@@ -802,6 +808,7 @@ export type Database = {
     Functions: {
       au_fy_start: { Args: { d: string }; Returns: number }
       is_admin: { Args: never; Returns: boolean }
+      my_role: { Args: never; Returns: string }
       next_document_number: { Args: { p_doc_type: string }; Returns: string }
     }
     Enums: {
