@@ -114,6 +114,40 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     error: emailRes.ok ? null : emailRes.error ?? null,
   } as never);
 
+  // When an invoice is sent, also text the customer a review request (once).
+  if (kind === "invoice" && doc.customer_phone) {
+    try {
+      const { isConfigured, sendSms } = await import("./sms.server");
+      if (isConfigured()) {
+        const { data: already } = await supabaseAdmin
+          .from("messages")
+          .select("id")
+          .eq("invoice_id", id)
+          .eq("channel", "sms")
+          .eq("subject", "Review request")
+          .limit(1)
+          .maybeSingle();
+        if (!already) {
+          const REVIEW_URL = "https://g.page/r/Cee2YwnmgX5wEAI/review/";
+          const smsBody = `Thanks for choosing Lanky Services! If you were happy with the job, a quick Google review would mean a lot: ${REVIEW_URL} Cheers, the Lanky team.`;
+          const sms = await sendSms(doc.customer_phone, smsBody);
+          await supabaseAdmin.from("messages").insert({
+            invoice_id: id,
+            channel: "sms",
+            direction: "outbound",
+            to_phone: doc.customer_phone,
+            subject: "Review request",
+            body: smsBody,
+            email_status: sms.ok ? "sent" : "failed",
+            error: sms.ok ? null : sms.error ?? null,
+          } as never);
+        }
+      }
+    } catch (error) {
+      await logServerError({ source: "api:invoice:review-sms", error, status: 202, context: { id }, ...meta });
+    }
+  }
+
   if (!emailRes.ok) {
     await logServerError({ source: `api:${kind}:email`, error: emailRes.error, status: 202, context: { id }, ...meta });
     return Response.json({ ok: true, url, emailed: false, message: "PDF saved, but the email could not be sent." }, { status: 202 });
