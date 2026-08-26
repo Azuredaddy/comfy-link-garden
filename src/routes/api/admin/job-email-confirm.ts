@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 // POST /api/admin/job/confirm  { id }
 // Admin-only: emails the customer a booking confirmation for a job.
-export const Route = createFileRoute("/api/admin/job/confirm")({
+export const Route = createFileRoute("/api/admin/job-email-confirm")({
   server: {
     handlers: {
       POST: async ({ request }) => {
