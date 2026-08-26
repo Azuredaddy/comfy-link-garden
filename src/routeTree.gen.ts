@@ -21,6 +21,7 @@ import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-r
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
+import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job/confirm'
 import { Route as ApiAdminQuoteSendRouteImport } from './routes/api/admin/quote/send'
 import { Route as ApiAdminXeroAuthorizeUrlRouteImport } from './routes/api/admin/xero/authorize-url'
 import { Route as ApiAdminXeroCallbackRouteImport } from './routes/api/admin/xero/callback'
@@ -90,6 +91,11 @@ const ApiAdminInvoiceSendRoute = ApiAdminInvoiceSendRouteImport.update({
   path: '/api/admin/invoice/send',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminJobConfirmRoute = ApiAdminJobConfirmRouteImport.update({
+  id: '/api/admin/job/confirm',
+  path: '/api/admin/job/confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminQuoteSendRoute = ApiAdminQuoteSendRouteImport.update({
   id: '/api/admin/quote/send',
   path: '/api/admin/quote/send',
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/job/confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
   '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/job/confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
   '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
@@ -191,6 +199,7 @@ export interface FileRoutesById {
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/job/confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
   '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
+    | '/api/admin/job/confirm'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
     | '/api/admin/xero/callback'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
+    | '/api/admin/job/confirm'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
     | '/api/admin/xero/callback'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
+    | '/api/admin/job/confirm'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
     | '/api/admin/xero/callback'
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
+  ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
   ApiAdminQuoteSendRoute: typeof ApiAdminQuoteSendRoute
   ApiAdminXeroAuthorizeUrlRoute: typeof ApiAdminXeroAuthorizeUrlRoute
   ApiAdminXeroCallbackRoute: typeof ApiAdminXeroCallbackRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminInvoiceSendRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/job/confirm': {
+      id: '/api/admin/job/confirm'
+      path: '/api/admin/job/confirm'
+      fullPath: '/api/admin/job/confirm'
+      preLoaderRoute: typeof ApiAdminJobConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/quote/send': {
       id: '/api/admin/quote/send'
       path: '/api/admin/quote/send'
@@ -450,6 +470,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
+  ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
   ApiAdminQuoteSendRoute: ApiAdminQuoteSendRoute,
   ApiAdminXeroAuthorizeUrlRoute: ApiAdminXeroAuthorizeUrlRoute,
   ApiAdminXeroCallbackRoute: ApiAdminXeroCallbackRoute,
