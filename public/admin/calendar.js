@@ -170,7 +170,7 @@ function openJob(job, dateStr) {
   const close = openOverlay(view, 'modal', { dismissible: false });
   view.querySelector('#jCancel').addEventListener('click', () => close());
 
-  view.querySelector('#jSms').addEventListener('click', () => {
+  view.querySelector('#jSms').addEventListener('click', async (ev) => {
     const phone = view.querySelector('#jPhone').value.trim().replace(/\s+/g, '');
     if (!phone) { toast("Add the customer's phone number first.", 'bad'); return; }
     const name = (view.querySelector('#jTitle').value.trim().split(/[—-]/)[0] || '').trim();
@@ -179,7 +179,23 @@ function openJob(job, dateStr) {
     const suburb = view.querySelector('#jSuburb').value.trim();
     const dstr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
     const msg = `Hi ${name || 'there'}, confirming your booking with Lanky Services${dstr ? ' on ' + dstr : ''}${time ? ' at ' + time : ''}${suburb ? ' (' + suburb + ')' : ''}. Any questions call 0439 973 051. Thanks!`;
-    window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`;
+    const openDevice = () => { window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`; };
+
+    // Saved job → try sending automatically via Twilio; otherwise open Messages.
+    if (job && job.id) {
+      ev.target.disabled = true; ev.target.textContent = 'Sending…';
+      try {
+        const res = await apiFetch('/api/admin/job-confirm', { body: { job_id: job.id } });
+        if (res.configured === false) openDevice();
+        else toast('Confirmation text sent to the customer ✓');
+      } catch (err) {
+        toast(err.message + ' — opening your Messages instead', 'bad');
+        openDevice();
+      }
+      ev.target.disabled = false; ev.target.textContent = '✉ Text confirmation';
+    } else {
+      openDevice();
+    }
   });
 
   view.querySelector('#jSave').addEventListener('click', async (e) => {
