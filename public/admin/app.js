@@ -10,12 +10,13 @@ import * as expenses from './expenses.js';
 import * as income from './income.js';
 import * as reports from './reports.js';
 import * as marketing from './marketing.js';
+import * as users from './users.js';
 import * as settings from './settings.js';
 
-const TABS = { dashboard, leads, jobs, quotes, invoices, products, expenses, income, reports, marketing, settings };
+const TABS = { dashboard, leads, jobs, quotes, invoices, products, expenses, income, reports, marketing, users, settings };
 const TITLES = {
   dashboard: 'Dashboard', leads: 'Leads', jobs: 'Jobs calendar', quotes: 'Quotes', invoices: 'Invoices',
-  products: 'Price list', expenses: 'Expenses', income: 'Other income', reports: 'Reports & tax', marketing: 'Marketing', settings: 'Settings',
+  products: 'Price list', expenses: 'Expenses', income: 'Other income', reports: 'Reports & tax', marketing: 'Marketing', users: 'Users & access', settings: 'Settings',
 };
 const _tabParam = new URLSearchParams(location.search).get('tab');
 let current = (_tabParam && TABS[_tabParam]) ? _tabParam : 'dashboard';
