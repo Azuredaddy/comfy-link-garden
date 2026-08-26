@@ -16,12 +16,15 @@ import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
 import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/expenses-report'
+import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job-confirm'
+import { Route as ApiAdminJobEmailConfirmRouteImport } from './routes/api/admin/job-email-confirm'
 import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
+import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
+import { Route as ApiCalendarFeedRouteImport } from './routes/api/calendar/feed'
 import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
-import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job/confirm'
 import { Route as ApiAdminQuoteSendRouteImport } from './routes/api/admin/quote/send'
 import { Route as ApiAdminXeroAuthorizeUrlRouteImport } from './routes/api/admin/xero/authorize-url'
 import { Route as ApiAdminXeroCallbackRouteImport } from './routes/api/admin/xero/callback'
@@ -66,9 +69,29 @@ const ApiAdminExpensesReportRoute = ApiAdminExpensesReportRouteImport.update({
   path: '/api/admin/expenses-report',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminJobConfirmRoute = ApiAdminJobConfirmRouteImport.update({
+  id: '/api/admin/job-confirm',
+  path: '/api/admin/job-confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminJobEmailConfirmRoute = ApiAdminJobEmailConfirmRouteImport.update({
+  id: '/api/admin/job-email-confirm',
+  path: '/api/admin/job-email-confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
   id: '/api/admin/reply',
   path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
+  id: '/api/admin/users',
+  path: '/api/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCalendarFeedRoute = ApiCalendarFeedRouteImport.update({
+  id: '/api/calendar/feed',
+  path: '/api/calendar/feed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCronJobRemindersRoute = ApiCronJobRemindersRouteImport.update({
@@ -89,11 +112,6 @@ const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
 const ApiAdminInvoiceSendRoute = ApiAdminInvoiceSendRouteImport.update({
   id: '/api/admin/invoice/send',
   path: '/api/admin/invoice/send',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAdminJobConfirmRoute = ApiAdminJobConfirmRouteImport.update({
-  id: '/api/admin/job/confirm',
-  path: '/api/admin/job/confirm',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminQuoteSendRoute = ApiAdminQuoteSendRouteImport.update({
@@ -147,12 +165,15 @@ export interface FileRoutesByFullPath {
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
+  '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
-  '/api/admin/job/confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
   '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
@@ -170,12 +191,15 @@ export interface FileRoutesByTo {
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
+  '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
-  '/api/admin/job/confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
   '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
@@ -194,12 +218,15 @@ export interface FileRoutesById {
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
+  '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
-  '/api/admin/job/confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
   '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
@@ -219,12 +246,15 @@ export interface FileRouteTypes {
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
+    | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
-    | '/api/admin/job/confirm'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
     | '/api/admin/xero/callback'
@@ -242,12 +272,15 @@ export interface FileRouteTypes {
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
+    | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
-    | '/api/admin/job/confirm'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
     | '/api/admin/xero/callback'
@@ -265,12 +298,15 @@ export interface FileRouteTypes {
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
+    | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
-    | '/api/admin/job/confirm'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
     | '/api/admin/xero/callback'
@@ -289,12 +325,15 @@ export interface RootRouteChildren {
   ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
   ApiAdminExpensesReportRoute: typeof ApiAdminExpensesReportRoute
+  ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
+  ApiAdminJobEmailConfirmRoute: typeof ApiAdminJobEmailConfirmRoute
   ApiAdminReplyRoute: typeof ApiAdminReplyRoute
+  ApiAdminUsersRoute: typeof ApiAdminUsersRoute
+  ApiCalendarFeedRoute: typeof ApiCalendarFeedRoute
   ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
-  ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
   ApiAdminQuoteSendRoute: typeof ApiAdminQuoteSendRoute
   ApiAdminXeroAuthorizeUrlRoute: typeof ApiAdminXeroAuthorizeUrlRoute
   ApiAdminXeroCallbackRoute: typeof ApiAdminXeroCallbackRoute
@@ -356,11 +395,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminExpensesReportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/job-confirm': {
+      id: '/api/admin/job-confirm'
+      path: '/api/admin/job-confirm'
+      fullPath: '/api/admin/job-confirm'
+      preLoaderRoute: typeof ApiAdminJobConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/job-email-confirm': {
+      id: '/api/admin/job-email-confirm'
+      path: '/api/admin/job-email-confirm'
+      fullPath: '/api/admin/job-email-confirm'
+      preLoaderRoute: typeof ApiAdminJobEmailConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/reply': {
       id: '/api/admin/reply'
       path: '/api/admin/reply'
       fullPath: '/api/admin/reply'
       preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/users': {
+      id: '/api/admin/users'
+      path: '/api/admin/users'
+      fullPath: '/api/admin/users'
+      preLoaderRoute: typeof ApiAdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/calendar/feed': {
+      id: '/api/calendar/feed'
+      path: '/api/calendar/feed'
+      fullPath: '/api/calendar/feed'
+      preLoaderRoute: typeof ApiCalendarFeedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/cron/job-reminders': {
@@ -389,13 +456,6 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/invoice/send'
       fullPath: '/api/admin/invoice/send'
       preLoaderRoute: typeof ApiAdminInvoiceSendRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/job/confirm': {
-      id: '/api/admin/job/confirm'
-      path: '/api/admin/job/confirm'
-      fullPath: '/api/admin/job/confirm'
-      preLoaderRoute: typeof ApiAdminJobConfirmRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/quote/send': {
@@ -465,12 +525,15 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
   ApiAdminExpensesReportRoute: ApiAdminExpensesReportRoute,
+  ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
+  ApiAdminJobEmailConfirmRoute: ApiAdminJobEmailConfirmRoute,
   ApiAdminReplyRoute: ApiAdminReplyRoute,
+  ApiAdminUsersRoute: ApiAdminUsersRoute,
+  ApiCalendarFeedRoute: ApiCalendarFeedRoute,
   ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
-  ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
   ApiAdminQuoteSendRoute: ApiAdminQuoteSendRoute,
   ApiAdminXeroAuthorizeUrlRoute: ApiAdminXeroAuthorizeUrlRoute,
   ApiAdminXeroCallbackRoute: ApiAdminXeroCallbackRoute,
