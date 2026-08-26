@@ -1,7 +1,7 @@
 // Settings — business details used on quotes/invoices, the GST toggle, bank
 // details for invoice payment, document number prefixes, and a placeholder for
 // the Xero connection (added later via Lovable).
-import { $, el, esc, supabase, toast, apiFetch, xeroStatus, myRole } from './lib.js';
+import { $, esc, supabase, toast, apiFetch, xeroStatus } from './lib.js';
 
 export async function load() {
   const { data, error } = await supabase.from('business_settings').select('*').eq('id', 1).maybeSingle();
@@ -9,7 +9,6 @@ export async function load() {
   const s = data || {};
 
   $('tab-settings').innerHTML = `
-    <div id="usersCard"></div>
     <div class="card">
       <strong>Business details</strong>
       <p class="muted" style="font-size:13px;margin:4px 0 6px">These appear on your quotes and invoices.</p>
@@ -89,73 +88,6 @@ export async function load() {
 
   handleXeroReturn();
   await renderXero();
-  await renderUsers();
-}
-
-const ROLE_LABEL = { admin: 'Admin (full + users)', editor: 'Editor (full)', viewer: 'View only' };
-
-async function renderUsers() {
-  const card = $('usersCard');
-  if (!card) return;
-  const role = await myRole();
-  if (role !== 'admin') { card.innerHTML = ''; return; } // only admins manage users
-
-  const { data: me } = await supabase.auth.getUser();
-  const myEmail = (me.user?.email || '').toLowerCase();
-  let data;
-  try { const res = await apiFetch('/api/admin/users', { method: 'GET' }); data = res.users; }
-  catch (err) { card.innerHTML = `<div class="card err">${esc(err.message)}</div>`; return; }
-
-  card.innerHTML = `<div class="card">
-    <div class="card-head"><h2>Users &amp; access</h2></div>
-    <p class="cap" style="margin-top:-6px">Add someone by email and pick their access. They sign in at this page with that email (first time: “Create account”).</p>
-    <div class="row" style="align-items:flex-end;margin-top:8px">
-      <div class="grow"><label>Email</label><input id="usEmail" type="email" placeholder="person@email.com"></div>
-      <div style="width:190px"><label>Access</label><select id="usRole">
-        <option value="viewer">View only</option><option value="editor">Editor (full)</option><option value="admin">Admin (full + users)</option>
-      </select></div>
-      <button id="usAdd">Add user</button>
-    </div>
-    <table class="tbl" style="margin-top:14px"><tbody id="usRows"></tbody></table>
-  </div>`;
-
-  const rows = $('usRows');
-  rows.innerHTML = '';
-  for (const u of (data || [])) {
-    const isMe = u.email.toLowerCase() === myEmail;
-    const tr = el(`<tr>
-      <td>${esc(u.email)}${isMe ? ' <span class="muted">(you)</span>' : ''}</td>
-      <td style="width:200px"></td>
-      <td class="num" style="width:90px"></td></tr>`);
-    const sel = el(`<select class="sm" style="width:auto;padding:6px 8px" ${isMe ? 'disabled title="You can\'t change your own role"' : ''}>
-      ${['viewer', 'editor', 'admin'].map((r) => `<option value="${r}" ${r === (u.role || 'admin') ? 'selected' : ''}>${ROLE_LABEL[r]}</option>`).join('')}</select>`);
-    sel.addEventListener('change', async () => {
-      try { await apiFetch('/api/admin/users', { body: { action: 'update', email: u.email, role: sel.value } }); toast(`${u.email} is now ${sel.value}`); }
-      catch (err) { toast(err.message, 'bad'); }
-    });
-    tr.children[1].appendChild(sel);
-    if (!isMe) {
-      const del = el('<button class="danger sm">Remove</button>');
-      del.addEventListener('click', async () => {
-        if (!window.confirm(`Remove ${u.email}'s access?`)) return;
-        try { await apiFetch('/api/admin/users', { body: { action: 'remove', email: u.email } }); toast('Access removed'); renderUsers(); }
-        catch (err) { toast(err.message, 'bad'); }
-      });
-      tr.children[2].appendChild(del);
-    }
-    rows.appendChild(tr);
-  }
-
-  $('usAdd').addEventListener('click', async (e) => {
-    const email = $('usEmail').value.trim().toLowerCase();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Enter a valid email.', 'bad'); return; }
-    e.target.disabled = true;
-    try {
-      await apiFetch('/api/admin/users', { body: { action: 'add', email, role: $('usRole').value } });
-      toast('User added'); $('usEmail').value = ''; renderUsers();
-    } catch (err) { toast(err.message, 'bad'); }
-    e.target.disabled = false;
-  });
 }
 
 // Show a toast for the ?xero=... result after returning from Xero consent.
