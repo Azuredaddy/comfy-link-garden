@@ -12,6 +12,7 @@ const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Au
 const now = new Date();
 let vy = now.getFullYear();
 let vm = now.getMonth();
+let team = [];
 
 export async function load() {
   $('tab-jobs').innerHTML = `
@@ -38,6 +39,7 @@ export async function load() {
   $('calToday').addEventListener('click', () => { vy = now.getFullYear(); vm = now.getMonth(); render(); });
   $('calAdd').addEventListener('click', () => openJob(null, todayISO()));
   $('calSync').addEventListener('click', openSync);
+  try { team = (await apiFetch('/api/admin/team', { method: 'GET' })).team || []; } catch { team = []; }
   $('calRemind').addEventListener('click', async (e) => {
     e.target.disabled = true;
     try {
@@ -95,7 +97,7 @@ async function render() {
   up.innerHTML = (upcoming.data && upcoming.data.length)
     ? `<table class="tbl"><tbody>${upcoming.data.map((j) => `<tr class="clickable" data-job="${j.id}">
         <td style="width:130px" class="muted">${esc(fmtDate(j.job_date))}${j.job_time ? ' · ' + esc(j.job_time.slice(0, 5)) : ''}</td>
-        <td><strong>${esc(j.title)}</strong>${j.suburb ? ` <span class="muted">· ${esc(j.suburb)}</span>` : ''}</td>
+        <td><strong>${esc(j.title)}</strong>${j.suburb ? ` <span class="muted">· ${esc(j.suburb)}</span>` : ''}${j.assigned_to ? ` <span class="pill sent" style="margin-left:6px">${esc(j.assigned_to.split('@')[0])}</span>` : ''}</td>
         <td>${j.source ? `<span class="pill">${esc(j.source)}</span>` : ''}</td>
         <td class="num">${j.amount != null ? money(j.amount) : ''}</td>
         <td><span class="pill ${statusPill(j.status)}">${esc(STATUS_LABEL[j.status] || j.status)}</span></td>
@@ -136,7 +138,7 @@ async function openSync() {
 }
 
 function openJob(job, dateStr) {
-  const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', status: 'booked', source: 'Word of mouth', amount: '' };
+  const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', status: 'booked', source: 'Word of mouth', amount: '', assigned_to: '' };
   const view = el(`<div>
     <div class="spread"><h2>${job ? 'Edit job' : 'New job'}</h2>${job ? `<span class="pill ${statusPill(j.status)}">${esc(STATUS_LABEL[j.status] || j.status)}</span>` : ''}</div>
     <label>Customer / job title</label><input id="jTitle" value="${esc(j.title || '')}" placeholder="e.g. Dave — garage clean-out">
@@ -156,6 +158,8 @@ function openJob(job, dateStr) {
       <div style="width:180px"><label>Status</label><select id="jStatus">${STATUSES.map((s) => `<option value="${s}" ${s === j.status ? 'selected' : ''}>${STATUS_LABEL[s]}</option>`).join('')}</select></div>
       <div style="width:130px"><label>Amount $</label><input id="jAmount" inputmode="decimal" value="${j.amount != null ? j.amount : ''}" placeholder="optional"></div>
     </div>
+    <label>Assign to</label>
+    <select id="jAssign"><option value="">Unassigned</option>${team.map((t) => `<option value="${esc(t.email)}" ${t.email === j.assigned_to ? 'selected' : ''}>${esc(t.email)}${t.role ? ' (' + esc(t.role) + ')' : ''}</option>`).join('')}</select>
     <label>Notes</label><textarea id="jDesc" rows="3">${esc(j.description || '')}</textarea>
     <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:600">
       <input id="jConfirm" type="checkbox" style="width:auto;margin:0" ${job ? '' : 'checked'}>
@@ -216,6 +220,7 @@ function openJob(job, dateStr) {
       job_time: view.querySelector('#jTime').value || null,
       source: view.querySelector('#jSource').value,
       status: view.querySelector('#jStatus').value,
+      assigned_to: view.querySelector('#jAssign').value || null,
       amount: isNaN(amt) ? null : amt,
     };
     if (wantsConfirm && !email) { toast('Add a customer email, or untick the confirmation box.', 'bad'); return; }
