@@ -47,6 +47,9 @@ async function render() {
   const role = await myRole(true);
   document.body.classList.toggle('role-viewer', role === 'viewer');
   const rl = $('roleLabel'); if (rl) rl.textContent = role === 'admin' ? 'Admin' : role === 'editor' ? 'Editor' : 'View only';
+  const navUsers = $('navUsers');
+  if (navUsers) navUsers.classList.toggle('hidden', role !== 'admin');
+  if (role !== 'admin' && current === 'users') current = 'dashboard';
   const av = $('avatar');
   if (av && !av.dataset.wired) {
     av.dataset.wired = '1';
