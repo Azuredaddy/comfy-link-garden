@@ -226,7 +226,7 @@ function openJob(job, dateStr) {
 
     if (wantsConfirm && email) {
       try {
-        await apiFetch('/api/admin/job/confirm', { body: { id: res.data.id } });
+        await apiFetch('/api/admin/job-email-confirm', { body: { id: res.data.id } });
         toast('Confirmation emailed to ' + email);
       } catch (err) { toast('Job saved, but the email failed: ' + err.message, 'bad'); }
     }

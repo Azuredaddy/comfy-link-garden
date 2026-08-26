@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// POST /api/admin/job/confirm  { id }
+// POST /api/admin/job-email-confirm  { id }
 // Admin-only: emails the customer a booking confirmation for a job.
 export const Route = createFileRoute("/api/admin/job-email-confirm")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { requireAdmin } = await import("../../../../lib/admin-auth.server");
+        const { requireAdmin } = await import("../../../lib/admin-auth.server");
         const admin = await requireAdmin(request);
         if (!admin.ok) return admin.response;
 
@@ -15,9 +15,9 @@ export const Route = createFileRoute("/api/admin/job-email-confirm")({
           return Response.json({ ok: false, message: "Missing job id." }, { status: 400 });
         }
 
-        const { supabaseAdmin } = await import("../../../../integrations/supabase/client.server");
-        const { sendEmail, brandedEmail } = await import("../../../../lib/email.server");
-        const { loadSettings } = await import("../../../../lib/document-send.server");
+        const { supabaseAdmin } = await import("../../../integrations/supabase/client.server");
+        const { sendEmail, brandedEmail } = await import("../../../lib/email.server");
+        const { loadSettings } = await import("../../../lib/document-send.server");
 
         const { data: job } = await supabaseAdmin
           .from("jobs")
