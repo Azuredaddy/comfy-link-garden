@@ -18,14 +18,17 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          role: string
         }
         Insert: {
           created_at?: string
           email: string
+          role?: string
         }
         Update: {
           created_at?: string
           email?: string
+          role?: string
         }
         Relationships: []
       }
@@ -291,6 +294,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      jobs: {
+        Row: {
+          amount: number | null
+          created_at: string
+          customer_phone: string | null
+          description: string | null
+          id: string
+          invoice_id: string | null
+          job_date: string
+          job_time: string | null
+          quote_id: string | null
+          source: string | null
+          status: string
+          suburb: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          customer_phone?: string | null
+          description?: string | null
+          id?: string
+          invoice_id?: string | null
+          job_date?: string
+          job_time?: string | null
+          quote_id?: string | null
+          source?: string | null
+          status?: string
+          suburb?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          customer_phone?: string | null
+          description?: string | null
+          id?: string
+          invoice_id?: string | null
+          job_date?: string
+          job_time?: string | null
+          quote_id?: string | null
+          source?: string | null
+          status?: string
+          suburb?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jobs_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_subscribers: {
+        Row: {
+          consent_ip: string | null
+          consented_at: string
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          source: string | null
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          consent_ip?: string | null
+          consented_at?: string
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          source?: string | null
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          consent_ip?: string | null
+          consented_at?: string
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          source?: string | null
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: []
       }
       messages: {
         Row: {
