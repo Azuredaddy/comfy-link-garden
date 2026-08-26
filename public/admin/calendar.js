@@ -3,7 +3,9 @@
 import { $, el, esc, money, fmtDate, supabase, toast, openOverlay, todayISO, apiFetch } from './lib.js';
 
 const SOURCES = ['Word of mouth', 'Returning client', 'Website lead', 'Airtasker', 'Phone', 'Other'];
-const STATUSES = ['booked', 'completed', 'cancelled'];
+const STATUSES = ['unconfirmed', 'booked', 'completed', 'cancelled'];
+const STATUS_LABEL = { unconfirmed: 'Not yet confirmed (TBC)', booked: 'Booked', completed: 'Completed', cancelled: 'Cancelled' };
+const statusPill = (s) => s === 'completed' ? 'paid' : s === 'cancelled' ? 'void' : s === 'unconfirmed' ? 'draft' : 'sent';
 const DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -96,7 +98,7 @@ async function render() {
         <td><strong>${esc(j.title)}</strong>${j.suburb ? ` <span class="muted">· ${esc(j.suburb)}</span>` : ''}</td>
         <td>${j.source ? `<span class="pill">${esc(j.source)}</span>` : ''}</td>
         <td class="num">${j.amount != null ? money(j.amount) : ''}</td>
-        <td><span class="pill ${j.status === 'completed' ? 'paid' : j.status === 'cancelled' ? 'void' : 'sent'}">${esc(j.status)}</span></td>
+        <td><span class="pill ${statusPill(j.status)}">${esc(STATUS_LABEL[j.status] || j.status)}</span></td>
       </tr>`).join('')}</tbody></table>`
     : '<p class="cap">No upcoming jobs. Click a day on the calendar to add one.</p>';
   up.querySelectorAll('[data-job]').forEach((tr) => {
@@ -136,7 +138,7 @@ async function openSync() {
 function openJob(job, dateStr) {
   const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', status: 'booked', source: 'Word of mouth', amount: '' };
   const view = el(`<div>
-    <div class="spread"><h2>${job ? 'Edit job' : 'New job'}</h2>${job ? `<span class="pill ${j.status === 'completed' ? 'paid' : j.status === 'cancelled' ? 'void' : 'sent'}">${esc(j.status)}</span>` : ''}</div>
+    <div class="spread"><h2>${job ? 'Edit job' : 'New job'}</h2>${job ? `<span class="pill ${statusPill(j.status)}">${esc(STATUS_LABEL[j.status] || j.status)}</span>` : ''}</div>
     <label>Customer / job title</label><input id="jTitle" value="${esc(j.title || '')}" placeholder="e.g. Dave — garage clean-out">
     <div class="row">
       <div class="grow"><label>Date</label><input id="jDate" type="date" value="${esc(j.job_date)}"></div>
@@ -151,7 +153,7 @@ function openJob(job, dateStr) {
     </div>
     <div class="row">
       <div class="grow"><label>Source</label><select id="jSource">${SOURCES.map((s) => `<option ${s === j.source ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
-      <div style="width:150px"><label>Status</label><select id="jStatus">${STATUSES.map((s) => `<option ${s === j.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div style="width:180px"><label>Status</label><select id="jStatus">${STATUSES.map((s) => `<option value="${s}" ${s === j.status ? 'selected' : ''}>${STATUS_LABEL[s]}</option>`).join('')}</select></div>
       <div style="width:130px"><label>Amount $</label><input id="jAmount" inputmode="decimal" value="${j.amount != null ? j.amount : ''}" placeholder="optional"></div>
     </div>
     <label>Notes</label><textarea id="jDesc" rows="3">${esc(j.description || '')}</textarea>

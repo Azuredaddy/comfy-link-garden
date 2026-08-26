@@ -11,6 +11,17 @@ export async function load() {
   const root = $('tab-dashboard');
   root.innerHTML = `
     <div class="tiles" id="dashTiles"></div>
+    <div class="card">
+      <div class="card-head"><h2>Quick actions</h2></div>
+      <div class="row">
+        <button onclick="LANKY.go('quotes')">＋ New quote</button>
+        <button class="subtle" onclick="LANKY.go('invoices')">＋ New invoice</button>
+        <button class="subtle" onclick="LANKY.go('jobs')">＋ Add job</button>
+        <button class="subtle" onclick="LANKY.go('expenses')">＋ Add expense</button>
+        <button class="ghost" onclick="LANKY.go('income')">＋ Add income</button>
+        <button class="ghost" onclick="LANKY.go('leads')">View leads</button>
+      </div>
+    </div>
     <div class="grid2">
       <div class="card">
         <div class="card-head"><div><h2>Revenue by month</h2><div class="cap">Paid invoices · last 12 months</div></div></div>
@@ -28,15 +39,6 @@ export async function load() {
     <div class="card">
       <div class="card-head"><h2>Recent paid invoices</h2></div>
       <div id="dashRecent"></div>
-    </div>
-    <div class="card">
-      <div class="card-head"><h2>Quick actions</h2></div>
-      <div class="row">
-        <button onclick="LANKY.go('quotes')">＋ New quote</button>
-        <button class="subtle" onclick="LANKY.go('invoices')">＋ New invoice</button>
-        <button class="subtle" onclick="LANKY.go('expenses')">＋ Add expense</button>
-        <button class="ghost" onclick="LANKY.go('leads')">View leads</button>
-      </div>
     </div>`;
 
   const fy = currentFyStart();

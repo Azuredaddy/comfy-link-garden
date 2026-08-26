@@ -37,8 +37,13 @@ export async function loadDocList(kind) {
   const refresh = () => renderRows(kind, table, isInvoice);
   $('dlFilter').addEventListener('change', refresh);
   $('dlNew').addEventListener('click', () => openDocEditor(kind, { onSaved: refresh }));
-  xeroOn = (await xeroStatus()).connected === true;
+  // Render the list immediately — don't block on the Xero status call (that
+  // network round-trip was making the buttons unresponsive until a refresh).
   await refresh();
+  xeroStatus().then((s) => {
+    const on = s.connected === true;
+    if (on !== xeroOn) { xeroOn = on; refresh(); }
+  }).catch(() => {});
 }
 
 async function renderRows(kind, table, isInvoice) {
