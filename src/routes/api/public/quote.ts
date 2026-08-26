@@ -123,7 +123,7 @@ export const Route = createFileRoute("/api/public/quote")({
             source: "quote form",
             consented_at: new Date().toISOString(),
             unsubscribed_at: null,
-          } as never, { onConflict: "email" });
+          }, { onConflict: "email" });
           if (subErr) await logServerError({ source: "api:quote:subscribe", error: subErr, status: 202, ...meta });
         }
 

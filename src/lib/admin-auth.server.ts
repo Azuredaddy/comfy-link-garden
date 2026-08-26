@@ -31,9 +31,12 @@ export async function requireAdmin(request: Request): Promise<AdminResult> {
 
   const row = (admins ?? []).find((r) => r.email.toLowerCase() === email);
   if (!row) return deny(403, "This account is not on the approved admin list.");
-  const role = (row as { role?: string }).role ?? "admin";
+  const role = row.role;
   // Every /api/admin/* route performs an action; view-only users are blocked.
   if (role === "viewer") return deny(403, "Your account is view-only.");
 
-  return { ok: true, user: { id: data.user!.id, email, role } };
+  const userId = data.user?.id;
+  if (!userId) return deny(401, "Your session has expired — please sign in again.");
+
+  return { ok: true, user: { id: userId, email, role } };
 }
