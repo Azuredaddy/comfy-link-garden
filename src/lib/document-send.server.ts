@@ -128,7 +128,7 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
           .limit(1)
           .maybeSingle();
         if (!already) {
-          const REVIEW_URL = "https://g.page/r/Cee2YwnmgX5wEAI/review/";
+          const REVIEW_URL = "https://g.page/r/Cee2YwnmgX5wEAI/review";
           const smsBody = `Thanks for choosing Lanky Services! If you were happy with the job, a quick Google review would mean a lot: ${REVIEW_URL} Cheers, the Lanky team.`;
           const sms = await sendSms(doc.customer_phone, smsBody);
           await supabaseAdmin.from("messages").insert({
