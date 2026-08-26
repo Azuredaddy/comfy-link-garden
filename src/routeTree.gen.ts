@@ -16,7 +16,10 @@ import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
 import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/expenses-report'
+import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job-confirm'
 import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
+import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
+import { Route as ApiCalendarFeedRouteImport } from './routes/api/calendar/feed'
 import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
@@ -66,9 +69,24 @@ const ApiAdminExpensesReportRoute = ApiAdminExpensesReportRouteImport.update({
   path: '/api/admin/expenses-report',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminJobConfirmRoute = ApiAdminJobConfirmRouteImport.update({
+  id: '/api/admin/job-confirm',
+  path: '/api/admin/job-confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
   id: '/api/admin/reply',
   path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
+  id: '/api/admin/users',
+  path: '/api/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCalendarFeedRoute = ApiCalendarFeedRouteImport.update({
+  id: '/api/calendar/feed',
+  path: '/api/calendar/feed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCronJobRemindersRoute = ApiCronJobRemindersRouteImport.update({
@@ -147,7 +165,10 @@ export interface FileRoutesByFullPath {
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -170,7 +191,10 @@ export interface FileRoutesByTo {
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -194,7 +218,10 @@ export interface FileRoutesById {
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
@@ -219,7 +246,10 @@ export interface FileRouteTypes {
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
     | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
@@ -242,7 +272,10 @@ export interface FileRouteTypes {
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
     | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
@@ -265,7 +298,10 @@ export interface FileRouteTypes {
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
     | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
@@ -289,7 +325,10 @@ export interface RootRouteChildren {
   ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
   ApiAdminExpensesReportRoute: typeof ApiAdminExpensesReportRoute
+  ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
   ApiAdminReplyRoute: typeof ApiAdminReplyRoute
+  ApiAdminUsersRoute: typeof ApiAdminUsersRoute
+  ApiCalendarFeedRoute: typeof ApiCalendarFeedRoute
   ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
@@ -356,11 +395,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminExpensesReportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/job-confirm': {
+      id: '/api/admin/job-confirm'
+      path: '/api/admin/job-confirm'
+      fullPath: '/api/admin/job-confirm'
+      preLoaderRoute: typeof ApiAdminJobConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/reply': {
       id: '/api/admin/reply'
       path: '/api/admin/reply'
       fullPath: '/api/admin/reply'
       preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/users': {
+      id: '/api/admin/users'
+      path: '/api/admin/users'
+      fullPath: '/api/admin/users'
+      preLoaderRoute: typeof ApiAdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/calendar/feed': {
+      id: '/api/calendar/feed'
+      path: '/api/calendar/feed'
+      fullPath: '/api/calendar/feed'
+      preLoaderRoute: typeof ApiCalendarFeedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/cron/job-reminders': {
@@ -465,7 +525,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
   ApiAdminExpensesReportRoute: ApiAdminExpensesReportRoute,
+  ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
   ApiAdminReplyRoute: ApiAdminReplyRoute,
+  ApiAdminUsersRoute: ApiAdminUsersRoute,
+  ApiCalendarFeedRoute: ApiCalendarFeedRoute,
   ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
