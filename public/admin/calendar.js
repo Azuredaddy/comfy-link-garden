@@ -20,6 +20,7 @@ export async function load() {
         <h2 id="calLabel"></h2>
         <button class="subtle sm" id="calToday">Today</button>
         <button id="calRemind" class="ghost sm">✉ Email tomorrow's jobs</button>
+        <button id="calSync" class="ghost sm">📅 Sync to phone</button>
         <button id="calAdd" class="right">＋ Add job</button>
       </div>
       <div class="cal" id="calDows">${DOW.map((d) => `<div class="dow">${d}</div>`).join('')}</div>
@@ -34,6 +35,7 @@ export async function load() {
   $('calNext').addEventListener('click', () => { vm++; if (vm > 11) { vm = 0; vy++; } render(); });
   $('calToday').addEventListener('click', () => { vy = now.getFullYear(); vm = now.getMonth(); render(); });
   $('calAdd').addEventListener('click', () => openJob(null, todayISO()));
+  $('calSync').addEventListener('click', openSync);
   $('calRemind').addEventListener('click', async (e) => {
     e.target.disabled = true;
     try {
@@ -100,6 +102,34 @@ async function render() {
   up.querySelectorAll('[data-job]').forEach((tr) => {
     const j = (upcoming.data || []).find((x) => x.id === tr.dataset.job);
     tr.addEventListener('click', () => openJob(j));
+  });
+}
+
+async function openSync() {
+  const { data } = await supabase.from('business_settings').select('ical_token').eq('id', 1).maybeSingle();
+  const token = data?.ical_token;
+  if (!token) { toast('Calendar sync not ready yet — try again after the next update.', 'bad'); return; }
+  const url = `${location.origin}/api/calendar/feed?token=${token}`;
+  const view = el(`<div>
+    <h2>Sync jobs to your phone</h2>
+    <p class="cap" style="margin:6px 0 12px">Add this private link to Google Calendar and your booked jobs show up on your phone — updating automatically.</p>
+    <label>Your private calendar link</label>
+    <input id="syncUrl" value="${esc(url)}" readonly>
+    <div class="row" style="margin-top:10px"><button id="syncCopy">Copy link</button><button id="syncClose" class="ghost">Close</button></div>
+    <div style="height:1px;background:var(--line);margin:16px 0"></div>
+    <strong style="font-size:14px">How to add it (once, on a computer)</strong>
+    <ol class="cap" style="margin:8px 0 0 18px;line-height:1.8">
+      <li>Open <a href="https://calendar.google.com" target="_blank" rel="noopener">Google Calendar</a>.</li>
+      <li>Left side → <strong>Other calendars</strong> → <strong>+</strong> → <strong>From URL</strong>.</li>
+      <li>Paste the link above → <strong>Add calendar</strong>.</li>
+      <li>It appears on your phone's Google Calendar within a few minutes. Keep the link private.</li>
+    </ol></div>`);
+  const close = openOverlay(view, 'modal');
+  view.querySelector('#syncClose').addEventListener('click', () => close());
+  view.querySelector('#syncUrl').addEventListener('focus', (e) => e.target.select());
+  view.querySelector('#syncCopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(url); toast('Link copied'); }
+    catch { const i = view.querySelector('#syncUrl'); i.focus(); i.select(); }
   });
 }
 
