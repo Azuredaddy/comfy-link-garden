@@ -132,12 +132,25 @@ function openJob(job, dateStr) {
     ${j.confirmation_sent_at ? `<div class="muted" style="font-size:12px;margin-top:4px">Confirmation sent ${new Date(j.confirmation_sent_at).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })}</div>` : ''}
     <div class="row" style="margin-top:16px">
       <button id="jSave">${job ? 'Save changes' : 'Add job'}</button>
+      <button id="jSms" class="subtle">✉ Text confirmation</button>
       <button id="jCancel" class="ghost">Close</button>
       ${job ? '<button id="jDelete" class="danger" style="margin-left:auto">Delete</button>' : ''}
     </div>
   </div>`);
   const close = openOverlay(view, 'modal', { dismissible: false });
   view.querySelector('#jCancel').addEventListener('click', () => close());
+
+  view.querySelector('#jSms').addEventListener('click', () => {
+    const phone = view.querySelector('#jPhone').value.trim().replace(/\s+/g, '');
+    if (!phone) { toast("Add the customer's phone number first.", 'bad'); return; }
+    const name = (view.querySelector('#jTitle').value.trim().split(/[—-]/)[0] || '').trim();
+    const date = view.querySelector('#jDate').value;
+    const time = view.querySelector('#jTime').value;
+    const suburb = view.querySelector('#jSuburb').value.trim();
+    const dstr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
+    const msg = `Hi ${name || 'there'}, confirming your booking with Lanky Services${dstr ? ' on ' + dstr : ''}${time ? ' at ' + time : ''}${suburb ? ' (' + suburb + ')' : ''}. Any questions call 0439 973 051. Thanks!`;
+    window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`;
+  });
 
   view.querySelector('#jSave').addEventListener('click', async (e) => {
     const title = view.querySelector('#jTitle').value.trim();

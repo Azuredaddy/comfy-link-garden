@@ -61,6 +61,16 @@ export async function openDocEditor(kind, opts = {}) {
     items = (Q._items && Q._items.length) ? Q._items.map((i) => ({ ...i })) : items;
   }
 
+  // New quotes start with the Base Booking Fee prefilled (from the price list).
+  if (kind === 'quote' && !opts.id && !opts.fromQuote) {
+    let base = { description: 'Base Booking Fee', quantity: 1, unit_price: 110 };
+    try {
+      const { data } = await supabase.from('products').select('name, unit_price').ilike('name', 'Base Booking Fee').eq('active', true).limit(1).maybeSingle();
+      if (data) base = { description: data.name, quantity: 1, unit_price: Number(data.unit_price) || 0 };
+    } catch { /* price list not available — use default */ }
+    items = (opts.lead && opts.lead.service) ? [base, { description: opts.lead.service, quantity: 1, unit_price: 0 }] : [base];
+  }
+
   const gst = !!settings.gst_registered;
   const dateField = isInvoice
     ? `<div class="grow"><label>Due date</label><input id="dDue" type="date" value="${esc(doc.due_date || '')}"></div>`

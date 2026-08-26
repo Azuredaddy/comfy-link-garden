@@ -9,7 +9,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export const EXPENSE_CATEGORIES = [
   'Fuel', 'Tools & Equipment', 'Vehicle', 'Tip/Disposal fees', 'Materials',
-  'Insurance', 'Phone/Internet', 'Advertising', 'Wages', 'Other',
+  'Insurance', 'Phone/Internet', 'Advertising', 'Wages', 'Airtasker fees', 'Platform fees', 'Other',
 ];
 
 // ---- dom helpers ----------------------------------------------------------

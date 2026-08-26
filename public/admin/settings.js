@@ -102,8 +102,9 @@ async function renderUsers() {
 
   const { data: me } = await supabase.auth.getUser();
   const myEmail = (me.user?.email || '').toLowerCase();
-  const { data, error } = await supabase.from('admin_emails').select('email, role').order('email');
-  if (error) { card.innerHTML = `<div class="card err">${esc(error.message)}</div>`; return; }
+  let data;
+  try { const res = await apiFetch('/api/admin/users', { method: 'GET' }); data = res.users; }
+  catch (err) { card.innerHTML = `<div class="card err">${esc(err.message)}</div>`; return; }
 
   card.innerHTML = `<div class="card">
     <div class="card-head"><h2>Users &amp; access</h2></div>
@@ -129,18 +130,16 @@ async function renderUsers() {
     const sel = el(`<select class="sm" style="width:auto;padding:6px 8px" ${isMe ? 'disabled title="You can\'t change your own role"' : ''}>
       ${['viewer', 'editor', 'admin'].map((r) => `<option value="${r}" ${r === (u.role || 'admin') ? 'selected' : ''}>${ROLE_LABEL[r]}</option>`).join('')}</select>`);
     sel.addEventListener('change', async () => {
-      const { error } = await supabase.from('admin_emails').update({ role: sel.value }).eq('email', u.email);
-      if (error) { toast(error.message, 'bad'); return; }
-      toast(`${u.email} is now ${sel.value}`);
+      try { await apiFetch('/api/admin/users', { body: { action: 'update', email: u.email, role: sel.value } }); toast(`${u.email} is now ${sel.value}`); }
+      catch (err) { toast(err.message, 'bad'); }
     });
     tr.children[1].appendChild(sel);
     if (!isMe) {
       const del = el('<button class="danger sm">Remove</button>');
       del.addEventListener('click', async () => {
         if (!window.confirm(`Remove ${u.email}'s access?`)) return;
-        const { error } = await supabase.from('admin_emails').delete().eq('email', u.email);
-        if (error) { toast(error.message, 'bad'); return; }
-        toast('Access removed'); renderUsers();
+        try { await apiFetch('/api/admin/users', { body: { action: 'remove', email: u.email } }); toast('Access removed'); renderUsers(); }
+        catch (err) { toast(err.message, 'bad'); }
       });
       tr.children[2].appendChild(del);
     }
@@ -151,10 +150,11 @@ async function renderUsers() {
     const email = $('usEmail').value.trim().toLowerCase();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Enter a valid email.', 'bad'); return; }
     e.target.disabled = true;
-    const { error } = await supabase.from('admin_emails').upsert({ email, role: $('usRole').value }, { onConflict: 'email' });
+    try {
+      await apiFetch('/api/admin/users', { body: { action: 'add', email, role: $('usRole').value } });
+      toast('User added'); $('usEmail').value = ''; renderUsers();
+    } catch (err) { toast(err.message, 'bad'); }
     e.target.disabled = false;
-    if (error) { toast(error.message, 'bad'); return; }
-    toast('User added'); $('usEmail').value = ''; renderUsers();
   });
 }
 

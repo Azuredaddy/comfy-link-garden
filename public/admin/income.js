@@ -16,7 +16,8 @@ export async function load() {
         <div style="width:150px"><label>Date</label><input id="inDate" type="date" value="${todayISO()}"></div>
         <div style="width:170px"><label>Source</label><input id="inSource" placeholder="e.g. Airtasker"></div>
         <div class="grow" style="min-width:160px"><label>Description</label><input id="inDesc" placeholder="optional"></div>
-        <div style="width:130px"><label>Amount $</label><input id="inAmount" inputmode="decimal" placeholder="0.00"></div>
+        <div style="width:120px"><label>Amount $</label><input id="inAmount" inputmode="decimal" placeholder="0.00"></div>
+        <div style="width:130px"><label>Service fee $</label><input id="inFee" inputmode="decimal" placeholder="optional"></div>
         <button id="inAdd">Add</button>
       </div>
     </div>
@@ -60,16 +61,32 @@ async function addOne() {
   const amount = parseFloat($('inAmount').value);
   if (!amount || amount <= 0) { toast('Enter an amount.', 'bad'); return; }
   const btn = $('inAdd'); btn.disabled = true;
+  const source = $('inSource').value.trim() || null;
   const { error } = await supabase.from('other_income').insert({
     income_date: $('inDate').value || todayISO(),
-    source: $('inSource').value.trim() || null,
+    source,
     description: $('inDesc').value.trim() || null,
     amount,
   });
+  if (error) { toast(error.message, 'bad'); btn.disabled = false; return; }
+
+  // Optional service fee → logged as a claimable expense (with its GST portion).
+  const fee = parseFloat($('inFee').value);
+  let feeMsg = '';
+  if (fee && fee > 0) {
+    const { error: fe } = await supabase.from('expenses').insert({
+      expense_date: $('inDate').value || todayISO(),
+      category: (source && /airtasker/i.test(source)) ? 'Airtasker fees' : 'Platform fees',
+      description: `${source || 'Platform'} service fee`,
+      supplier: source || null,
+      amount: fee,
+      gst_amount: Math.round((fee / 11) * 100) / 100,
+    });
+    feeMsg = fe ? ' (fee not saved: ' + fe.message + ')' : ' + fee logged as expense';
+  }
   btn.disabled = false;
-  if (error) { toast(error.message, 'bad'); return; }
-  $('inSource').value = ''; $('inDesc').value = ''; $('inAmount').value = '';
-  toast('Income added'); refresh();
+  $('inSource').value = ''; $('inDesc').value = ''; $('inAmount').value = ''; $('inFee').value = '';
+  toast('Income added' + feeMsg); refresh();
 }
 
 // ---- spreadsheet import ---------------------------------------------------
