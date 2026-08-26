@@ -1,5 +1,19 @@
 /* Lanky Services — shared interactions */
 (function () {
+  // Google Analytics (gtag.js)
+  var GA_ID = 'G-RW5ZEP2YVH';
+  if (!window.__gaLoaded) {
+    window.__gaLoaded = true;
+    var ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(ga);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID);
+  }
+
   // Skip-to-content link (accessibility)
   var main = document.querySelector('main');
   if (main) {
