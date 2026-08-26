@@ -168,32 +168,37 @@
           });
         }
         var rows = '';
-        if (payload.phone) rows += '<li><strong>Phone:</strong> ' + esc(payload.phone) + '</li>';
-        if (payload.email) rows += '<li><strong>Email:</strong> ' + esc(payload.email) + '</li>';
-        if (payload.suburb) rows += '<li><strong>Suburb:</strong> ' + esc(payload.suburb) + '</li>';
-        if (payload.service) rows += '<li><strong>Job:</strong> ' + esc(payload.service) + '</li>';
+        if (payload.phone) rows += '<li><strong>Phone</strong><span>' + esc(payload.phone) + '</span></li>';
+        if (payload.email) rows += '<li><strong>Email</strong><span>' + esc(payload.email) + '</span></li>';
+        if (payload.suburb) rows += '<li><strong>Suburb</strong><span>' + esc(payload.suburb) + '</span></li>';
+        if (payload.service) rows += '<li><strong>Job</strong><span>' + esc(payload.service) + '</span></li>';
 
         var done = document.createElement('div');
         done.className = 'quote-confirm';
         done.setAttribute('role', 'status');
         done.setAttribute('tabindex', '-1');
         done.innerHTML =
-          '<div class="qc-tick" aria-hidden="true">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">' +
-            '<path d="M20 6 9 17l-5-5"/></svg>' +
+          '<div class="qc-head">' +
+            '<div class="qc-tick" aria-hidden="true">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>' +
+            '</div>' +
+            '<h2>Thanks ' + esc(payload.name.split(' ')[0]) + ', your request is in.</h2>' +
+            '<p>We\u2019ve received your quote request \u2014 it\u2019s already with our team.</p>' +
           '</div>' +
-          '<h2>Thanks ' + esc(payload.name.split(' ')[0]) + ', your request is in.</h2>' +
-          '<p>We\u2019ve received your quote request and it\u2019s already with our team.</p>' +
           '<h3>What happens next</h3>' +
           '<ol class="qc-steps">' +
-            '<li>We review the details you sent (usually within a couple of hours, Mon\u2013Sat 7am\u20136pm).</li>' +
-            '<li>Matt calls or texts you with an upfront, no-obligation price.</li>' +
-            '<li>Happy with it? We lock in a time \u2014 often same or next day.</li>' +
+            '<li><span class="qc-num">1</span><div class="qc-step-b"><strong>We review your details</strong><span>Usually within a couple of hours \u00b7 Mon\u2013Sat, 7am\u20136pm</span></div></li>' +
+            '<li><span class="qc-num">2</span><div class="qc-step-b"><strong>Matt calls or texts you</strong><span>With an upfront, no-obligation price</span></div></li>' +
+            '<li><span class="qc-num">3</span><div class="qc-step-b"><strong>We lock in a time</strong><span>Happy with it? Often same or next day</span></div></li>' +
           '</ol>' +
-          (rows ? '<h3>What you sent us</h3><ul class="qc-summary">' + rows + '</ul>' : '') +
-          '<p class="qc-contact">Need it sorted urgently? Call <a href="tel:0439973051">0439 973 051</a> ' +
-          'or email <a href="mailto:' + BUSINESS_EMAIL + '">' + BUSINESS_EMAIL + '</a>.</p>' +
-          '<p class="form-note">Tip: photos help us quote faster \u2014 text or email them through anytime.</p>';
+          (rows ? '<div class="qc-card"><h3>What you sent us</h3><ul class="qc-summary">' + rows + '</ul></div>' : '') +
+          '<div class="qc-cta">' +
+            '<a class="qc-btn" href="tel:0439973051">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+              'Call 0439 973 051</a>' +
+            '<span class="qc-or">or email <a href="mailto:' + BUSINESS_EMAIL + '">' + BUSINESS_EMAIL + '</a></span>' +
+          '</div>' +
+          '<p class="qc-tip">\ud83d\udcf8 Photos help us quote faster \u2014 text or email them through anytime.</p>';
 
         form.parentNode.replaceChild(done, form);
         try { done.focus(); } catch (err) {}
