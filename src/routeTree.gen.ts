@@ -32,6 +32,7 @@ import { Route as ApiAdminXeroPushInvoiceRouteImport } from './routes/api/admin/
 import { Route as ApiAdminXeroPushQuoteRouteImport } from './routes/api/admin/xero/push-quote'
 import { Route as ApiAdminXeroStatusRouteImport } from './routes/api/admin/xero/status'
 import { Route as ApiAdminXeroSyncSettingsRouteImport } from './routes/api/admin/xero/sync-settings'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -150,6 +151,12 @@ const ApiAdminXeroSyncSettingsRoute =
     path: '/api/admin/xero/sync-settings',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
   '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
   '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -200,6 +208,7 @@ export interface FileRoutesByTo {
   '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
   '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
   '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -226,6 +235,7 @@ export interface FileRoutesById {
   '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
   '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
   '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/api/admin/xero/push-quote'
     | '/api/admin/xero/status'
     | '/api/admin/xero/sync-settings'
+    | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/api/admin/xero/push-quote'
     | '/api/admin/xero/status'
     | '/api/admin/xero/sync-settings'
+    | '/api/public/payments/webhook'
   id:
     | '__root__'
     | '/'
@@ -303,6 +315,7 @@ export interface FileRouteTypes {
     | '/api/admin/xero/push-quote'
     | '/api/admin/xero/status'
     | '/api/admin/xero/sync-settings'
+    | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -329,6 +342,7 @@ export interface RootRouteChildren {
   ApiAdminXeroPushQuoteRoute: typeof ApiAdminXeroPushQuoteRoute
   ApiAdminXeroStatusRoute: typeof ApiAdminXeroStatusRoute
   ApiAdminXeroSyncSettingsRoute: typeof ApiAdminXeroSyncSettingsRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -494,6 +508,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminXeroSyncSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -521,6 +542,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminXeroPushQuoteRoute: ApiAdminXeroPushQuoteRoute,
   ApiAdminXeroStatusRoute: ApiAdminXeroStatusRoute,
   ApiAdminXeroSyncSettingsRoute: ApiAdminXeroSyncSettingsRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
