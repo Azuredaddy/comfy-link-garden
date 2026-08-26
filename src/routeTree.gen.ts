@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
-import { Route as PayRouteImport } from './routes/pay'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
@@ -23,7 +22,6 @@ import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiCalendarFeedRouteImport } from './routes/api/calendar/feed'
 import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
-import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
 import { Route as ApiAdminQuoteSendRouteImport } from './routes/api/admin/quote/send'
 import { Route as ApiAdminXeroAuthorizeUrlRouteImport } from './routes/api/admin/xero/authorize-url'
@@ -42,11 +40,6 @@ const IndexRoute = IndexRouteImport.update({
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PayRoute = PayRouteImport.update({
-  id: '/pay',
-  path: '/pay',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
@@ -104,11 +97,6 @@ const ApiPublicQuoteRoute = ApiPublicQuoteRouteImport.update({
   path: '/api/public/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
-  id: '/api/stripe/webhook',
-  path: '/api/stripe/webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAdminInvoiceSendRoute = ApiAdminInvoiceSendRouteImport.update({
   id: '/api/admin/invoice/send',
   path: '/api/admin/invoice/send',
@@ -160,7 +148,6 @@ const ApiAdminXeroSyncSettingsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/pay': typeof PayRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -172,7 +159,6 @@ export interface FileRoutesByFullPath {
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
-  '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
@@ -186,7 +172,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/pay': typeof PayRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -198,7 +183,6 @@ export interface FileRoutesByTo {
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
-  '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
@@ -213,7 +197,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/pay': typeof PayRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -225,7 +208,6 @@ export interface FileRoutesById {
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
-  '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
   '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
   '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
@@ -241,7 +223,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
-    | '/pay'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -253,7 +234,6 @@ export interface FileRouteTypes {
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
-    | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
@@ -267,7 +247,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
-    | '/pay'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -279,7 +258,6 @@ export interface FileRouteTypes {
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
-    | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
@@ -293,7 +271,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
-    | '/pay'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -305,7 +282,6 @@ export interface FileRouteTypes {
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
     | '/api/public/quote'
-    | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
     | '/api/admin/quote/send'
     | '/api/admin/xero/authorize-url'
@@ -320,7 +296,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
-  PayRoute: typeof PayRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
@@ -332,7 +307,6 @@ export interface RootRouteChildren {
   ApiCalendarFeedRoute: typeof ApiCalendarFeedRoute
   ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
-  ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
   ApiAdminQuoteSendRoute: typeof ApiAdminQuoteSendRoute
   ApiAdminXeroAuthorizeUrlRoute: typeof ApiAdminXeroAuthorizeUrlRoute
@@ -358,13 +332,6 @@ declare module '@tanstack/react-router' {
       path: '/$'
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pay': {
-      id: '/pay'
-      path: '/pay'
-      fullPath: '/pay'
-      preLoaderRoute: typeof PayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/unsubscribe': {
@@ -444,13 +411,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicQuoteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/stripe/webhook': {
-      id: '/api/stripe/webhook'
-      path: '/api/stripe/webhook'
-      fullPath: '/api/stripe/webhook'
-      preLoaderRoute: typeof ApiStripeWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/admin/invoice/send': {
       id: '/api/admin/invoice/send'
       path: '/api/admin/invoice/send'
@@ -520,7 +480,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
-  PayRoute: PayRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
@@ -532,7 +491,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCalendarFeedRoute: ApiCalendarFeedRoute,
   ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
-  ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
   ApiAdminQuoteSendRoute: ApiAdminQuoteSendRoute,
   ApiAdminXeroAuthorizeUrlRoute: ApiAdminXeroAuthorizeUrlRoute,
