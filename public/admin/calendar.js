@@ -117,11 +117,19 @@ function openJob(job, dateStr) {
       <div style="width:150px"><label>Suburb</label><input id="jSuburb" value="${esc(j.suburb || '')}"></div>
     </div>
     <div class="row">
+      <div class="grow"><label>Customer email (for the booking confirmation)</label><input id="jEmail" type="email" value="${esc(j.customer_email || '')}" placeholder="name@example.com"></div>
+    </div>
+    <div class="row">
       <div class="grow"><label>Source</label><select id="jSource">${SOURCES.map((s) => `<option ${s === j.source ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div style="width:150px"><label>Status</label><select id="jStatus">${STATUSES.map((s) => `<option ${s === j.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div style="width:130px"><label>Amount $</label><input id="jAmount" inputmode="decimal" value="${j.amount != null ? j.amount : ''}" placeholder="optional"></div>
     </div>
     <label>Notes</label><textarea id="jDesc" rows="3">${esc(j.description || '')}</textarea>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:600">
+      <input id="jConfirm" type="checkbox" style="width:auto;margin:0" ${job ? '' : 'checked'}>
+      Email the customer a booking confirmation when I save
+    </label>
+    ${j.confirmation_sent_at ? `<div class="muted" style="font-size:12px;margin-top:4px">Confirmation sent ${new Date(j.confirmation_sent_at).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })}</div>` : ''}
     <div class="row" style="margin-top:16px">
       <button id="jSave">${job ? 'Save changes' : 'Add job'}</button>
       <button id="jCancel" class="ghost">Close</button>
@@ -135,9 +143,12 @@ function openJob(job, dateStr) {
     const title = view.querySelector('#jTitle').value.trim();
     if (!title) { toast('Add a customer / job title.', 'bad'); return; }
     const amt = parseFloat(view.querySelector('#jAmount').value);
+    const email = view.querySelector('#jEmail').value.trim() || null;
+    const wantsConfirm = view.querySelector('#jConfirm').checked;
     const payload = {
       title,
       customer_phone: view.querySelector('#jPhone').value.trim() || null,
+      customer_email: email,
       suburb: view.querySelector('#jSuburb').value.trim() || null,
       description: view.querySelector('#jDesc').value.trim() || null,
       job_date: view.querySelector('#jDate').value || todayISO(),
@@ -146,14 +157,23 @@ function openJob(job, dateStr) {
       status: view.querySelector('#jStatus').value,
       amount: isNaN(amt) ? null : amt,
     };
+    if (wantsConfirm && !email) { toast('Add a customer email, or untick the confirmation box.', 'bad'); return; }
     e.target.disabled = true;
     const res = job
-      ? await supabase.from('jobs').update(payload).eq('id', j.id)
-      : await supabase.from('jobs').insert(payload);
+      ? await supabase.from('jobs').update(payload).eq('id', j.id).select('id').single()
+      : await supabase.from('jobs').insert(payload).select('id').single();
     if (res.error) { toast(res.error.message, 'bad'); e.target.disabled = false; return; }
     toast(job ? 'Job updated' : 'Job added');
+
+    if (wantsConfirm && email) {
+      try {
+        await apiFetch('/api/admin/job/confirm', { body: { id: res.data.id } });
+        toast('Confirmation emailed to ' + email);
+      } catch (err) { toast('Job saved, but the email failed: ' + err.message, 'bad'); }
+    }
     close(); render();
   });
+
 
   const del = view.querySelector('#jDelete');
   if (del) del.addEventListener('click', async () => {
