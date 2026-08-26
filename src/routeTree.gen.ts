@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as PayRouteImport } from './routes/pay'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
 import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/expenses-report'
 import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
+import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe/webhook'
 import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
@@ -42,6 +45,16 @@ const PayRoute = PayRouteImport.update({
   path: '/pay',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminBroadcastRoute = ApiAdminBroadcastRouteImport.update({
+  id: '/api/admin/broadcast',
+  path: '/api/admin/broadcast',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminDocumentPdfRoute = ApiAdminDocumentPdfRouteImport.update({
   id: '/api/admin/document-pdf',
   path: '/api/admin/document-pdf',
@@ -55,6 +68,11 @@ const ApiAdminExpensesReportRoute = ApiAdminExpensesReportRouteImport.update({
 const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
   id: '/api/admin/reply',
   path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronJobRemindersRoute = ApiCronJobRemindersRouteImport.update({
+  id: '/api/cron/job-reminders',
+  path: '/api/cron/job-reminders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicQuoteRoute = ApiPublicQuoteRouteImport.update({
@@ -119,9 +137,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
@@ -138,9 +159,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
@@ -158,9 +182,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
   '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
   '/api/stripe/webhook': typeof ApiStripeWebhookRoute
   '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
@@ -179,9 +206,12 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/unsubscribe'
+    | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
     | '/api/admin/reply'
+    | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
@@ -198,9 +228,12 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/unsubscribe'
+    | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
     | '/api/admin/reply'
+    | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
@@ -217,9 +250,12 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/unsubscribe'
+    | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
     | '/api/admin/expenses-report'
     | '/api/admin/reply'
+    | '/api/cron/job-reminders'
     | '/api/public/quote'
     | '/api/stripe/webhook'
     | '/api/admin/invoice/send'
@@ -237,9 +273,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   PayRoute: typeof PayRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
+  ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
   ApiAdminExpensesReportRoute: typeof ApiAdminExpensesReportRoute
   ApiAdminReplyRoute: typeof ApiAdminReplyRoute
+  ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
@@ -276,6 +315,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PayRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/broadcast': {
+      id: '/api/admin/broadcast'
+      path: '/api/admin/broadcast'
+      fullPath: '/api/admin/broadcast'
+      preLoaderRoute: typeof ApiAdminBroadcastRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/document-pdf': {
       id: '/api/admin/document-pdf'
       path: '/api/admin/document-pdf'
@@ -295,6 +348,13 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/reply'
       fullPath: '/api/admin/reply'
       preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/job-reminders': {
+      id: '/api/cron/job-reminders'
+      path: '/api/cron/job-reminders'
+      fullPath: '/api/cron/job-reminders'
+      preLoaderRoute: typeof ApiCronJobRemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/quote': {
@@ -381,9 +441,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   PayRoute: PayRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
+  ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
   ApiAdminExpensesReportRoute: ApiAdminExpensesReportRoute,
   ApiAdminReplyRoute: ApiAdminReplyRoute,
+  ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
