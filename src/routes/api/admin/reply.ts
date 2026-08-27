@@ -69,7 +69,7 @@ export const Route = createFileRoute("/api/admin/reply")({
 
         if (!emailRes.ok) {
           await logServerError({ source: "api:reply:email", error: emailRes.error, status: 502, context: { quote_request_id }, ...meta });
-          return Response.json({ ok: false, message: "The reply could not be sent. Please try again." }, { status: 502 });
+          return Response.json({ ok: false, message: `Couldn't send: ${emailRes.error || "email service error"}` }, { status: 502 });
         }
         return Response.json({ ok: true });
       },

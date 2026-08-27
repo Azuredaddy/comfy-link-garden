@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -18,16 +18,555 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          role: string
         }
         Insert: {
           created_at?: string
           email: string
+          role?: string
         }
         Update: {
           created_at?: string
           email?: string
+          role?: string
         }
         Relationships: []
+      }
+      business_settings: {
+        Row: {
+          abn: string | null
+          address: string | null
+          bank_account: string | null
+          bank_bsb: string | null
+          bank_name: string | null
+          business_name: string
+          email: string | null
+          gst_rate: number
+          gst_registered: boolean
+          id: number
+          invoice_due_days: number
+          invoice_prefix: string
+          logo_url: string | null
+          phone: string | null
+          quote_prefix: string
+          quote_terms_days: number
+          updated_at: string
+        }
+        Insert: {
+          abn?: string | null
+          address?: string | null
+          bank_account?: string | null
+          bank_bsb?: string | null
+          bank_name?: string | null
+          business_name?: string
+          email?: string | null
+          gst_rate?: number
+          gst_registered?: boolean
+          id?: number
+          invoice_due_days?: number
+          invoice_prefix?: string
+          logo_url?: string | null
+          phone?: string | null
+          quote_prefix?: string
+          quote_terms_days?: number
+          updated_at?: string
+        }
+        Update: {
+          abn?: string | null
+          address?: string | null
+          bank_account?: string | null
+          bank_bsb?: string | null
+          bank_name?: string | null
+          business_name?: string
+          email?: string | null
+          gst_rate?: number
+          gst_registered?: boolean
+          id?: number
+          invoice_due_days?: number
+          invoice_prefix?: string
+          logo_url?: string | null
+          phone?: string | null
+          quote_prefix?: string
+          quote_terms_days?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      document_counters: {
+        Row: {
+          doc_type: string
+          fy: number
+          last_number: number
+        }
+        Insert: {
+          doc_type: string
+          fy: number
+          last_number?: number
+        }
+        Update: {
+          doc_type?: string
+          fy?: number
+          last_number?: number
+        }
+        Relationships: []
+      }
+      expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          description: string | null
+          expense_date: string
+          gst_amount: number | null
+          id: string
+          receipt_url: string | null
+          supplier: string | null
+          tax_deductible: boolean
+        }
+        Insert: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          expense_date?: string
+          gst_amount?: number | null
+          id?: string
+          receipt_url?: string | null
+          supplier?: string | null
+          tax_deductible?: boolean
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          expense_date?: string
+          gst_amount?: number | null
+          id?: string
+          receipt_url?: string | null
+          supplier?: string | null
+          tax_deductible?: boolean
+        }
+        Relationships: []
+      }
+      invoice_items: {
+        Row: {
+          description: string
+          id: string
+          invoice_id: string
+          line_total: number
+          position: number
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          description: string
+          id?: string
+          invoice_id: string
+          line_total?: number
+          position?: number
+          quantity?: number
+          unit_price?: number
+        }
+        Update: {
+          description?: string
+          id?: string
+          invoice_id?: string
+          line_total?: number
+          position?: number
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_paid: number
+          created_at: string
+          customer_address: string | null
+          customer_email: string | null
+          customer_name: string
+          customer_notes: string | null
+          customer_phone: string | null
+          discount_amount: number
+          discount_percent: number
+          due_date: string | null
+          gst_amount: number
+          id: string
+          internal_notes: string | null
+          issue_date: string
+          number: string | null
+          paid_at: string | null
+          payment_method: string | null
+          pdf_url: string | null
+          quote_id: string | null
+          quote_request_id: string | null
+          sent_at: string | null
+          status: string
+          subtotal: number
+          suburb: string | null
+          total: number
+          updated_at: string
+          xero_contact_id: string | null
+          xero_invoice_id: string | null
+        }
+        Insert: {
+          amount_paid?: number
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          discount_amount?: number
+          discount_percent?: number
+          due_date?: string | null
+          gst_amount?: number
+          id?: string
+          internal_notes?: string | null
+          issue_date?: string
+          number?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          pdf_url?: string | null
+          quote_id?: string | null
+          quote_request_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subtotal?: number
+          suburb?: string | null
+          total?: number
+          updated_at?: string
+          xero_contact_id?: string | null
+          xero_invoice_id?: string | null
+        }
+        Update: {
+          amount_paid?: number
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          discount_amount?: number
+          discount_percent?: number
+          due_date?: string | null
+          gst_amount?: number
+          id?: string
+          internal_notes?: string | null
+          issue_date?: string
+          number?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          pdf_url?: string | null
+          quote_id?: string | null
+          quote_request_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subtotal?: number
+          suburb?: string | null
+          total?: number
+          updated_at?: string
+          xero_contact_id?: string | null
+          xero_invoice_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_quote_request_id_fkey"
+            columns: ["quote_request_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          amount: number | null
+          confirmation_sent_at: string | null
+          created_at: string
+          customer_email: string | null
+          customer_phone: string | null
+          description: string | null
+          id: string
+          invoice_id: string | null
+          job_date: string
+          job_time: string | null
+          quote_id: string | null
+          source: string | null
+          status: string
+          suburb: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          confirmation_sent_at?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          description?: string | null
+          id?: string
+          invoice_id?: string | null
+          job_date?: string
+          job_time?: string | null
+          quote_id?: string | null
+          source?: string | null
+          status?: string
+          suburb?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          confirmation_sent_at?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          description?: string | null
+          id?: string
+          invoice_id?: string | null
+          job_date?: string
+          job_time?: string | null
+          quote_id?: string | null
+          source?: string | null
+          status?: string
+          suburb?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jobs_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_subscribers: {
+        Row: {
+          consent_ip: string | null
+          consented_at: string
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          source: string | null
+          unsubscribe_token: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          consent_ip?: string | null
+          consented_at?: string
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          source?: string | null
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          consent_ip?: string | null
+          consented_at?: string
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          source?: string | null
+          unsubscribe_token?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string | null
+          channel: string
+          created_at: string
+          direction: string
+          email_status: string
+          error: string | null
+          id: string
+          invoice_id: string | null
+          quote_id: string | null
+          quote_request_id: string | null
+          subject: string | null
+          to_email: string | null
+          to_phone: string | null
+        }
+        Insert: {
+          body?: string | null
+          channel?: string
+          created_at?: string
+          direction?: string
+          email_status?: string
+          error?: string | null
+          id?: string
+          invoice_id?: string | null
+          quote_id?: string | null
+          quote_request_id?: string | null
+          subject?: string | null
+          to_email?: string | null
+          to_phone?: string | null
+        }
+        Update: {
+          body?: string | null
+          channel?: string
+          created_at?: string
+          direction?: string
+          email_status?: string
+          error?: string | null
+          id?: string
+          invoice_id?: string | null
+          quote_id?: string | null
+          quote_request_id?: string | null
+          subject?: string | null
+          to_email?: string | null
+          to_phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_quote_request_id_fkey"
+            columns: ["quote_request_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      other_income: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          income_date: string
+          source: string | null
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          income_date?: string
+          source?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          income_date?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          position: number
+          unit_price: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          position?: number
+          unit_price?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          position?: number
+          unit_price?: number
+        }
+        Relationships: []
+      }
+      quote_items: {
+        Row: {
+          description: string
+          id: string
+          line_total: number
+          position: number
+          quantity: number
+          quote_id: string
+          unit_price: number
+        }
+        Insert: {
+          description: string
+          id?: string
+          line_total?: number
+          position?: number
+          quantity?: number
+          quote_id: string
+          unit_price?: number
+        }
+        Update: {
+          description?: string
+          id?: string
+          line_total?: number
+          position?: number
+          quantity?: number
+          quote_id?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quote_requests: {
         Row: {
@@ -86,6 +625,98 @@ export type Database = {
         }
         Relationships: []
       }
+      quotes: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          customer_address: string | null
+          customer_email: string | null
+          customer_name: string
+          customer_notes: string | null
+          customer_phone: string | null
+          discount_amount: number
+          discount_percent: number
+          expiry_date: string | null
+          gst_amount: number
+          id: string
+          internal_notes: string | null
+          issue_date: string
+          number: string | null
+          pdf_url: string | null
+          quote_request_id: string | null
+          sent_at: string | null
+          status: string
+          subtotal: number
+          suburb: string | null
+          total: number
+          updated_at: string
+          xero_contact_id: string | null
+          xero_quote_id: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          discount_amount?: number
+          discount_percent?: number
+          expiry_date?: string | null
+          gst_amount?: number
+          id?: string
+          internal_notes?: string | null
+          issue_date?: string
+          number?: string | null
+          pdf_url?: string | null
+          quote_request_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subtotal?: number
+          suburb?: string | null
+          total?: number
+          updated_at?: string
+          xero_contact_id?: string | null
+          xero_quote_id?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          customer_notes?: string | null
+          customer_phone?: string | null
+          discount_amount?: number
+          discount_percent?: number
+          expiry_date?: string | null
+          gst_amount?: number
+          id?: string
+          internal_notes?: string | null
+          issue_date?: string
+          number?: string | null
+          pdf_url?: string | null
+          quote_request_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subtotal?: number
+          suburb?: string | null
+          total?: number
+          updated_at?: string
+          xero_contact_id?: string | null
+          xero_quote_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_quote_request_id_fkey"
+            columns: ["quote_request_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       server_errors: {
         Row: {
           context: Json | null
@@ -128,415 +759,52 @@ export type Database = {
         }
         Relationships: []
       }
-      business_settings: {
-        Row: {
-          id: number
-          business_name: string
-          abn: string | null
-          address: string | null
-          phone: string | null
-          email: string | null
-          gst_registered: boolean
-          gst_rate: number
-          bank_name: string | null
-          bank_bsb: string | null
-          bank_account: string | null
-          quote_prefix: string
-          invoice_prefix: string
-          quote_terms_days: number
-          invoice_due_days: number
-          logo_url: string | null
-          updated_at: string
-        }
-        Insert: {
-          id?: number
-          business_name?: string
-          abn?: string | null
-          address?: string | null
-          phone?: string | null
-          email?: string | null
-          gst_registered?: boolean
-          gst_rate?: number
-          bank_name?: string | null
-          bank_bsb?: string | null
-          bank_account?: string | null
-          quote_prefix?: string
-          invoice_prefix?: string
-          quote_terms_days?: number
-          invoice_due_days?: number
-          logo_url?: string | null
-          updated_at?: string
-        }
-        Update: {
-          id?: number
-          business_name?: string
-          abn?: string | null
-          address?: string | null
-          phone?: string | null
-          email?: string | null
-          gst_registered?: boolean
-          gst_rate?: number
-          bank_name?: string | null
-          bank_bsb?: string | null
-          bank_account?: string | null
-          quote_prefix?: string
-          invoice_prefix?: string
-          quote_terms_days?: number
-          invoice_due_days?: number
-          logo_url?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      document_counters: {
-        Row: { doc_type: string; fy: number; last_number: number }
-        Insert: { doc_type: string; fy: number; last_number?: number }
-        Update: { doc_type?: string; fy?: number; last_number?: number }
-        Relationships: []
-      }
-      quotes: {
-        Row: {
-          id: string
-          number: string | null
-          quote_request_id: string | null
-          customer_name: string
-          customer_email: string | null
-          customer_phone: string | null
-          customer_address: string | null
-          suburb: string | null
-          status: string
-          issue_date: string
-          expiry_date: string | null
-          subtotal: number
-          gst_amount: number
-          total: number
-          customer_notes: string | null
-          internal_notes: string | null
-          pdf_url: string | null
-          sent_at: string | null
-          accepted_at: string | null
-          xero_quote_id: string | null
-          xero_contact_id: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          number?: string | null
-          quote_request_id?: string | null
-          customer_name: string
-          customer_email?: string | null
-          customer_phone?: string | null
-          customer_address?: string | null
-          suburb?: string | null
-          status?: string
-          issue_date?: string
-          expiry_date?: string | null
-          subtotal?: number
-          gst_amount?: number
-          total?: number
-          customer_notes?: string | null
-          internal_notes?: string | null
-          pdf_url?: string | null
-          sent_at?: string | null
-          accepted_at?: string | null
-          xero_quote_id?: string | null
-          xero_contact_id?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          number?: string | null
-          quote_request_id?: string | null
-          customer_name?: string
-          customer_email?: string | null
-          customer_phone?: string | null
-          customer_address?: string | null
-          suburb?: string | null
-          status?: string
-          issue_date?: string
-          expiry_date?: string | null
-          subtotal?: number
-          gst_amount?: number
-          total?: number
-          customer_notes?: string | null
-          internal_notes?: string | null
-          pdf_url?: string | null
-          sent_at?: string | null
-          accepted_at?: string | null
-          xero_quote_id?: string | null
-          xero_contact_id?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      quote_items: {
-        Row: {
-          id: string
-          quote_id: string
-          description: string
-          quantity: number
-          unit_price: number
-          line_total: number
-          position: number
-        }
-        Insert: {
-          id?: string
-          quote_id: string
-          description: string
-          quantity?: number
-          unit_price?: number
-          line_total?: number
-          position?: number
-        }
-        Update: {
-          id?: string
-          quote_id?: string
-          description?: string
-          quantity?: number
-          unit_price?: number
-          line_total?: number
-          position?: number
-        }
-        Relationships: []
-      }
-      invoices: {
-        Row: {
-          id: string
-          number: string | null
-          quote_id: string | null
-          quote_request_id: string | null
-          customer_name: string
-          customer_email: string | null
-          customer_phone: string | null
-          customer_address: string | null
-          suburb: string | null
-          status: string
-          issue_date: string
-          due_date: string | null
-          subtotal: number
-          gst_amount: number
-          total: number
-          amount_paid: number
-          paid_at: string | null
-          payment_method: string | null
-          customer_notes: string | null
-          internal_notes: string | null
-          pdf_url: string | null
-          sent_at: string | null
-          xero_invoice_id: string | null
-          xero_contact_id: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          number?: string | null
-          quote_id?: string | null
-          quote_request_id?: string | null
-          customer_name: string
-          customer_email?: string | null
-          customer_phone?: string | null
-          customer_address?: string | null
-          suburb?: string | null
-          status?: string
-          issue_date?: string
-          due_date?: string | null
-          subtotal?: number
-          gst_amount?: number
-          total?: number
-          amount_paid?: number
-          paid_at?: string | null
-          payment_method?: string | null
-          customer_notes?: string | null
-          internal_notes?: string | null
-          pdf_url?: string | null
-          sent_at?: string | null
-          xero_invoice_id?: string | null
-          xero_contact_id?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          number?: string | null
-          quote_id?: string | null
-          quote_request_id?: string | null
-          customer_name?: string
-          customer_email?: string | null
-          customer_phone?: string | null
-          customer_address?: string | null
-          suburb?: string | null
-          status?: string
-          issue_date?: string
-          due_date?: string | null
-          subtotal?: number
-          gst_amount?: number
-          total?: number
-          amount_paid?: number
-          paid_at?: string | null
-          payment_method?: string | null
-          customer_notes?: string | null
-          internal_notes?: string | null
-          pdf_url?: string | null
-          sent_at?: string | null
-          xero_invoice_id?: string | null
-          xero_contact_id?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      invoice_items: {
-        Row: {
-          id: string
-          invoice_id: string
-          description: string
-          quantity: number
-          unit_price: number
-          line_total: number
-          position: number
-        }
-        Insert: {
-          id?: string
-          invoice_id: string
-          description: string
-          quantity?: number
-          unit_price?: number
-          line_total?: number
-          position?: number
-        }
-        Update: {
-          id?: string
-          invoice_id?: string
-          description?: string
-          quantity?: number
-          unit_price?: number
-          line_total?: number
-          position?: number
-        }
-        Relationships: []
-      }
-      expenses: {
-        Row: {
-          id: string
-          expense_date: string
-          category: string
-          description: string | null
-          amount: number
-          gst_amount: number | null
-          supplier: string | null
-          receipt_url: string | null
-          tax_deductible: boolean
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          expense_date?: string
-          category?: string
-          description?: string | null
-          amount?: number
-          gst_amount?: number | null
-          supplier?: string | null
-          receipt_url?: string | null
-          tax_deductible?: boolean
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          expense_date?: string
-          category?: string
-          description?: string | null
-          amount?: number
-          gst_amount?: number | null
-          supplier?: string | null
-          receipt_url?: string | null
-          tax_deductible?: boolean
-          created_at?: string
-        }
-        Relationships: []
-      }
-      messages: {
-        Row: {
-          id: string
-          quote_request_id: string | null
-          quote_id: string | null
-          invoice_id: string | null
-          direction: string
-          to_email: string | null
-          subject: string | null
-          body: string | null
-          email_status: string
-          error: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          quote_request_id?: string | null
-          quote_id?: string | null
-          invoice_id?: string | null
-          direction?: string
-          to_email?: string | null
-          subject?: string | null
-          body?: string | null
-          email_status?: string
-          error?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          quote_request_id?: string | null
-          quote_id?: string | null
-          invoice_id?: string | null
-          direction?: string
-          to_email?: string | null
-          subject?: string | null
-          body?: string | null
-          email_status?: string
-          error?: string | null
-          created_at?: string
-        }
-        Relationships: []
-      }
       xero_connection: {
         Row: {
-          id: number
           access_token: string | null
-          refresh_token: string | null
+          connected_at: string | null
           expires_at: string | null
+          id: number
+          refresh_token: string | null
           tenant_id: string | null
           tenant_name: string | null
-          connected_at: string | null
           updated_at: string
         }
         Insert: {
-          id?: number
           access_token?: string | null
-          refresh_token?: string | null
+          connected_at?: string | null
           expires_at?: string | null
+          id?: number
+          refresh_token?: string | null
           tenant_id?: string | null
           tenant_name?: string | null
-          connected_at?: string | null
           updated_at?: string
         }
         Update: {
-          id?: number
           access_token?: string | null
-          refresh_token?: string | null
+          connected_at?: string | null
           expires_at?: string | null
+          id?: number
+          refresh_token?: string | null
           tenant_id?: string | null
           tenant_name?: string | null
-          connected_at?: string | null
           updated_at?: string
         }
         Relationships: []
       }
       xero_oauth_state: {
-        Row: { state: string; created_at: string }
-        Insert: { state: string; created_at?: string }
-        Update: { state?: string; created_at?: string }
+        Row: {
+          created_at: string
+          state: string
+        }
+        Insert: {
+          created_at?: string
+          state: string
+        }
+        Update: {
+          created_at?: string
+          state?: string
+        }
         Relationships: []
       }
     }
@@ -544,8 +812,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin: { Args: never; Returns: boolean }
       au_fy_start: { Args: { d: string }; Returns: number }
+      is_admin: { Args: never; Returns: boolean }
+      my_role: { Args: never; Returns: string }
       next_document_number: { Args: { p_doc_type: string }; Returns: string }
     }
     Enums: {

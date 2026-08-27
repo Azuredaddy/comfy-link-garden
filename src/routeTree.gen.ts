@@ -11,7 +11,28 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as PayRouteImport } from './routes/pay'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
+import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
+import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
+import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/expenses-report'
+import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job-confirm'
+import { Route as ApiAdminJobEmailConfirmRouteImport } from './routes/api/admin/job-email-confirm'
+import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
+import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
+import { Route as ApiCalendarFeedRouteImport } from './routes/api/calendar/feed'
+import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
 import { Route as ApiPublicQuoteRouteImport } from './routes/api/public/quote'
+import { Route as ApiAdminInvoiceSendRouteImport } from './routes/api/admin/invoice/send'
+import { Route as ApiAdminQuoteSendRouteImport } from './routes/api/admin/quote/send'
+import { Route as ApiAdminXeroAuthorizeUrlRouteImport } from './routes/api/admin/xero/authorize-url'
+import { Route as ApiAdminXeroCallbackRouteImport } from './routes/api/admin/xero/callback'
+import { Route as ApiAdminXeroDisconnectRouteImport } from './routes/api/admin/xero/disconnect'
+import { Route as ApiAdminXeroPushInvoiceRouteImport } from './routes/api/admin/xero/push-invoice'
+import { Route as ApiAdminXeroPushQuoteRouteImport } from './routes/api/admin/xero/push-quote'
+import { Route as ApiAdminXeroStatusRouteImport } from './routes/api/admin/xero/status'
+import { Route as ApiAdminXeroSyncSettingsRouteImport } from './routes/api/admin/xero/sync-settings'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +44,305 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayRoute = PayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminBroadcastRoute = ApiAdminBroadcastRouteImport.update({
+  id: '/api/admin/broadcast',
+  path: '/api/admin/broadcast',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDocumentPdfRoute = ApiAdminDocumentPdfRouteImport.update({
+  id: '/api/admin/document-pdf',
+  path: '/api/admin/document-pdf',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminExpensesReportRoute = ApiAdminExpensesReportRouteImport.update({
+  id: '/api/admin/expenses-report',
+  path: '/api/admin/expenses-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminJobConfirmRoute = ApiAdminJobConfirmRouteImport.update({
+  id: '/api/admin/job-confirm',
+  path: '/api/admin/job-confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminJobEmailConfirmRoute = ApiAdminJobEmailConfirmRouteImport.update({
+  id: '/api/admin/job-email-confirm',
+  path: '/api/admin/job-email-confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
+  id: '/api/admin/reply',
+  path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
+  id: '/api/admin/users',
+  path: '/api/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCalendarFeedRoute = ApiCalendarFeedRouteImport.update({
+  id: '/api/calendar/feed',
+  path: '/api/calendar/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCronJobRemindersRoute = ApiCronJobRemindersRouteImport.update({
+  id: '/api/cron/job-reminders',
+  path: '/api/cron/job-reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicQuoteRoute = ApiPublicQuoteRouteImport.update({
   id: '/api/public/quote',
   path: '/api/public/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminInvoiceSendRoute = ApiAdminInvoiceSendRouteImport.update({
+  id: '/api/admin/invoice/send',
+  path: '/api/admin/invoice/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminQuoteSendRoute = ApiAdminQuoteSendRouteImport.update({
+  id: '/api/admin/quote/send',
+  path: '/api/admin/quote/send',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroAuthorizeUrlRoute =
+  ApiAdminXeroAuthorizeUrlRouteImport.update({
+    id: '/api/admin/xero/authorize-url',
+    path: '/api/admin/xero/authorize-url',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiAdminXeroCallbackRoute = ApiAdminXeroCallbackRouteImport.update({
+  id: '/api/admin/xero/callback',
+  path: '/api/admin/xero/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroDisconnectRoute = ApiAdminXeroDisconnectRouteImport.update({
+  id: '/api/admin/xero/disconnect',
+  path: '/api/admin/xero/disconnect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroPushInvoiceRoute = ApiAdminXeroPushInvoiceRouteImport.update({
+  id: '/api/admin/xero/push-invoice',
+  path: '/api/admin/xero/push-invoice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroPushQuoteRoute = ApiAdminXeroPushQuoteRouteImport.update({
+  id: '/api/admin/xero/push-quote',
+  path: '/api/admin/xero/push-quote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroStatusRoute = ApiAdminXeroStatusRouteImport.update({
+  id: '/api/admin/xero/status',
+  path: '/api/admin/xero/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminXeroSyncSettingsRoute =
+  ApiAdminXeroSyncSettingsRouteImport.update({
+    id: '/api/admin/xero/sync-settings',
+    path: '/api/admin/xero/sync-settings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/pay': typeof PayRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
+  '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
+  '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
+  '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
+  '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
+  '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
+  '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
+  '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
+  '/api/admin/xero/disconnect': typeof ApiAdminXeroDisconnectRoute
+  '/api/admin/xero/push-invoice': typeof ApiAdminXeroPushInvoiceRoute
+  '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
+  '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
+  '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/pay': typeof PayRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
+  '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
+  '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
+  '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
+  '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
+  '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
+  '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
+  '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
+  '/api/admin/xero/disconnect': typeof ApiAdminXeroDisconnectRoute
+  '/api/admin/xero/push-invoice': typeof ApiAdminXeroPushInvoiceRoute
+  '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
+  '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
+  '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/pay': typeof PayRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
+  '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
+  '/api/admin/expenses-report': typeof ApiAdminExpensesReportRoute
+  '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
+  '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
+  '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/calendar/feed': typeof ApiCalendarFeedRoute
+  '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
   '/api/public/quote': typeof ApiPublicQuoteRoute
+  '/api/admin/invoice/send': typeof ApiAdminInvoiceSendRoute
+  '/api/admin/quote/send': typeof ApiAdminQuoteSendRoute
+  '/api/admin/xero/authorize-url': typeof ApiAdminXeroAuthorizeUrlRoute
+  '/api/admin/xero/callback': typeof ApiAdminXeroCallbackRoute
+  '/api/admin/xero/disconnect': typeof ApiAdminXeroDisconnectRoute
+  '/api/admin/xero/push-invoice': typeof ApiAdminXeroPushInvoiceRoute
+  '/api/admin/xero/push-quote': typeof ApiAdminXeroPushQuoteRoute
+  '/api/admin/xero/status': typeof ApiAdminXeroStatusRoute
+  '/api/admin/xero/sync-settings': typeof ApiAdminXeroSyncSettingsRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/api/public/quote'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/pay'
+    | '/unsubscribe'
+    | '/api/admin/broadcast'
+    | '/api/admin/document-pdf'
+    | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
+    | '/api/admin/job-email-confirm'
+    | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
+    | '/api/cron/job-reminders'
+    | '/api/public/quote'
+    | '/api/admin/invoice/send'
+    | '/api/admin/quote/send'
+    | '/api/admin/xero/authorize-url'
+    | '/api/admin/xero/callback'
+    | '/api/admin/xero/disconnect'
+    | '/api/admin/xero/push-invoice'
+    | '/api/admin/xero/push-quote'
+    | '/api/admin/xero/status'
+    | '/api/admin/xero/sync-settings'
+    | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/api/public/quote'
-  id: '__root__' | '/' | '/$' | '/api/public/quote'
+  to:
+    | '/'
+    | '/$'
+    | '/pay'
+    | '/unsubscribe'
+    | '/api/admin/broadcast'
+    | '/api/admin/document-pdf'
+    | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
+    | '/api/admin/job-email-confirm'
+    | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
+    | '/api/cron/job-reminders'
+    | '/api/public/quote'
+    | '/api/admin/invoice/send'
+    | '/api/admin/quote/send'
+    | '/api/admin/xero/authorize-url'
+    | '/api/admin/xero/callback'
+    | '/api/admin/xero/disconnect'
+    | '/api/admin/xero/push-invoice'
+    | '/api/admin/xero/push-quote'
+    | '/api/admin/xero/status'
+    | '/api/admin/xero/sync-settings'
+    | '/api/public/payments/webhook'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/pay'
+    | '/unsubscribe'
+    | '/api/admin/broadcast'
+    | '/api/admin/document-pdf'
+    | '/api/admin/expenses-report'
+    | '/api/admin/job-confirm'
+    | '/api/admin/job-email-confirm'
+    | '/api/admin/reply'
+    | '/api/admin/users'
+    | '/api/calendar/feed'
+    | '/api/cron/job-reminders'
+    | '/api/public/quote'
+    | '/api/admin/invoice/send'
+    | '/api/admin/quote/send'
+    | '/api/admin/xero/authorize-url'
+    | '/api/admin/xero/callback'
+    | '/api/admin/xero/disconnect'
+    | '/api/admin/xero/push-invoice'
+    | '/api/admin/xero/push-quote'
+    | '/api/admin/xero/status'
+    | '/api/admin/xero/sync-settings'
+    | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  PayRoute: typeof PayRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
+  ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
+  ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
+  ApiAdminExpensesReportRoute: typeof ApiAdminExpensesReportRoute
+  ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
+  ApiAdminJobEmailConfirmRoute: typeof ApiAdminJobEmailConfirmRoute
+  ApiAdminReplyRoute: typeof ApiAdminReplyRoute
+  ApiAdminUsersRoute: typeof ApiAdminUsersRoute
+  ApiCalendarFeedRoute: typeof ApiCalendarFeedRoute
+  ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
   ApiPublicQuoteRoute: typeof ApiPublicQuoteRoute
+  ApiAdminInvoiceSendRoute: typeof ApiAdminInvoiceSendRoute
+  ApiAdminQuoteSendRoute: typeof ApiAdminQuoteSendRoute
+  ApiAdminXeroAuthorizeUrlRoute: typeof ApiAdminXeroAuthorizeUrlRoute
+  ApiAdminXeroCallbackRoute: typeof ApiAdminXeroCallbackRoute
+  ApiAdminXeroDisconnectRoute: typeof ApiAdminXeroDisconnectRoute
+  ApiAdminXeroPushInvoiceRoute: typeof ApiAdminXeroPushInvoiceRoute
+  ApiAdminXeroPushQuoteRoute: typeof ApiAdminXeroPushQuoteRoute
+  ApiAdminXeroStatusRoute: typeof ApiAdminXeroStatusRoute
+  ApiAdminXeroSyncSettingsRoute: typeof ApiAdminXeroSyncSettingsRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +361,158 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pay': {
+      id: '/pay'
+      path: '/pay'
+      fullPath: '/pay'
+      preLoaderRoute: typeof PayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/broadcast': {
+      id: '/api/admin/broadcast'
+      path: '/api/admin/broadcast'
+      fullPath: '/api/admin/broadcast'
+      preLoaderRoute: typeof ApiAdminBroadcastRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/document-pdf': {
+      id: '/api/admin/document-pdf'
+      path: '/api/admin/document-pdf'
+      fullPath: '/api/admin/document-pdf'
+      preLoaderRoute: typeof ApiAdminDocumentPdfRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/expenses-report': {
+      id: '/api/admin/expenses-report'
+      path: '/api/admin/expenses-report'
+      fullPath: '/api/admin/expenses-report'
+      preLoaderRoute: typeof ApiAdminExpensesReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/job-confirm': {
+      id: '/api/admin/job-confirm'
+      path: '/api/admin/job-confirm'
+      fullPath: '/api/admin/job-confirm'
+      preLoaderRoute: typeof ApiAdminJobConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/job-email-confirm': {
+      id: '/api/admin/job-email-confirm'
+      path: '/api/admin/job-email-confirm'
+      fullPath: '/api/admin/job-email-confirm'
+      preLoaderRoute: typeof ApiAdminJobEmailConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/reply': {
+      id: '/api/admin/reply'
+      path: '/api/admin/reply'
+      fullPath: '/api/admin/reply'
+      preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/users': {
+      id: '/api/admin/users'
+      path: '/api/admin/users'
+      fullPath: '/api/admin/users'
+      preLoaderRoute: typeof ApiAdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/calendar/feed': {
+      id: '/api/calendar/feed'
+      path: '/api/calendar/feed'
+      fullPath: '/api/calendar/feed'
+      preLoaderRoute: typeof ApiCalendarFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/job-reminders': {
+      id: '/api/cron/job-reminders'
+      path: '/api/cron/job-reminders'
+      fullPath: '/api/cron/job-reminders'
+      preLoaderRoute: typeof ApiCronJobRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/quote': {
       id: '/api/public/quote'
       path: '/api/public/quote'
       fullPath: '/api/public/quote'
       preLoaderRoute: typeof ApiPublicQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/invoice/send': {
+      id: '/api/admin/invoice/send'
+      path: '/api/admin/invoice/send'
+      fullPath: '/api/admin/invoice/send'
+      preLoaderRoute: typeof ApiAdminInvoiceSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/quote/send': {
+      id: '/api/admin/quote/send'
+      path: '/api/admin/quote/send'
+      fullPath: '/api/admin/quote/send'
+      preLoaderRoute: typeof ApiAdminQuoteSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/authorize-url': {
+      id: '/api/admin/xero/authorize-url'
+      path: '/api/admin/xero/authorize-url'
+      fullPath: '/api/admin/xero/authorize-url'
+      preLoaderRoute: typeof ApiAdminXeroAuthorizeUrlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/callback': {
+      id: '/api/admin/xero/callback'
+      path: '/api/admin/xero/callback'
+      fullPath: '/api/admin/xero/callback'
+      preLoaderRoute: typeof ApiAdminXeroCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/disconnect': {
+      id: '/api/admin/xero/disconnect'
+      path: '/api/admin/xero/disconnect'
+      fullPath: '/api/admin/xero/disconnect'
+      preLoaderRoute: typeof ApiAdminXeroDisconnectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/push-invoice': {
+      id: '/api/admin/xero/push-invoice'
+      path: '/api/admin/xero/push-invoice'
+      fullPath: '/api/admin/xero/push-invoice'
+      preLoaderRoute: typeof ApiAdminXeroPushInvoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/push-quote': {
+      id: '/api/admin/xero/push-quote'
+      path: '/api/admin/xero/push-quote'
+      fullPath: '/api/admin/xero/push-quote'
+      preLoaderRoute: typeof ApiAdminXeroPushQuoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/status': {
+      id: '/api/admin/xero/status'
+      path: '/api/admin/xero/status'
+      fullPath: '/api/admin/xero/status'
+      preLoaderRoute: typeof ApiAdminXeroStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/xero/sync-settings': {
+      id: '/api/admin/xero/sync-settings'
+      path: '/api/admin/xero/sync-settings'
+      fullPath: '/api/admin/xero/sync-settings'
+      preLoaderRoute: typeof ApiAdminXeroSyncSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +521,28 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  PayRoute: PayRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
+  ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
+  ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
+  ApiAdminExpensesReportRoute: ApiAdminExpensesReportRoute,
+  ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
+  ApiAdminJobEmailConfirmRoute: ApiAdminJobEmailConfirmRoute,
+  ApiAdminReplyRoute: ApiAdminReplyRoute,
+  ApiAdminUsersRoute: ApiAdminUsersRoute,
+  ApiCalendarFeedRoute: ApiCalendarFeedRoute,
+  ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,
   ApiPublicQuoteRoute: ApiPublicQuoteRoute,
+  ApiAdminInvoiceSendRoute: ApiAdminInvoiceSendRoute,
+  ApiAdminQuoteSendRoute: ApiAdminQuoteSendRoute,
+  ApiAdminXeroAuthorizeUrlRoute: ApiAdminXeroAuthorizeUrlRoute,
+  ApiAdminXeroCallbackRoute: ApiAdminXeroCallbackRoute,
+  ApiAdminXeroDisconnectRoute: ApiAdminXeroDisconnectRoute,
+  ApiAdminXeroPushInvoiceRoute: ApiAdminXeroPushInvoiceRoute,
+  ApiAdminXeroPushQuoteRoute: ApiAdminXeroPushQuoteRoute,
+  ApiAdminXeroStatusRoute: ApiAdminXeroStatusRoute,
+  ApiAdminXeroSyncSettingsRoute: ApiAdminXeroSyncSettingsRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

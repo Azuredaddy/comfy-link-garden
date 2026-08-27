@@ -364,30 +364,66 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 
 /* Quote confirmation screen */
 .quote-confirm{
-  background:rgba(255,255,255,.04);
+  background:linear-gradient(180deg,rgba(126,217,87,.06),rgba(255,255,255,.03));
   border:1px solid rgba(255,255,255,.10);
-  border-radius:20px;
-  padding:32px 28px;
-  max-width:640px;
+  border-radius:22px;
+  padding:36px 30px;
+  max-width:600px;
   margin:0 auto;
   outline:none;
+  animation:qcIn .5s cubic-bezier(.2,.8,.2,1) both;
 }
+@keyframes qcIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.quote-confirm .qc-head{text-align:center;margin-bottom:26px;}
 .quote-confirm .qc-tick{
-  width:56px;height:56px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(126,217,87,.14);color:#7ed957;margin-bottom:18px;
+  width:64px;height:64px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  background:radial-gradient(circle at 50% 40%,#8ae95f,#5fbf3a);color:#0d1408;
+  box-shadow:0 8px 22px rgba(126,217,87,.32);
+  animation:qcPop .45s .12s cubic-bezier(.2,1.3,.4,1) both;
 }
-.quote-confirm .qc-tick svg{width:28px;height:28px;}
-.quote-confirm h2{margin:0 0 8px;font-size:1.5rem;}
-.quote-confirm h3{margin:22px 0 8px;font-size:1rem;letter-spacing:.02em;text-transform:uppercase;color:var(--tan,#d8b98a);}
-.quote-confirm p{color:var(--stone,#b9bdb8);margin:0 0 8px;}
-.quote-confirm .qc-steps{margin:0;padding-left:20px;color:var(--stone,#b9bdb8);}
-.quote-confirm .qc-steps li{margin-bottom:8px;}
+@keyframes qcPop{from{transform:scale(0)}to{transform:scale(1)}}
+.quote-confirm .qc-tick svg{width:30px;height:30px;}
+.quote-confirm h2{margin:0 0 6px;font-size:1.55rem;line-height:1.2;}
+.quote-confirm .qc-head p{margin:0;color:var(--stone,#b9bdb8);}
+.quote-confirm h3{margin:0 0 14px;font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;color:var(--tan,#d8b98a);}
+
+.quote-confirm .qc-steps{list-style:none;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:14px;}
+.quote-confirm .qc-steps li{display:flex;gap:14px;align-items:flex-start;}
+.quote-confirm .qc-num{
+  flex:0 0 30px;width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(126,217,87,.14);color:#8ae95f;font-weight:700;font-size:.95rem;
+  border:1px solid rgba(126,217,87,.35);
+}
+.quote-confirm .qc-step-b{display:flex;flex-direction:column;gap:2px;padding-top:2px;}
+.quote-confirm .qc-step-b strong{color:#f2f5ef;font-weight:600;font-size:1rem;}
+.quote-confirm .qc-step-b span{color:var(--stone,#b9bdb8);font-size:.9rem;}
+
+.quote-confirm .qc-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:16px 18px;margin-bottom:24px;
+}
 .quote-confirm .qc-summary{list-style:none;margin:0;padding:0;}
 .quote-confirm .qc-summary li{
-  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);color:#e9ece8;font-size:.95rem;
+  display:flex;justify-content:space-between;gap:12px;
+  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07);color:#e9ece8;font-size:.95rem;
 }
 .quote-confirm .qc-summary li:last-child{border-bottom:none;}
-.quote-confirm .qc-summary strong{color:var(--stone,#b9bdb8);font-weight:600;margin-right:6px;}
-.quote-confirm .qc-contact{margin-top:20px;}
+.quote-confirm .qc-summary strong{color:var(--stone,#b9bdb8);font-weight:600;}
+
+.quote-confirm .qc-cta{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
+  padding-top:4px;
+}
+.quote-confirm .qc-btn{
+  display:inline-flex;align-items:center;gap:9px;
+  background:#7ed957;color:#0d1408;font-weight:700;text-decoration:none;
+  padding:13px 22px;border-radius:12px;box-shadow:0 6px 18px rgba(126,217,87,.28);
+}
+.quote-confirm .qc-btn:hover{filter:brightness(1.06);}
+.quote-confirm .qc-btn svg{width:18px;height:18px;}
+.quote-confirm .qc-or{color:var(--stone,#b9bdb8);font-size:.92rem;}
+.quote-confirm .qc-tip{text-align:center;color:var(--stone,#b9bdb8);font-size:.88rem;margin:22px 0 0;}
 .quote-confirm a{color:var(--tan,#d8b98a);font-weight:600;}
+.quote-confirm .qc-btn{color:#0d1408;}

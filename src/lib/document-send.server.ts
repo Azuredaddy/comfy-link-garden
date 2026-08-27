@@ -37,7 +37,7 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
   const { data: items } = await supabaseAdmin
     .from(itemsTable)
     .select("*")
-    .eq(fk, id)
+    .eq(fk as never, id)
     .order("position", { ascending: true });
 
   // --- render + host the PDF ------------------------------------------------
@@ -47,9 +47,14 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     const key = `${kind}/${doc.number || id}-${crypto.randomUUID().slice(0, 8)}.pdf`;
     const { error: upErr } = await supabaseAdmin.storage
       .from("documents")
-      .upload(key, new Blob([bytes], { type: "application/pdf" }), { contentType: "application/pdf", upsert: true });
+      .upload(key, new Blob([bytes as unknown as BlobPart], { type: "application/pdf" }), { contentType: "application/pdf", upsert: true });
     if (upErr) throw upErr;
-    url = supabaseAdmin.storage.from("documents").getPublicUrl(key).data.publicUrl;
+    // `documents` is a private bucket — hand out a long-lived signed link.
+    const { data: signed, error: signErr } = await supabaseAdmin.storage
+      .from("documents")
+      .createSignedUrl(key, 60 * 60 * 24 * 365);
+    if (signErr || !signed?.signedUrl) throw signErr ?? new Error("Could not create a document link.");
+    url = signed.signedUrl;
   } catch (error) {
     await logServerError({ source: `api:${kind}:pdf`, error, status: 500, context: { id }, ...meta });
     return Response.json({ ok: false, message: "Could not generate the PDF. Please try again." }, { status: 500 });
@@ -69,14 +74,23 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     [kind === "quote" ? "Quote number" : "Invoice number", doc.number ?? "—"],
     ["Total", "$" + Number(doc.total || 0).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })],
   ];
-  if (kind === "invoice" && doc.due_date) rows.push(["Due date", new Date(doc.due_date + "T00:00:00").toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" })]);
+  const dueDate = (doc as { due_date?: string | null }).due_date;
+  if (kind === "invoice" && dueDate) rows.push(["Due date", new Date(dueDate + "T00:00:00").toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" })]);
+
+  // Offer online card payment on invoices when Stripe is configured.
+  const { isConfigured: stripeOn, siteUrl } = await import("./stripe.server");
+  const canPay = kind === "invoice" && stripeOn();
+  const payUrl = `${siteUrl(new URL(request.url).origin)}/pay?invoice=${id}`;
 
   const { html, text } = brandedEmail({
     businessName: settings.business_name,
     heading: kind === "quote" ? "Your quote from Lanky Services" : "Your invoice from Lanky Services",
     intro: `Hi ${doc.customer_name}, ${kind === "quote" ? "thanks for the opportunity — here's your quote." : "please find your invoice below."}`,
     rows,
-    button: { label: kind === "quote" ? "View your quote (PDF)" : "View your invoice (PDF)", url },
+    button: canPay
+      ? { label: "Pay this invoice", url: payUrl }
+      : { label: kind === "quote" ? "View your quote (PDF)" : "View your invoice (PDF)", url },
+    button2: canPay ? { label: "View invoice (PDF)", url } : undefined,
     contact: { phone: settings.phone, email: settings.email },
   });
 
@@ -99,6 +113,40 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     email_status: emailRes.ok ? "sent" : "failed",
     error: emailRes.ok ? null : emailRes.error ?? null,
   } as never);
+
+  // When an invoice is sent, also text the customer a review request (once).
+  if (kind === "invoice" && doc.customer_phone) {
+    try {
+      const { isConfigured, sendSms } = await import("./sms.server");
+      if (isConfigured()) {
+        const { data: already } = await supabaseAdmin
+          .from("messages")
+          .select("id")
+          .eq("invoice_id", id)
+          .eq("channel", "sms")
+          .eq("subject", "Review request")
+          .limit(1)
+          .maybeSingle();
+        if (!already) {
+          const REVIEW_URL = "https://g.page/r/Cee2YwnmgX5wEAI/review";
+          const smsBody = `Thanks for choosing Lanky Services! If you were happy with the job, a quick Google review would mean a lot: ${REVIEW_URL} Cheers, the Lanky team.`;
+          const sms = await sendSms(doc.customer_phone, smsBody);
+          await supabaseAdmin.from("messages").insert({
+            invoice_id: id,
+            channel: "sms",
+            direction: "outbound",
+            to_phone: doc.customer_phone,
+            subject: "Review request",
+            body: smsBody,
+            email_status: sms.ok ? "sent" : "failed",
+            error: sms.ok ? null : sms.error ?? null,
+          } as never);
+        }
+      }
+    } catch (error) {
+      await logServerError({ source: "api:invoice:review-sms", error, status: 202, context: { id }, ...meta });
+    }
+  }
 
   if (!emailRes.ok) {
     await logServerError({ source: `api:${kind}:email`, error: emailRes.error, status: 202, context: { id }, ...meta });

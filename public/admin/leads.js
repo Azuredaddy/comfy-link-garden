@@ -14,6 +14,7 @@ export async function unhandledCount() {
 export async function load() {
   const root = $('tab-leads');
   root.innerHTML = `
+    <div class="banner">📞 You always ring customers to book them in — tap a phone number in a lead to call straight away.</div>
     <div class="card spread">
       <div class="row">
         <label style="margin:0">Show</label>
@@ -96,6 +97,9 @@ async function openLead(q) {
 
     <h3 style="margin:22px 0 6px;font-size:15px">History</h3>
     <div id="ldHistory"></div>
+
+    <div class="divider" style="height:1px;background:var(--line);margin:22px 0 14px"></div>
+    <button id="ldDelete" class="danger sm">Delete lead</button>
   </div>`);
 
   const close = openOverlay(view, 'drawer');
@@ -125,6 +129,15 @@ async function openLead(q) {
     e.target.textContent = error ? 'Save failed' : 'Saved';
     if (error) toast(error.message, 'bad');
     setTimeout(() => { e.target.textContent = 'Save notes'; e.target.disabled = false; }, 1500);
+  });
+
+  view.querySelector('#ldDelete').addEventListener('click', async (e) => {
+    if (!window.confirm(`Delete the lead from ${q.name}? This can't be undone.`)) return;
+    e.target.disabled = true;
+    const { error } = await supabase.from('quote_requests').delete().eq('id', q.id);
+    if (error) { toast(error.message, 'bad'); e.target.disabled = false; return; }
+    toast('Lead deleted');
+    close(); await refresh();
   });
 
   view.querySelector('#ldReply').addEventListener('click', async (e) => {

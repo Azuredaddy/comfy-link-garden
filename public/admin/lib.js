@@ -9,7 +9,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export const EXPENSE_CATEGORIES = [
   'Fuel', 'Tools & Equipment', 'Vehicle', 'Tip/Disposal fees', 'Materials',
-  'Insurance', 'Phone/Internet', 'Advertising', 'Wages', 'Other',
+  'Insurance', 'Phone/Internet', 'Advertising', 'Wages', 'Airtasker fees', 'Platform fees', 'Other',
 ];
 
 // ---- dom helpers ----------------------------------------------------------
@@ -81,6 +81,16 @@ export async function apiOpenPdf(path, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
+// Current user's portal role: 'admin' | 'editor' | 'viewer' (cached).
+let _role = null;
+export async function myRole(force = false) {
+  if (_role && !force) return _role;
+  try { const { data } = await supabase.rpc('my_role'); _role = data || 'admin'; }
+  catch { _role = 'admin'; }
+  return _role;
+}
+export const canEdit = async () => (await myRole()) !== 'viewer';
+
 // Xero connection status (cached for the session; pass true to refresh).
 let _xero = null;
 export async function xeroStatus(force = false) {
@@ -106,14 +116,22 @@ export function toast(msg, kind = 'ok') {
 }
 
 // Opens a scrim with your content. `variant` = 'drawer' | 'modal'. Returns a close() fn.
-export function openOverlay(contentEl, variant = 'drawer') {
+export function openOverlay(contentEl, variant = 'drawer', opts = {}) {
+  const dismissible = opts.dismissible !== false; // pass {dismissible:false} to require an explicit close
   const scrim = el(`<div class="scrim ${variant === 'modal' ? 'center' : ''}"></div>`);
   const holder = el(`<div class="${variant}"></div>`);
   holder.appendChild(contentEl);
   scrim.appendChild(holder);
   const close = () => { scrim.remove(); document.removeEventListener('keydown', onKey); };
-  const onKey = (e) => { if (e.key === 'Escape') close(); };
-  scrim.addEventListener('click', (e) => { if (e.target === scrim) close(); });
+  const onKey = (e) => { if (dismissible && e.key === 'Escape') close(); };
+  // Only close on a genuine backdrop click — the press must START on the backdrop.
+  // (Highlighting text inside and releasing outside used to close it and lose work.)
+  let downOnScrim = false;
+  scrim.addEventListener('mousedown', (e) => { downOnScrim = e.target === scrim; });
+  scrim.addEventListener('mouseup', (e) => {
+    if (dismissible && downOnScrim && e.target === scrim) close();
+    downOnScrim = false;
+  });
   document.addEventListener('keydown', onKey);
   $('modalRoot').appendChild(scrim);
   return close;

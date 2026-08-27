@@ -1,7 +1,7 @@
 // Expenses tab — track deductible spend (fuel, tools, tip fees…), filter by
 // period, see totals, upload receipts, and download the yearly expenses PDF.
 import {
-  $, el, esc, money, fmtDate, supabase, toast, apiOpenPdf,
+  $, el, esc, money, fmtDate, supabase, toast, apiOpenPdf, openOverlay,
   EXPENSE_CATEGORIES, todayISO, currentFyStart, fyRange, fyLabel, monthRange,
 } from './lib.js';
 
@@ -54,6 +54,10 @@ export async function load() {
   $('exPeriod').value = period;
   $('exPeriod').addEventListener('change', (e) => { period = e.target.value; refresh(); });
   $('exAdd').addEventListener('click', add);
+  if ($('exGst')) $('exAmount').addEventListener('input', () => {
+    const a = parseFloat($('exAmount').value);
+    $('exGst').placeholder = a > 0 ? (Math.round((a / 11) * 100) / 100).toFixed(2) : 'auto';
+  });
   $('exPdf').addEventListener('click', async () => {
     try { await apiOpenPdf(`/api/admin/expenses-report?fy=${fy}`, `lanky-expenses-FY${fy}-${fy + 1}.pdf`); }
     catch (err) { toast(err.message, 'bad'); }
@@ -132,14 +136,56 @@ async function refresh() {
       tr.children[5].appendChild(link);
     } else { tr.children[5].innerHTML = '<span class="muted">—</span>'; }
 
-    const del = el('<button class="danger sm">Delete</button>');
+    const edit = el('<button class="ghost sm">Edit</button>');
+    edit.addEventListener('click', () => openEdit(e));
+    const del = el('<button class="danger sm" style="margin-left:6px">Delete</button>');
     del.addEventListener('click', async () => {
       if (!window.confirm('Delete this expense?')) return;
       const { error } = await supabase.from('expenses').delete().eq('id', e.id);
       if (error) { toast(error.message, 'bad'); return; }
       toast('Deleted'); refresh();
     });
-    tr.children[6].appendChild(del);
+    tr.children[6].append(edit, del);
     rows.appendChild(tr);
   }
+}
+
+function openEdit(e) {
+  const view = el(`<div>
+    <h2>Edit expense</h2>
+    <div class="row">
+      <div style="width:160px"><label>Date</label><input id="edDate" type="date" value="${esc(e.expense_date)}"></div>
+      <div class="grow"><label>Category</label><select id="edCat">${EXPENSE_CATEGORIES.map((c) => `<option ${c === e.category ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+    </div>
+    <label>Description</label><input id="edDesc" value="${esc(e.description || '')}">
+    <div class="row">
+      <div class="grow"><label>Supplier</label><input id="edSupplier" value="${esc(e.supplier || '')}"></div>
+      <div style="width:130px"><label>Amount $</label><input id="edAmount" inputmode="decimal" value="${e.amount ?? ''}"></div>
+      ${gstRegistered ? `<div style="width:120px"><label>GST $</label><input id="edGst" inputmode="decimal" value="${e.gst_amount ?? ''}" placeholder="auto"></div>` : ''}
+    </div>
+    ${gstRegistered ? '<p class="cap" style="margin-top:6px">Leave GST blank to auto-calc as 1/11th of the amount.</p>' : ''}
+    <div class="row" style="margin-top:16px">
+      <button id="edSave">Save changes</button>
+      <button id="edCancel" class="ghost">Close</button>
+    </div>
+  </div>`);
+  const close = openOverlay(view, 'modal', { dismissible: false });
+  view.querySelector('#edCancel').addEventListener('click', () => close());
+  view.querySelector('#edSave').addEventListener('click', async (ev) => {
+    const amount = parseFloat(view.querySelector('#edAmount').value);
+    if (!amount || amount <= 0) { toast('Enter an amount.', 'bad'); return; }
+    ev.target.disabled = true;
+    const gstEl = view.querySelector('#edGst');
+    const patch = {
+      expense_date: view.querySelector('#edDate').value || todayISO(),
+      category: view.querySelector('#edCat').value,
+      description: view.querySelector('#edDesc').value.trim() || null,
+      supplier: view.querySelector('#edSupplier').value.trim() || null,
+      amount,
+      gst_amount: gstRegistered ? (gstEl && gstEl.value ? parseFloat(gstEl.value) : Math.round((amount / 11) * 100) / 100) : null,
+    };
+    const { error } = await supabase.from('expenses').update(patch).eq('id', e.id);
+    if (error) { toast(error.message, 'bad'); ev.target.disabled = false; return; }
+    toast('Expense updated'); close(); refresh();
+  });
 }

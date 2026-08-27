@@ -12,6 +12,7 @@ const quoteSchema = z
     message: z.string().trim().max(2000).nullable().optional(),
     source_url: z.string().trim().url().max(500).nullable().optional(),
     website: z.string().max(0).optional(),
+    marketing_opt_in: z.boolean().optional(),
   })
   .refine((value) => Boolean(value.phone || value.email), {
     message: "A phone number or email address is required",
@@ -109,6 +110,21 @@ export const Route = createFileRoute("/api/public/quote")({
             return Response.json({ ok: false, message: "We couldn't save your request. Please try again." }, { status: 503 });
           }
           quote = data;
+        }
+
+        // Marketing opt-in — explicit consent only. Log the consent + IP as proof.
+        if (input.marketing_opt_in && input.email) {
+          const ip = (request.headers.get("x-forwarded-for") || "").split(",")[0].trim()
+            || request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || null;
+          const { error: subErr } = await supabaseAdmin.from("marketing_subscribers").upsert({
+            email: input.email.toLowerCase(),
+            name: input.name,
+            consent_ip: ip,
+            source: "quote form",
+            consented_at: new Date().toISOString(),
+            unsubscribed_at: null,
+          }, { onConflict: "email" });
+          if (subErr) await logServerError({ source: "api:quote:subscribe", error: subErr, status: 202, ...meta });
         }
 
         if (quote.notified_at) {

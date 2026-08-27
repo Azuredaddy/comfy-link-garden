@@ -42,6 +42,8 @@ export type PdfDoc = {
   subtotal: number;
   gst_amount: number;
   total: number;
+  discount_percent?: number | null;
+  discount_amount?: number | null;
   customer_notes?: string | null;
 };
 
@@ -221,11 +223,13 @@ export async function renderDocumentPdf(
     drawRight(page, value, totalsRight, y, bold ? fonts.bold : fonts.reg, bold ? 12 : 10, bold ? INK : INK);
     y -= bold ? 20 : 16;
   };
-  if (gst) {
+  const hasDiscount = Number(doc.discount_amount) > 0;
+  if (gst || hasDiscount) {
     totalRow("Subtotal", money(doc.subtotal));
-    totalRow(`GST (${+Number(settings.gst_rate).toFixed(0)}%)`, money(doc.gst_amount));
+    if (hasDiscount) totalRow(`Discount (${+Number(doc.discount_percent || 0).toFixed(2)}%)`, "-" + money(doc.discount_amount || 0));
+    if (gst) totalRow(`GST (${+Number(settings.gst_rate).toFixed(0)}%)`, money(doc.gst_amount));
     page.drawLine({ start: { x: totalsLabelX, y: y + 6 }, end: { x: totalsRight, y: y + 6 }, thickness: 0.5, color: LINE });
-    totalRow(kind === "invoice" ? "Total (inc. GST)" : "Total (inc. GST)", money(doc.total), true);
+    totalRow(gst ? "Total (inc. GST)" : "Total", money(doc.total), true);
   } else {
     totalRow("Total", money(doc.total), true);
   }

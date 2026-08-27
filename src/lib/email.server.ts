@@ -53,6 +53,7 @@ export function brandedEmail(opts: {
   intro: string;
   bodyParagraphs?: string[];
   button?: { label: string; url: string };
+  button2?: { label: string; url: string };
   rows?: Array<[string, string]>;
   contact?: { phone?: string | null; email?: string | null };
 }): { html: string; text: string } {
@@ -65,9 +66,12 @@ export function brandedEmail(opts: {
   const bodyHtml = (opts.bodyParagraphs ?? [])
     .map((p) => `<p style="margin:0 0 12px;font-size:15px;line-height:1.5">${esc(p)}</p>`)
     .join("");
-  const buttonHtml = opts.button
-    ? `<p style="margin:24px 0"><a href="${esc(opts.button.url)}" style="display:inline-block;background:#5aad17;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:13px 22px;border-radius:10px">${esc(opts.button.label)}</a></p>
-       <p style="margin:0 0 8px;font-size:12px;color:#8a9182">Or paste this link into your browser:<br><a href="${esc(opts.button.url)}" style="color:#5aad17;word-break:break-all">${esc(opts.button.url)}</a></p>`
+  const btn = (b: { label: string; url: string }, primary: boolean) =>
+    `<a href="${esc(b.url)}" style="display:inline-block;${primary ? "background:#5aad17;color:#ffffff;" : "background:#ffffff;color:#12170f;border:1px solid #cfd8c4;"}text-decoration:none;font-weight:700;font-size:15px;padding:13px 22px;border-radius:10px;margin:0 8px 10px 0">${esc(b.label)}</a>`;
+  const linkFor = opts.button ?? opts.button2;
+  const buttonHtml = (opts.button || opts.button2)
+    ? `<p style="margin:24px 0 6px">${opts.button ? btn(opts.button, true) : ""}${opts.button2 ? btn(opts.button2, false) : ""}</p>
+       ${linkFor ? `<p style="margin:0 0 8px;font-size:12px;color:#8a9182">Or paste this link into your browser:<br><a href="${esc(linkFor.url)}" style="color:#5aad17;word-break:break-all">${esc(linkFor.url)}</a></p>` : ""}`
     : "";
   const contactLine = [opts.contact?.phone, opts.contact?.email].filter(Boolean).join("  ·  ");
 
@@ -94,6 +98,7 @@ export function brandedEmail(opts: {
     "",
     ...(opts.rows ?? []).map(([k, v]) => `${k}: ${v}`),
     ...(opts.button ? ["", `${opts.button.label}: ${opts.button.url}`] : []),
+    ...(opts.button2 ? ["", `${opts.button2.label}: ${opts.button2.url}`] : []),
     ...(contactLine ? ["", contactLine] : []),
   ];
   return { html, text: textParts.join("\n") };
