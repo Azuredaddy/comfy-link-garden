@@ -29,7 +29,8 @@ export async function sendEmail(opts: {
         text: opts.text,
         reply_to: opts.reply_to,
         purpose: "transactional",
-        idempotency_key: opts.idempotency_key,
+        // The email API requires run_id OR idempotency_key — always provide one.
+        idempotency_key: opts.idempotency_key || crypto.randomUUID(),
       },
       { apiKey },
     );

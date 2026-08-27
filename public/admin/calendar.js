@@ -209,26 +209,18 @@ function openJob(job, dateStr) {
   }
 
   view.querySelector('#jSms').addEventListener('click', async (ev) => {
-    const phone = view.querySelector('#jPhone').value.trim().replace(/\s+/g, '');
+    const phone = view.querySelector('#jPhone').value.trim();
     if (!phone) { toast("Add the customer's phone number first.", 'bad'); return; }
-    const name = (view.querySelector('#jTitle').value.trim().split(/[—-]/)[0] || '').trim();
-    const date = view.querySelector('#jDate').value;
-    const t = view.querySelector('#jTime').value || view.querySelector('#jTimeNote').value.trim();
-    const suburb = view.querySelector('#jSuburb').value.trim();
-    const dstr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
-    const msg = `Hi ${name || 'there'}, confirming your booking with Lanky Services${dstr ? ' on ' + dstr : ''}${t ? ' at ' + t : ''}${suburb ? ' (' + suburb + ')' : ''}. Any questions call 0439 973 051. Thanks!`;
-    const openDevice = () => { window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`; };
-
     ev.target.disabled = true; ev.target.textContent = 'Sending…';
     try {
       const id = j.id || await saveJob();   // save first so it can send via Twilio
-      if (!id) { ev.target.disabled = false; ev.target.textContent = '✉ Text confirmation'; return; }
-      const res = await apiFetch('/api/admin/job-confirm', { body: { job_id: id } });
-      if (res.configured === false) { openDevice(); toast("Twilio isn't detected — opened your Messages instead. Check the TWILIO secrets in Lovable.", 'bad'); }
-      else { toast('Confirmation text sent to the customer ✓'); render(); }
+      if (id) {
+        const res = await apiFetch('/api/admin/job-confirm', { body: { job_id: id } });
+        if (res.configured === false) toast("Twilio isn't set up yet — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN and TWILIO_FROM in Lovable.", 'bad');
+        else { toast('Confirmation text sent to the customer ✓'); render(); }
+      }
     } catch (err) {
-      toast((err.message || 'Send failed') + ' — opening your Messages instead', 'bad');
-      openDevice();
+      toast(err.message || 'Could not send the text.', 'bad');
     }
     ev.target.disabled = false; ev.target.textContent = '✉ Text confirmation';
   });
