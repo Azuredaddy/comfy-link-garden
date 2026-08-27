@@ -47,7 +47,8 @@ export async function load() {
   const twelveAgo = new Date(); twelveAgo.setMonth(twelveAgo.getMonth() - 11); twelveAgo.setDate(1);
   const today = todayISO();
 
-  const [paidFy, paidMonth, expFy, outstanding, leads, recent, paid12, overdue, failed, otherFy, otherMonth, jobsUp] = await Promise.all([
+  const acceptedQuotesQ = supabase.from('quotes').select('number,customer_name,total,suburb').eq('status', 'accepted');
+  const [paidFy, paidMonth, expFy, outstanding, leads, recent, paid12, overdue, failed, otherFy, otherMonth, jobsUp, acceptedQuotes] = await Promise.all([
     supabase.from('invoices').select('total').eq('status', 'paid').gte('paid_at', fyR.from + 'T00:00:00').lte('paid_at', fyR.to + 'T23:59:59'),
     supabase.from('invoices').select('total').eq('status', 'paid').gte('paid_at', m.from + 'T00:00:00').lte('paid_at', m.to + 'T23:59:59'),
     supabase.from('expenses').select('amount').gte('expense_date', fyR.from).lte('expense_date', fyR.to),
@@ -60,6 +61,7 @@ export async function load() {
     supabase.from('other_income').select('amount').gte('income_date', fyR.from).lte('income_date', fyR.to),
     supabase.from('other_income').select('amount').gte('income_date', m.from).lte('income_date', m.to),
     supabase.from('jobs').select('title,job_date,job_time,suburb,status').gte('job_date', today).neq('status', 'cancelled').order('job_date', { ascending: true }).order('job_time', { ascending: true }).limit(6),
+    acceptedQuotesQ,
   ]);
 
   const revFy = sum(paidFy.data, 'total');
@@ -102,6 +104,7 @@ export async function load() {
   }
   for (const f of (failed.data || [])) items.push(['var(--bad)', 'Email alert failed on a lead', `${esc(f.name)}${f.suburb ? ' · ' + esc(f.suburb) : ''} · resend from Leads`]);
   if (newLeads > 0) items.push(['var(--lime)', `${newLeads} new lead${newLeads === 1 ? '' : 's'} to call back`, 'Open the Leads tab']);
+  for (const q of (acceptedQuotes && acceptedQuotes.data ? acceptedQuotes.data : [])) items.push(['var(--paid)', `<b>Quote ${esc(q.number || '')}</b> accepted — book it in`, `${esc(q.customer_name)}${q.suburb ? ' · ' + esc(q.suburb) : ''} · ${money(q.total)}`]);
 
   $('dashAttn').innerHTML = items.length
     ? items.slice(0, 6).map(([c, t, s]) => `<div class="attn-item"><span class="dot" style="background:${c}"></span><div><p>${t}</p><small>${s}</small></div></div>`).join('')

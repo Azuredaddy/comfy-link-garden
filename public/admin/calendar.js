@@ -137,8 +137,16 @@ async function openSync() {
   });
 }
 
-function openJob(job, dateStr) {
-  const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', time_note: '', status: 'booked', source: 'Word of mouth', amount: '', assigned_to: '' };
+// Open the job editor prefilled from a quote (adds it to the calendar on save).
+export function openJobFromQuote(q) {
+  openJob(null, todayISO(), {
+    title: q.customer_name || '', customer_phone: q.customer_phone || '', customer_email: q.customer_email || '',
+    suburb: q.suburb || '', amount: q.total != null ? q.total : '', quote_id: q.id,
+  });
+}
+
+function openJob(job, dateStr, prefill) {
+  const j = job || Object.assign({ title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', time_note: '', status: 'booked', source: 'Word of mouth', amount: '', assigned_to: '' }, prefill || {});
   const view = el(`<div>
     <div class="spread"><h2>${job ? 'Edit job' : 'New job'}</h2>${job ? `<span class="pill ${statusPill(j.status)}">${esc(STATUS_LABEL[j.status] || j.status)}</span>` : ''}</div>
     <label>Customer / job title</label><input id="jTitle" value="${esc(j.title || '')}" placeholder="e.g. Dave — garage clean-out">
@@ -192,6 +200,7 @@ function openJob(job, dateStr) {
       status: view.querySelector('#jStatus').value,
       assigned_to: view.querySelector('#jAssign').value || null,
       amount: isNaN(amt) ? null : amt,
+      quote_id: j.quote_id || null,
     };
   }
 
