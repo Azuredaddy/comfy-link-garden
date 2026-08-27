@@ -19,6 +19,7 @@ import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/e
 import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job-confirm'
 import { Route as ApiAdminJobEmailConfirmRouteImport } from './routes/api/admin/job-email-confirm'
 import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
+import { Route as ApiAdminTeamRouteImport } from './routes/api/admin/team'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiCalendarFeedRouteImport } from './routes/api/calendar/feed'
 import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
@@ -82,6 +83,11 @@ const ApiAdminJobEmailConfirmRoute = ApiAdminJobEmailConfirmRouteImport.update({
 const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
   id: '/api/admin/reply',
   path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminTeamRoute = ApiAdminTeamRouteImport.update({
+  id: '/api/admin/team',
+  path: '/api/admin/team',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/team': typeof ApiAdminTeamRoute
   '/api/admin/users': typeof ApiAdminUsersRoute
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/team': typeof ApiAdminTeamRoute
   '/api/admin/users': typeof ApiAdminUsersRoute
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/team': typeof ApiAdminTeamRoute
   '/api/admin/users': typeof ApiAdminUsersRoute
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/api/admin/job-confirm'
     | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/team'
     | '/api/admin/users'
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/api/admin/job-confirm'
     | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/team'
     | '/api/admin/users'
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
@@ -302,6 +313,7 @@ export interface FileRouteTypes {
     | '/api/admin/job-confirm'
     | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/team'
     | '/api/admin/users'
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
@@ -329,6 +341,7 @@ export interface RootRouteChildren {
   ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
   ApiAdminJobEmailConfirmRoute: typeof ApiAdminJobEmailConfirmRoute
   ApiAdminReplyRoute: typeof ApiAdminReplyRoute
+  ApiAdminTeamRoute: typeof ApiAdminTeamRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRoute
   ApiCalendarFeedRoute: typeof ApiCalendarFeedRoute
   ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
@@ -415,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/reply'
       fullPath: '/api/admin/reply'
       preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/team': {
+      id: '/api/admin/team'
+      path: '/api/admin/team'
+      fullPath: '/api/admin/team'
+      preLoaderRoute: typeof ApiAdminTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -529,6 +549,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
   ApiAdminJobEmailConfirmRoute: ApiAdminJobEmailConfirmRoute,
   ApiAdminReplyRoute: ApiAdminReplyRoute,
+  ApiAdminTeamRoute: ApiAdminTeamRoute,
   ApiAdminUsersRoute: ApiAdminUsersRoute,
   ApiCalendarFeedRoute: ApiCalendarFeedRoute,
   ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,
