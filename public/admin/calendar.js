@@ -96,7 +96,7 @@ async function render() {
   const up = $('calUpcoming');
   up.innerHTML = (upcoming.data && upcoming.data.length)
     ? `<table class="tbl"><tbody>${upcoming.data.map((j) => `<tr class="clickable" data-job="${j.id}">
-        <td style="width:130px" class="muted">${esc(fmtDate(j.job_date))}${j.job_time ? ' · ' + esc(j.job_time.slice(0, 5)) : ''}</td>
+        <td style="width:140px" class="muted">${esc(fmtDate(j.job_date))}${j.job_time ? ' · ' + esc(j.job_time.slice(0, 5)) : (j.time_note ? ' · ' + esc(j.time_note) : '')}</td>
         <td><strong>${esc(j.title)}</strong>${j.suburb ? ` <span class="muted">· ${esc(j.suburb)}</span>` : ''}${j.assigned_to ? ` <span class="pill sent" style="margin-left:6px">${esc(j.assigned_to.split('@')[0])}</span>` : ''}</td>
         <td>${j.source ? `<span class="pill">${esc(j.source)}</span>` : ''}</td>
         <td class="num">${j.amount != null ? money(j.amount) : ''}</td>
@@ -138,13 +138,14 @@ async function openSync() {
 }
 
 function openJob(job, dateStr) {
-  const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', status: 'booked', source: 'Word of mouth', amount: '', assigned_to: '' };
+  const j = job || { title: '', customer_phone: '', suburb: '', description: '', job_date: dateStr || todayISO(), job_time: '', time_note: '', status: 'booked', source: 'Word of mouth', amount: '', assigned_to: '' };
   const view = el(`<div>
     <div class="spread"><h2>${job ? 'Edit job' : 'New job'}</h2>${job ? `<span class="pill ${statusPill(j.status)}">${esc(STATUS_LABEL[j.status] || j.status)}</span>` : ''}</div>
     <label>Customer / job title</label><input id="jTitle" value="${esc(j.title || '')}" placeholder="e.g. Dave — garage clean-out">
     <div class="row">
       <div class="grow"><label>Date</label><input id="jDate" type="date" value="${esc(j.job_date)}"></div>
-      <div style="width:130px"><label>Time</label><input id="jTime" type="time" value="${esc((j.job_time || '').slice(0, 5))}"></div>
+      <div style="width:120px"><label>Time</label><input id="jTime" type="time" value="${esc((j.job_time || '').slice(0, 5))}"></div>
+      <div style="width:160px"><label>Rough time</label><input id="jTimeNote" value="${esc(j.time_note || '')}" placeholder="e.g. morning, 9–11am"></div>
     </div>
     <div class="row">
       <div class="grow"><label>Phone</label><input id="jPhone" value="${esc(j.customer_phone || '')}"></div>
@@ -176,64 +177,73 @@ function openJob(job, dateStr) {
   const close = openOverlay(view, 'modal', { dismissible: false });
   view.querySelector('#jCancel').addEventListener('click', () => close());
 
-  view.querySelector('#jSms').addEventListener('click', async (ev) => {
-    const phone = view.querySelector('#jPhone').value.trim().replace(/\s+/g, '');
-    if (!phone) { toast("Add the customer's phone number first.", 'bad'); return; }
-    const name = (view.querySelector('#jTitle').value.trim().split(/[—-]/)[0] || '').trim();
-    const date = view.querySelector('#jDate').value;
-    const time = view.querySelector('#jTime').value;
-    const suburb = view.querySelector('#jSuburb').value.trim();
-    const dstr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
-    const msg = `Hi ${name || 'there'}, confirming your booking with Lanky Services${dstr ? ' on ' + dstr : ''}${time ? ' at ' + time : ''}${suburb ? ' (' + suburb + ')' : ''}. Any questions call 0439 973 051. Thanks!`;
-    const openDevice = () => { window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`; };
-
-    // Saved job → try sending automatically via Twilio; otherwise open Messages.
-    if (job && job.id) {
-      ev.target.disabled = true; ev.target.textContent = 'Sending…';
-      try {
-        const res = await apiFetch('/api/admin/job-confirm', { body: { job_id: job.id } });
-        if (res.configured === false) openDevice();
-        else toast('Confirmation text sent to the customer ✓');
-      } catch (err) {
-        toast(err.message + ' — opening your Messages instead', 'bad');
-        openDevice();
-      }
-      ev.target.disabled = false; ev.target.textContent = '✉ Text confirmation';
-    } else {
-      openDevice();
-    }
-  });
-
-  view.querySelector('#jSave').addEventListener('click', async (e) => {
-    const title = view.querySelector('#jTitle').value.trim();
-    if (!title) { toast('Add a customer / job title.', 'bad'); return; }
+  function collect() {
     const amt = parseFloat(view.querySelector('#jAmount').value);
-    const email = view.querySelector('#jEmail').value.trim() || null;
-    const wantsConfirm = view.querySelector('#jConfirm').checked;
-    const payload = {
-      title,
+    return {
+      title: view.querySelector('#jTitle').value.trim(),
       customer_phone: view.querySelector('#jPhone').value.trim() || null,
-      customer_email: email,
+      customer_email: view.querySelector('#jEmail').value.trim() || null,
       suburb: view.querySelector('#jSuburb').value.trim() || null,
       description: view.querySelector('#jDesc').value.trim() || null,
       job_date: view.querySelector('#jDate').value || todayISO(),
       job_time: view.querySelector('#jTime').value || null,
+      time_note: view.querySelector('#jTimeNote').value.trim() || null,
       source: view.querySelector('#jSource').value,
       status: view.querySelector('#jStatus').value,
       assigned_to: view.querySelector('#jAssign').value || null,
       amount: isNaN(amt) ? null : amt,
     };
-    if (wantsConfirm && !email) { toast('Add a customer email, or untick the confirmation box.', 'bad'); return; }
-    e.target.disabled = true;
-    const res = job
+  }
+
+  // Persist the form; returns the job id (null on failure). Marks j.id so later
+  // actions (like the SMS) treat it as an existing, saved job.
+  async function saveJob() {
+    const payload = collect();
+    if (!payload.title) { toast('Add a customer / job title.', 'bad'); return null; }
+    const res = j.id
       ? await supabase.from('jobs').update(payload).eq('id', j.id).select('id').single()
       : await supabase.from('jobs').insert(payload).select('id').single();
-    if (res.error) { toast(res.error.message, 'bad'); e.target.disabled = false; return; }
-    toast(job ? 'Job updated' : 'Job added');
+    if (res.error) { toast(res.error.message, 'bad'); return null; }
+    j.id = res.data.id;
+    return res.data.id;
+  }
 
+  view.querySelector('#jSms').addEventListener('click', async (ev) => {
+    const phone = view.querySelector('#jPhone').value.trim().replace(/\s+/g, '');
+    if (!phone) { toast("Add the customer's phone number first.", 'bad'); return; }
+    const name = (view.querySelector('#jTitle').value.trim().split(/[—-]/)[0] || '').trim();
+    const date = view.querySelector('#jDate').value;
+    const t = view.querySelector('#jTime').value || view.querySelector('#jTimeNote').value.trim();
+    const suburb = view.querySelector('#jSuburb').value.trim();
+    const dstr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
+    const msg = `Hi ${name || 'there'}, confirming your booking with Lanky Services${dstr ? ' on ' + dstr : ''}${t ? ' at ' + t : ''}${suburb ? ' (' + suburb + ')' : ''}. Any questions call 0439 973 051. Thanks!`;
+    const openDevice = () => { window.location.href = `sms:${phone}?body=${encodeURIComponent(msg)}`; };
+
+    ev.target.disabled = true; ev.target.textContent = 'Sending…';
+    try {
+      const id = j.id || await saveJob();   // save first so it can send via Twilio
+      if (!id) { ev.target.disabled = false; ev.target.textContent = '✉ Text confirmation'; return; }
+      const res = await apiFetch('/api/admin/job-confirm', { body: { job_id: id } });
+      if (res.configured === false) { openDevice(); toast("Twilio isn't detected — opened your Messages instead. Check the TWILIO secrets in Lovable.", 'bad'); }
+      else { toast('Confirmation text sent to the customer ✓'); render(); }
+    } catch (err) {
+      toast((err.message || 'Send failed') + ' — opening your Messages instead', 'bad');
+      openDevice();
+    }
+    ev.target.disabled = false; ev.target.textContent = '✉ Text confirmation';
+  });
+
+  view.querySelector('#jSave').addEventListener('click', async (e) => {
+    const email = view.querySelector('#jEmail').value.trim() || null;
+    const wantsConfirm = view.querySelector('#jConfirm').checked;
+    if (wantsConfirm && !email) { toast('Add a customer email, or untick the confirmation box.', 'bad'); return; }
+    e.target.disabled = true;
+    const id = await saveJob();
+    if (!id) { e.target.disabled = false; return; }
+    toast(job ? 'Job updated' : 'Job added');
     if (wantsConfirm && email) {
       try {
-        await apiFetch('/api/admin/job-email-confirm', { body: { id: res.data.id } });
+        await apiFetch('/api/admin/job-email-confirm', { body: { id } });
         toast('Confirmation emailed to ' + email);
       } catch (err) { toast('Job saved, but the email failed: ' + err.message, 'bad'); }
     }
