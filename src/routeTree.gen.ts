@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as PayRouteImport } from './routes/pay'
+import { Route as QuoteAcceptRouteImport } from './routes/quote-accept'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
@@ -48,6 +49,11 @@ const SplatRoute = SplatRouteImport.update({
 const PayRoute = PayRouteImport.update({
   id: '/pay',
   path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuoteAcceptRoute = QuoteAcceptRouteImport.update({
+  id: '/quote-accept',
+  path: '/quote-accept',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/quote-accept': typeof QuoteAcceptRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/quote-accept': typeof QuoteAcceptRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/quote-accept': typeof QuoteAcceptRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/quote-accept'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -279,6 +289,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/quote-accept'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/quote-accept'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -334,6 +346,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   PayRoute: typeof PayRoute
+  QuoteAcceptRoute: typeof QuoteAcceptRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
@@ -379,6 +392,13 @@ declare module '@tanstack/react-router' {
       path: '/pay'
       fullPath: '/pay'
       preLoaderRoute: typeof PayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quote-accept': {
+      id: '/quote-accept'
+      path: '/quote-accept'
+      fullPath: '/quote-accept'
+      preLoaderRoute: typeof QuoteAcceptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/unsubscribe': {
@@ -542,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   PayRoute: PayRoute,
+  QuoteAcceptRoute: QuoteAcceptRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
