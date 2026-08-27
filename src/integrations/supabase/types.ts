@@ -298,6 +298,7 @@ export type Database = {
       jobs: {
         Row: {
           amount: number | null
+          assigned_to: string | null
           confirmation_sent_at: string | null
           created_at: string
           customer_email: string | null
@@ -311,11 +312,13 @@ export type Database = {
           source: string | null
           status: string
           suburb: string | null
+          time_note: string | null
           title: string
           updated_at: string
         }
         Insert: {
           amount?: number | null
+          assigned_to?: string | null
           confirmation_sent_at?: string | null
           created_at?: string
           customer_email?: string | null
@@ -329,11 +332,13 @@ export type Database = {
           source?: string | null
           status?: string
           suburb?: string | null
+          time_note?: string | null
           title?: string
           updated_at?: string
         }
         Update: {
           amount?: number | null
+          assigned_to?: string | null
           confirmation_sent_at?: string | null
           created_at?: string
           customer_email?: string | null
@@ -347,6 +352,7 @@ export type Database = {
           source?: string | null
           status?: string
           suburb?: string | null
+          time_note?: string | null
           title?: string
           updated_at?: string
         }
