@@ -36,7 +36,9 @@ export const Route = createFileRoute("/api/admin/document-pdf")({
           .order("position", { ascending: true });
 
         const settings = await loadSettings();
-        const bytes = await renderDocumentPdf(type, doc as never, (items ?? []) as never, settings);
+        const { siteUrl } = await import("../../../lib/stripe.server");
+        const acceptUrl = type === "quote" ? `${siteUrl(url.origin)}/quote-accept?id=${id}` : undefined;
+        const bytes = await renderDocumentPdf(type, doc as never, (items ?? []) as never, settings, acceptUrl);
 
         return new Response(new Blob([bytes as unknown as BlobPart], { type: "application/pdf" }), {
           headers: {

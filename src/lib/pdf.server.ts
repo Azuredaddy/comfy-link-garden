@@ -2,7 +2,19 @@
 // report. Uses pdf-lib (pure JS, no native deps — safe in the serverless
 // runtime). Layout is deliberately simple and print-clean: a dark header band
 // with a lime accent, black body text on white, a line-item table and totals.
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
+import { PDFDocument, StandardFonts, PDFString, PDFName, rgb, type PDFFont, type PDFPage } from "pdf-lib";
+
+// Make a rectangle on a page a clickable link to `url` (for PDF viewers).
+function addLink(pdf: PDFDocument, page: PDFPage, x1: number, y1: number, x2: number, y2: number, url: string) {
+  const annot = pdf.context.obj({
+    Type: "Annot", Subtype: "Link", Rect: [x1, y1, x2, y2], Border: [0, 0, 0],
+    A: { Type: "Action", S: "URI", URI: PDFString.of(url) },
+  });
+  const ref = pdf.context.register(annot);
+  const existing = page.node.Annots();
+  if (existing) existing.push(ref);
+  else page.node.set(PDFName.of("Annots"), pdf.context.obj([ref]));
+}
 
 // ---- palette (matches the site brand, tuned for print on white) -----------
 const INK = rgb(0.07, 0.09, 0.06);
@@ -138,6 +150,7 @@ export async function renderDocumentPdf(
   doc: PdfDoc,
   items: PdfItem[],
   settings: PdfSettings,
+  acceptUrl?: string,
 ): Promise<Uint8Array> {
   const { pdf, fonts } = await makeDoc();
   let page = pdf.addPage([A4.w, A4.h]);
@@ -232,6 +245,18 @@ export async function renderDocumentPdf(
     totalRow(gst ? "Total (inc. GST)" : "Total", money(doc.total), true);
   } else {
     totalRow("Total", money(doc.total), true);
+  }
+
+  // ---- clickable "Accept this quote" button (quotes only) ----------------
+  if (kind === "quote" && acceptUrl) {
+    ensureSpace(50);
+    y -= 18;
+    const bw = 230, bh = 30, bx = M, by = y - bh + 10;
+    page.drawRectangle({ x: bx, y: by, width: bw, height: bh, color: LIME });
+    page.drawText("Accept this quote online", { x: bx + 16, y: by + 10, size: 12, font: fonts.bold, color: rgb(0.06, 0.09, 0.04) });
+    addLink(pdf, page, bx, by, bx + bw, by + bh, acceptUrl);
+    page.drawText("Tap to accept — we'll be in touch to book you in.", { x: bx + bw + 12, y: by + 11, size: 9, font: fonts.reg, color: MUTED });
+    y -= bh + 8;
   }
 
   // ---- notes / payment footer --------------------------------------------
