@@ -101,6 +101,7 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     businessName: settings.business_name,
     heading: kind === "quote" ? "Your quote from Lanky Services" : "Your invoice from Lanky Services",
     intro: `Hi ${doc.customer_name}, ${kind === "quote" ? "thanks for the opportunity — here's your quote. Happy with it? Tap Accept and we'll be in touch to book you in." : "please find your invoice below."}`,
+    bodyParagraphs: ["You can reply to this email with any questions — it comes straight to us."],
     rows,
     button,
     button2,
