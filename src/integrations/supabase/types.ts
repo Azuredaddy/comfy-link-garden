@@ -43,6 +43,7 @@ export type Database = {
           email: string | null
           gst_rate: number
           gst_registered: boolean
+          ical_token: string
           id: number
           invoice_due_days: number
           invoice_prefix: string
@@ -62,6 +63,7 @@ export type Database = {
           email?: string | null
           gst_rate?: number
           gst_registered?: boolean
+          ical_token?: string
           id?: number
           invoice_due_days?: number
           invoice_prefix?: string
@@ -81,6 +83,7 @@ export type Database = {
           email?: string | null
           gst_rate?: number
           gst_registered?: boolean
+          ical_token?: string
           id?: number
           invoice_due_days?: number
           invoice_prefix?: string
