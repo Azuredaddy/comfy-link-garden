@@ -42,10 +42,10 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
 
   // --- render + host the PDF ------------------------------------------------
   const { siteUrl: siteUrlFor } = await import("./stripe.server");
-  const acceptUrl = kind === "quote" ? `${siteUrlFor(new URL(request.url).origin)}/quote-accept?id=${id}` : undefined;
+  const pdfAcceptUrl = kind === "quote" ? `${siteUrlFor(new URL(request.url).origin)}/quote-accept?id=${id}` : undefined;
   let url: string;
   try {
-    const bytes = await renderDocumentPdf(kind, doc as never, (items ?? []) as never, settings, acceptUrl);
+    const bytes = await renderDocumentPdf(kind, doc as never, (items ?? []) as never, settings, pdfAcceptUrl);
     const key = `${kind}/${doc.number || id}-${crypto.randomUUID().slice(0, 8)}.pdf`;
     const { error: upErr } = await supabaseAdmin.storage
       .from("documents")
