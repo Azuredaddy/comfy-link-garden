@@ -63,6 +63,11 @@ async function render() {
     const b = $('leadsBadge');
     if (n > 0) { b.textContent = n; b.classList.remove('hidden'); } else { b.classList.add('hidden'); }
   }).catch(() => {});
+  // accepted quotes waiting to be booked in
+  supabase.from('quotes').select('id', { count: 'exact', head: true }).eq('status', 'accepted').then(({ count }) => {
+    const b = $('quotesBadge'); if (!b) return;
+    if (count > 0) { b.textContent = count; b.classList.remove('hidden'); } else { b.classList.add('hidden'); }
+  }).catch(() => {});
 }
 
 // ---- nav ------------------------------------------------------------------
