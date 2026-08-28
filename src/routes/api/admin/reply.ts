@@ -55,6 +55,7 @@ export const Route = createFileRoute("/api/admin/reply")({
           html,
           text,
           reply_to: settings.email ?? undefined,
+          idempotency_key: `lead-reply-${quote_request_id}-${Date.now()}`,
         });
 
         await supabaseAdmin.from("messages").insert({
