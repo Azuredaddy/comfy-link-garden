@@ -64,13 +64,10 @@
   if (!document.querySelector('.mobile-cta')) {
     var bar = document.createElement('div');
     bar.className = 'mobile-cta';
-    var quoteHref = document.querySelector('a[href$="contact.html"], a[href="#quote"]') ? 'contact.html' : 'contact.html';
-    // use relative path that works from /locations/ too
-    var inLoc = /\/locations\//.test(location.pathname);
-    var contactHref = inLoc ? '../contact.html' : 'contact.html';
+    // absolute paths so they work from every folder (incl. /service-areas/ and /blog/)
     bar.innerHTML =
       '<a class="call" href="tel:0439973051">Call now</a>' +
-      '<a class="quote" href="' + contactHref + '">Free quote</a>';
+      '<a class="quote" href="/quote.html">Get a free quote</a>';
     document.body.appendChild(bar);
   }
 
