@@ -433,3 +433,6 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 .price-cards .card.featured::before{content:"Most common";position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--green);color:#0a1a06;font-family:var(--font-display);font-weight:700;font-size:.72rem;padding:3px 12px;border-radius:var(--radius-pill);white-space:nowrap}
 .price-cards .card p{flex:1}
 .price-note{margin-top:18px;color:var(--muted);text-align:center;max-width:640px;margin-left:auto;margin-right:auto}
+.benefits-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 34px;max-width:900px;margin-left:auto;margin-right:auto}
+.benefits-list li{align-items:flex-start}
+@media(max-width:640px){.benefits-list{grid-template-columns:1fr}}
