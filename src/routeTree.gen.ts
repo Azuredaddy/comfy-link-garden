@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as PayRouteImport } from './routes/pay'
+import { Route as QuoteAcceptRouteImport } from './routes/quote-accept'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ApiAdminBroadcastRouteImport } from './routes/api/admin/broadcast'
 import { Route as ApiAdminDocumentPdfRouteImport } from './routes/api/admin/document-pdf'
@@ -19,6 +20,7 @@ import { Route as ApiAdminExpensesReportRouteImport } from './routes/api/admin/e
 import { Route as ApiAdminJobConfirmRouteImport } from './routes/api/admin/job-confirm'
 import { Route as ApiAdminJobEmailConfirmRouteImport } from './routes/api/admin/job-email-confirm'
 import { Route as ApiAdminReplyRouteImport } from './routes/api/admin/reply'
+import { Route as ApiAdminTeamRouteImport } from './routes/api/admin/team'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin/users'
 import { Route as ApiCalendarFeedRouteImport } from './routes/api/calendar/feed'
 import { Route as ApiCronJobRemindersRouteImport } from './routes/api/cron/job-reminders'
@@ -47,6 +49,11 @@ const SplatRoute = SplatRouteImport.update({
 const PayRoute = PayRouteImport.update({
   id: '/pay',
   path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuoteAcceptRoute = QuoteAcceptRouteImport.update({
+  id: '/quote-accept',
+  path: '/quote-accept',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
@@ -82,6 +89,11 @@ const ApiAdminJobEmailConfirmRoute = ApiAdminJobEmailConfirmRouteImport.update({
 const ApiAdminReplyRoute = ApiAdminReplyRouteImport.update({
   id: '/api/admin/reply',
   path: '/api/admin/reply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminTeamRoute = ApiAdminTeamRouteImport.update({
+  id: '/api/admin/team',
+  path: '/api/admin/team',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
@@ -162,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/quote-accept': typeof QuoteAcceptRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -169,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/team': typeof ApiAdminTeamRoute
   '/api/admin/users': typeof ApiAdminUsersRoute
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
@@ -188,6 +202,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/quote-accept': typeof QuoteAcceptRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -195,6 +210,7 @@ export interface FileRoutesByTo {
   '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/team': typeof ApiAdminTeamRoute
   '/api/admin/users': typeof ApiAdminUsersRoute
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
@@ -215,6 +231,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/pay': typeof PayRoute
+  '/quote-accept': typeof QuoteAcceptRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/api/admin/broadcast': typeof ApiAdminBroadcastRoute
   '/api/admin/document-pdf': typeof ApiAdminDocumentPdfRoute
@@ -222,6 +239,7 @@ export interface FileRoutesById {
   '/api/admin/job-confirm': typeof ApiAdminJobConfirmRoute
   '/api/admin/job-email-confirm': typeof ApiAdminJobEmailConfirmRoute
   '/api/admin/reply': typeof ApiAdminReplyRoute
+  '/api/admin/team': typeof ApiAdminTeamRoute
   '/api/admin/users': typeof ApiAdminUsersRoute
   '/api/calendar/feed': typeof ApiCalendarFeedRoute
   '/api/cron/job-reminders': typeof ApiCronJobRemindersRoute
@@ -243,6 +261,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/quote-accept'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -250,6 +269,7 @@ export interface FileRouteTypes {
     | '/api/admin/job-confirm'
     | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/team'
     | '/api/admin/users'
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
@@ -269,6 +289,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/quote-accept'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -276,6 +297,7 @@ export interface FileRouteTypes {
     | '/api/admin/job-confirm'
     | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/team'
     | '/api/admin/users'
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
@@ -295,6 +317,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/pay'
+    | '/quote-accept'
     | '/unsubscribe'
     | '/api/admin/broadcast'
     | '/api/admin/document-pdf'
@@ -302,6 +325,7 @@ export interface FileRouteTypes {
     | '/api/admin/job-confirm'
     | '/api/admin/job-email-confirm'
     | '/api/admin/reply'
+    | '/api/admin/team'
     | '/api/admin/users'
     | '/api/calendar/feed'
     | '/api/cron/job-reminders'
@@ -322,6 +346,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   PayRoute: typeof PayRoute
+  QuoteAcceptRoute: typeof QuoteAcceptRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   ApiAdminBroadcastRoute: typeof ApiAdminBroadcastRoute
   ApiAdminDocumentPdfRoute: typeof ApiAdminDocumentPdfRoute
@@ -329,6 +354,7 @@ export interface RootRouteChildren {
   ApiAdminJobConfirmRoute: typeof ApiAdminJobConfirmRoute
   ApiAdminJobEmailConfirmRoute: typeof ApiAdminJobEmailConfirmRoute
   ApiAdminReplyRoute: typeof ApiAdminReplyRoute
+  ApiAdminTeamRoute: typeof ApiAdminTeamRoute
   ApiAdminUsersRoute: typeof ApiAdminUsersRoute
   ApiCalendarFeedRoute: typeof ApiCalendarFeedRoute
   ApiCronJobRemindersRoute: typeof ApiCronJobRemindersRoute
@@ -366,6 +392,13 @@ declare module '@tanstack/react-router' {
       path: '/pay'
       fullPath: '/pay'
       preLoaderRoute: typeof PayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quote-accept': {
+      id: '/quote-accept'
+      path: '/quote-accept'
+      fullPath: '/quote-accept'
+      preLoaderRoute: typeof QuoteAcceptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/unsubscribe': {
@@ -415,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/api/admin/reply'
       fullPath: '/api/admin/reply'
       preLoaderRoute: typeof ApiAdminReplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/team': {
+      id: '/api/admin/team'
+      path: '/api/admin/team'
+      fullPath: '/api/admin/team'
+      preLoaderRoute: typeof ApiAdminTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/users': {
@@ -522,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   PayRoute: PayRoute,
+  QuoteAcceptRoute: QuoteAcceptRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   ApiAdminBroadcastRoute: ApiAdminBroadcastRoute,
   ApiAdminDocumentPdfRoute: ApiAdminDocumentPdfRoute,
@@ -529,6 +570,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminJobConfirmRoute: ApiAdminJobConfirmRoute,
   ApiAdminJobEmailConfirmRoute: ApiAdminJobEmailConfirmRoute,
   ApiAdminReplyRoute: ApiAdminReplyRoute,
+  ApiAdminTeamRoute: ApiAdminTeamRoute,
   ApiAdminUsersRoute: ApiAdminUsersRoute,
   ApiCalendarFeedRoute: ApiCalendarFeedRoute,
   ApiCronJobRemindersRoute: ApiCronJobRemindersRoute,

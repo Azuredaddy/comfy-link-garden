@@ -41,9 +41,11 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
     .order("position", { ascending: true });
 
   // --- render + host the PDF ------------------------------------------------
+  const { siteUrl: siteUrlFor } = await import("./stripe.server");
+  const pdfAcceptUrl = kind === "quote" ? `${siteUrlFor(new URL(request.url).origin)}/quote-accept?id=${id}` : undefined;
   let url: string;
   try {
-    const bytes = await renderDocumentPdf(kind, doc as never, (items ?? []) as never, settings);
+    const bytes = await renderDocumentPdf(kind, doc as never, (items ?? []) as never, settings, pdfAcceptUrl);
     const key = `${kind}/${doc.number || id}-${crypto.randomUUID().slice(0, 8)}.pdf`;
     const { error: upErr } = await supabaseAdmin.storage
       .from("documents")
@@ -79,18 +81,34 @@ export async function sendDocument(kind: "quote" | "invoice", id: string, reques
 
   // Offer online card payment on invoices when Stripe is configured.
   const { isConfigured: stripeOn, siteUrl } = await import("./stripe.server");
+  const base = siteUrl(new URL(request.url).origin);
   const canPay = kind === "invoice" && stripeOn();
-  const payUrl = `${siteUrl(new URL(request.url).origin)}/pay?invoice=${id}`;
+  const payUrl = `${base}/pay?invoice=${id}`;
+  const acceptUrl = `${base}/quote-accept?id=${id}`;
+
+  // Quotes lead with "Accept this quote" (customer self-accepts); invoices with pay/view.
+  let button: { label: string; url: string };
+  let button2: { label: string; url: string } | undefined;
+  if (kind === "quote") {
+    button = { label: "Accept this quote", url: acceptUrl };
+    button2 = { label: "View quote (PDF)", url };
+  } else if (canPay) {
+    button = { label: "Pay this invoice", url: payUrl };
+    button2 = { label: "View invoice (PDF)", url };
+  } else {
+    button = { label: "View your invoice (PDF)", url };
+  }
 
   const { html, text } = brandedEmail({
     businessName: settings.business_name,
     heading: kind === "quote" ? "Your quote from Lanky Services" : "Your invoice from Lanky Services",
-    intro: `Hi ${doc.customer_name}, ${kind === "quote" ? "thanks for the opportunity — here's your quote." : "please find your invoice below."}`,
+    intro: `Hi ${doc.customer_name}, ${kind === "quote" ? "thanks for the opportunity — here's your quote. Happy with it? Tap Accept and we'll be in touch to book you in." : "please find your invoice below."}`,
+    bodyParagraphs: kind === "quote"
+      ? ["To accept, tap the button below. For any questions, just reply to this email — it comes straight to us."]
+      : ["Any questions? Just reply to this email — it comes straight to us."],
     rows,
-    button: canPay
-      ? { label: "Pay this invoice", url: payUrl }
-      : { label: kind === "quote" ? "View your quote (PDF)" : "View your invoice (PDF)", url },
-    button2: canPay ? { label: "View invoice (PDF)", url } : undefined,
+    button,
+    button2,
     contact: { phone: settings.phone, email: settings.email },
   });
 

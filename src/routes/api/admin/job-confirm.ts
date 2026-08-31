@@ -25,7 +25,7 @@ export const Route = createFileRoute("/api/admin/job-confirm")({
 
         const { data: job } = await supabaseAdmin
           .from("jobs")
-          .select("id, title, customer_phone, job_date, job_time, suburb")
+          .select("id, title, customer_phone, job_date, job_time, time_note, suburb")
           .eq("id", body.job_id)
           .maybeSingle();
         if (!job) return Response.json({ ok: false, message: "Job not found." }, { status: 404 });
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/api/admin/job-confirm")({
         const dstr = job.job_date
           ? new Date(job.job_date + "T00:00:00").toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "long" })
           : "";
-        const time = job.job_time ? job.job_time.slice(0, 5) : "";
+        const time = job.job_time ? job.job_time.slice(0, 5) : (job.time_note || "");
         const phoneLine = settings.phone ? ` Any questions call ${settings.phone}.` : "";
         const message = body.message?.trim() ||
           `Hi ${first}, confirming your booking with ${settings.business_name}${dstr ? " on " + dstr : ""}${time ? " at " + time : ""}${job.suburb ? " (" + job.suburb + ")" : ""}.${phoneLine} Thanks!`;

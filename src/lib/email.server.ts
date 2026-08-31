@@ -19,6 +19,11 @@ export async function sendEmail(opts: {
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) throw new Error("LOVABLE_API_KEY is unavailable");
     const { sendLovableEmail } = await import("@lovable.dev/email-js");
+    const key =
+      opts.idempotency_key ||
+      (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `email-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`);
     await sendLovableEmail(
       {
         to: opts.to,
@@ -29,9 +34,10 @@ export async function sendEmail(opts: {
         text: opts.text,
         reply_to: opts.reply_to,
         purpose: "transactional",
-        idempotency_key: opts.idempotency_key,
+        // The email API requires run_id OR idempotency_key — always provide one.
+        idempotency_key: key,
       },
-      { apiKey },
+      { apiKey, idempotencyKey: key },
     );
     return { ok: true };
   } catch (error) {

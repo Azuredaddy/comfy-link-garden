@@ -5,6 +5,7 @@ import {
   $, el, esc, money, supabase, toast, openOverlay, apiFetch, apiOpenPdf, nextNumber,
   todayISO, addDaysISO,
 } from './lib.js';
+import { openJobFromQuote } from './calendar.js';
 
 async function loadSettings() {
   const { data } = await supabase.from('business_settings').select('*').eq('id', 1).maybeSingle();
@@ -127,6 +128,7 @@ export async function openDocEditor(kind, opts = {}) {
       <button id="dSave">${doc.id ? 'Save changes' : 'Save draft'}</button>
       <button id="dSend" class="subtle">Save &amp; send</button>
       ${doc.id ? '<button id="dPdf" class="ghost">Preview PDF</button>' : ''}
+      ${(!isInvoice && doc.id) ? '<button id="dToJob" class="ghost">＋ Add to calendar</button>' : ''}
       ${(!isInvoice && doc.id) ? '<button id="dConvert" class="ghost">Convert to invoice</button>' : ''}
       ${(isInvoice && doc.id) ? '<button id="dPayLink" class="ghost">Copy pay link</button>' : ''}
       ${doc.id ? '<button id="dDelete" class="danger" style="margin-left:auto">Delete</button>' : ''}
@@ -295,6 +297,20 @@ export async function openDocEditor(kind, opts = {}) {
     const link = `${location.origin}/pay?invoice=${doc.id}`;
     try { await navigator.clipboard.writeText(link); toast('Payment link copied — text or email it to the customer'); }
     catch { window.prompt('Copy this payment link:', link); }
+  });
+
+  const toJobBtn = view.querySelector('#dToJob');
+  if (toJobBtn) toJobBtn.addEventListener('click', () => {
+    const { header } = collect();
+    close();
+    openJobFromQuote({
+      id: doc.id,
+      customer_name: header.customer_name,
+      customer_phone: header.customer_phone,
+      customer_email: header.customer_email,
+      suburb: header.suburb,
+      total: header.total,
+    });
   });
 
   const convBtn = view.querySelector('#dConvert');

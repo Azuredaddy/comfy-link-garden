@@ -44,7 +44,7 @@ export const Route = createFileRoute("/api/admin/job-email-confirm")({
               hour: "numeric",
               minute: "2-digit",
             })
-          : "We'll confirm a time window with you";
+          : (job.time_note || "We'll confirm a time window with you");
 
         const rows: Array<[string, string]> = [
           ["Date", niceDate],
