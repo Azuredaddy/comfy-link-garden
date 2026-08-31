@@ -427,3 +427,9 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 .quote-confirm .qc-tip{text-align:center;color:var(--stone,#b9bdb8);font-size:.88rem;margin:22px 0 0;}
 .quote-confirm a{color:var(--tan,#d8b98a);font-weight:600;}
 .quote-confirm .qc-btn{color:#0d1408;}
+.price-cards .card{text-align:center;display:flex;flex-direction:column}
+.price-cards .price{font-family:var(--font-display);font-weight:700;font-size:2.1rem;color:var(--green);margin:8px 0 10px;line-height:1}
+.price-cards .card.featured{border-color:var(--green);box-shadow:0 0 0 1px var(--green),var(--shadow-lg);position:relative}
+.price-cards .card.featured::before{content:"Most common";position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--green);color:#0a1a06;font-family:var(--font-display);font-weight:700;font-size:.72rem;padding:3px 12px;border-radius:var(--radius-pill);white-space:nowrap}
+.price-cards .card p{flex:1}
+.price-note{margin-top:18px;color:var(--muted);text-align:center;max-width:640px;margin-left:auto;margin-right:auto}
