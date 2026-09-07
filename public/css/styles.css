@@ -436,3 +436,8 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 .benefits-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 34px;max-width:900px;margin-left:auto;margin-right:auto}
 .benefits-list li{align-items:flex-start}
 @media(max-width:640px){.benefits-list{grid-template-columns:1fr}}
+.author-box{display:flex;gap:18px;align-items:center;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--shadow-sm)}
+.author-box img{width:90px;height:90px;border-radius:50%;object-fit:cover;flex:0 0 90px;border:2px solid var(--green)}
+.author-box h3{margin:2px 0 6px;font-size:1.15rem}
+.author-box p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.55}
+@media(max-width:520px){.author-box{flex-direction:column;text-align:center}.author-box img{margin:0 auto}}
