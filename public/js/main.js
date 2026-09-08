@@ -66,8 +66,9 @@
     bar.className = 'mobile-cta';
     // absolute paths so they work from every folder (incl. /service-areas/ and /blog/)
     bar.innerHTML =
-      '<a class="call" href="tel:0439973051">Call now</a>' +
-      '<a class="quote" href="/quote.html">Get a free quote</a>';
+      '<a class="call" href="tel:0439973051">Call</a>' +
+      '<a class="text" href="sms:0439973051?&body=Hi%20Matt%2C%20I%27d%20like%20a%20rubbish%20removal%20quote.%20Here%27s%20a%20photo%3A">Text a photo</a>' +
+      '<a class="quote" href="/quote.html">Free quote</a>';
     document.body.appendChild(bar);
   }
 
