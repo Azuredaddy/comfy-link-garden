@@ -42,7 +42,7 @@
 </head>
 <body>
 <header>
-  <h1>Lanky Services — Server errors</h1>
+  <h1>Lanky Services - Server errors</h1>
   <div class="row">
     <a class="muted" href="/admin.html">Quotes</a>
     <span id="who" class="muted"></span>
@@ -111,7 +111,7 @@ async function render() {
 
 async function load() {
   const mode = $('filter').value;
-  $('listMsg').textContent = 'Loading…';
+  $('listMsg').textContent = 'Loading...';
   let q = supabase.from('server_errors').select('*').order('created_at', { ascending: false }).limit(200);
   if (mode === 'open') q = q.eq('resolved', false);
   if (mode === 'resolved') q = q.eq('resolved', true);
@@ -119,13 +119,13 @@ async function load() {
 
   if (error) {
     $('listMsg').innerHTML = '<span class="err">' + esc(error.message) +
-      ' — this account may not be on the approved admin list.</span>';
+      '  - this account may not be on the approved admin list.</span>';
     $('list').innerHTML = '';
     return;
   }
   $('listMsg').textContent = data.length
     ? data.length + ' error' + (data.length === 1 ? '' : 's') + ' logged'
-    : 'No errors logged — everything is running clean.';
+    : 'No errors logged - everything is running clean.';
   $('list').innerHTML = data.map(card).join('');
 }
 
