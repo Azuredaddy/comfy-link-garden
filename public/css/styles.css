@@ -278,8 +278,18 @@ form.quote { background: var(--panel); border:1px solid var(--line); border-radi
 .form-note { font-size:.82rem; color: var(--stone); margin-top:6px; }
 
 /* Inner page hero */
-.loc-hero { background: var(--bg-2); position:relative; padding: clamp(48px,7vw,86px) 0; overflow:hidden; }
-.loc-hero::before { content:""; position:absolute; width:440px; height:440px; top:-170px; right:-110px; border-radius:50%; background: radial-gradient(circle, rgba(142,208,41,.22), transparent 62%); filter: blur(30px); pointer-events:none; }
+.loc-hero { position:relative; padding: clamp(48px,7vw,86px) 0; overflow:hidden;
+  background:
+    linear-gradient(94deg, rgba(6,9,7,.86) 0%, rgba(6,9,7,.64) 44%, rgba(6,9,7,.30) 78%, rgba(6,9,7,.5) 100%),
+    url('/images/brand-landscape.jpg') center top/cover no-repeat;
+  border-bottom:2px solid var(--green); }
+.loc-hero::before { display:none; }
+.loc-hero h1, .loc-hero p, .loc-hero .eyebrow { text-shadow:0 2px 14px rgba(0,0,0,.78), 0 1px 3px rgba(0,0,0,.6); }
+@media(max-width:760px){
+  .loc-hero { background:
+    linear-gradient(180deg, rgba(6,9,7,.60) 0%, rgba(6,9,7,.78) 54%, rgba(6,9,7,.93) 100%),
+    url('/images/brand-landscape.jpg') center top/cover no-repeat; }
+}
 .loc-hero .container { position:relative; z-index:1; }
 .loc-hero .eyebrow { color: var(--cyan); }
 .loc-hero h1 { color:#fff; max-width:820px; }
@@ -464,3 +474,24 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 .hero.hero-dark .hero-badge{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.26);color:#fff;backdrop-filter:blur(8px)}
 .hero.hero-dark .hero-trust strong{color:#fff}
 .hero.hero-dark .hero-trust span{color:#cfe0cf}
+
+/* Brand sunset-coast landscape hero background (brighter, vivid) */
+.hero.hero-landscape{
+  background:
+    linear-gradient(94deg, rgba(6,9,7,.80) 0%, rgba(6,9,7,.58) 40%, rgba(6,9,7,.24) 72%, rgba(6,9,7,.42) 100%),
+    url('/images/brand-landscape.jpg') center top/cover no-repeat;
+  border-bottom:2px solid var(--green);
+}
+.hero.hero-landscape::before,.hero.hero-landscape::after{display:none}
+.hero.hero-landscape h1,
+.hero.hero-landscape .slogan,
+.hero.hero-landscape p.lead{ text-shadow:0 2px 16px rgba(0,0,0,.78), 0 1px 3px rgba(0,0,0,.6); }
+.hero.hero-landscape .hero-trust strong,
+.hero.hero-landscape .hero-trust span{ text-shadow:0 2px 12px rgba(0,0,0,.8); }
+@media(max-width:760px){
+  .hero.hero-landscape{
+    background:
+      linear-gradient(180deg, rgba(6,9,7,.58) 0%, rgba(6,9,7,.76) 52%, rgba(6,9,7,.93) 100%),
+      url('/images/brand-landscape.jpg') center top/cover no-repeat;
+  }
+}
