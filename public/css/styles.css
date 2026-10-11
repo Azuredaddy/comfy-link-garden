@@ -442,3 +442,16 @@ a:focus-visible, button:focus-visible, .btn:focus-visible, input:focus-visible, 
 .author-box p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.55}
 @media(max-width:520px){.author-box{flex-direction:column;text-align:center}.author-box img{margin:0 auto}}
 .mobile-cta .text{background:var(--cyan);color:#04121a;border:1px solid var(--cyan)}
+.hero.hero-scenic{background:linear-gradient(100deg,rgba(8,12,9,.94) 0%,rgba(8,12,9,.80) 42%,rgba(8,12,9,.34) 100%),url(/images/hero-bg-central-coast.jpg) center/cover no-repeat;border-bottom:1px solid var(--line)}
+.hero.hero-scenic::before,.hero.hero-scenic::after{display:none}
+.hero.hero-scenic .hero-grid{grid-template-columns:1fr;max-width:760px}
+.hero.hero-scenic .hero-visual{display:none}
+.hero.hero-scenic .lead,.hero.hero-scenic .slogan{color:#eaf2ea}
+@media(max-width:760px){.hero.hero-scenic{background:linear-gradient(180deg,rgba(8,12,9,.90),rgba(8,12,9,.94)),url(/images/hero-bg-central-coast.jpg) center/cover no-repeat}}
+.hero.hero-scenic h1{color:#fff}
+.hero.hero-scenic h1 span{-webkit-text-fill-color:var(--green);background:none;color:var(--green)}
+.hero.hero-scenic .lead{color:#e9f1e9}
+.hero.hero-scenic .slogan{color:#bfe66b}
+.hero.hero-scenic .hero-badge{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.30);color:#fff;backdrop-filter:blur(8px)}
+.hero.hero-scenic .hero-trust strong{color:#fff}
+.hero.hero-scenic .hero-trust span{color:#d4e4d4}
