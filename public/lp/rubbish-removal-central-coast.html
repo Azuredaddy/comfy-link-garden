@@ -11,6 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Rubbish Removal Central Coast | Free Quote | Lanky Services" />
   <meta property="og:description" content="Household junk, hard rubbish, green waste and furniture removal, same day across the Central Coast. Free, upfront, no-obligation quote." />
+  <meta property="og:url" content="https://lankyservices.com.au/lp/rubbish-removal-central-coast.html" />
   <meta property="og:image" content="https://lankyservices.com.au/images/og-image.jpg" />
   <meta property="og:locale" content="en_AU" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -39,6 +40,33 @@
   </style>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"LocalBusiness","name":"Lanky Services","url":"https://lankyservices.com.au/","telephone":"+61439973051","email":"matt@lankyservices.com.au","identifier":{"@type":"PropertyValue","propertyID":"ABN","value":"75 340 334 049"},"image":"https://lankyservices.com.au/images/og-image.jpg","areaServed":["Central Coast, NSW","Newcastle, NSW"],"address":{"@type":"PostalAddress","streetAddress":"8 Cambridge Ave","addressLocality":"Kanwal","addressRegion":"NSW","postalCode":"2263","addressCountry":"AU"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":"10"}}
+  </script>
+
+  <!-- ============================================================
+       GOOGLE ADS CONVERSION TRACKING
+       1. Paste your Google tag (gtag.js) below and replace AW-XXXXXXXXXX
+          with your Google Ads ID (find it in Google Ads > Tools > Google tag).
+       2. In the quote:success listener, replace AW-XXXXXXXXXX/AbCdEfGh with
+          your conversion action's "send_to" value (Ads > Goals > Conversions).
+       Until you add your ID, nothing fires and nothing breaks.
+       ============================================================ -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXXXX');
+  </script>
+  -->
+  <script>
+    // Fires when a quote is successfully submitted (dispatched by /js/main.js)
+    document.addEventListener('quote:success', function () {
+      // Google Ads conversion — uncomment and set your send_to value:
+      // if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-XXXXXXXXXX/AbCdEfGh' });
+      // GA4 lead event (harmless if gtag isn't loaded yet):
+      if (typeof gtag === 'function') gtag('event', 'generate_lead', { source: 'google-ads-lp' });
+    });
   </script>
 </head>
 <body id="top">

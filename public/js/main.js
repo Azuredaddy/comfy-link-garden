@@ -160,6 +160,15 @@
         delete form.dataset.submissionKey;
         if (btn) { btn.disabled = false; btn.textContent = label; }
 
+        // Conversion tracking hook: fires on every successful quote submission.
+        // Works with Google Tag Manager out of the box (generate_lead), and lets
+        // landing pages fire Google Ads / Meta conversions via the quote:success event.
+        try {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'generate_lead', lead_service: payload.service || '', lead_suburb: payload.suburb || '', page_path: location.pathname });
+          document.dispatchEvent(new CustomEvent('quote:success', { detail: { service: payload.service, suburb: payload.suburb } }));
+        } catch (err) { /* tracking must never block the thank-you */ }
+
         function esc(v) {
           return String(v || '').replace(/[<>&"]/g, function (c) {
             return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c];
